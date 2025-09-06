@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    // https://www.typescriptlang.org/tsconfig/
+
+    // Type Checking
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitOverride": true,
+    "allowUnreachableCode": false,
+
+    // Modules
+    "module": "NodeNext",
+    "target": "ES6",
+
+    // Language and Environment
+    "moduleResolution": "NodeNext",
+
+    // Interop Constraints
+    "verbatimModuleSyntax": true
+  }
+}
