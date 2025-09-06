@@ -32,5 +32,56 @@ export default [
         project: true,
       },
     },
+    rules: {
+      '@typescript-eslint/naming-convention': [
+        'error',
+        // for ruleListener
+        {
+          selector: 'default',
+          format: ['camelCase'],
+          leadingUnderscore: 'allow',
+          trailingUnderscore: 'allow',
+        },
+
+        {
+          selector: 'import',
+          format: ['camelCase', 'PascalCase'],
+        },
+
+        {
+          selector: 'variable',
+          format: [
+            'camelCase',
+            'UPPER_CASE',
+            'PascalCase', // for React/Solid
+          ],
+          leadingUnderscore: 'allow',
+          trailingUnderscore: 'allow',
+        },
+
+        {
+          selector: 'function',
+          format: [
+            'camelCase',
+            'PascalCase', // for React/Solid
+          ],
+        },
+
+        {
+          selector: 'typeLike',
+          format: ['PascalCase'],
+        },
+
+        {
+          selector: 'enumMember',
+          format: ['UPPER_CASE'],
+        },
+
+        {
+          selector: 'objectLiteralMethod',
+          format: ['camelCase', 'PascalCase'],
+        },
+      ],
+    },
   },
 ];

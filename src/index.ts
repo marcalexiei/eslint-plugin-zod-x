@@ -1,6 +1,6 @@
 import type { TSESLint } from '@typescript-eslint/utils';
 
-// import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
+import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
 import { createRecommendedConfig } from './configs/recommended.js';
 import { PLUGIN_NAME, PLUGIN_VERSION } from './meta.js';
 
@@ -10,7 +10,9 @@ const eslintPluginZodX: TSESLint.FlatConfig.Plugin = {
     version: PLUGIN_VERSION,
   },
   rules: {
-    // 'prefer-namespace-import': preferNamespaceImport,
+    /* eslint-disable @typescript-eslint/naming-convention */
+    'prefer-namespace-import': preferNamespaceImport,
+    /* eslint-enable @typescript-eslint/naming-convention */
   },
   processors: {},
 };
