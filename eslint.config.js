@@ -10,29 +10,10 @@ export default [
     ignores: ['dist', 'coverage', 'tests/fixtures/**/*'],
   },
   configBase,
-  configTS,
   {
-    ...configVitest,
+    ...configTS,
     rules: {
-      ...configVitest.rules,
-      'vitest/max-nested-describe': ['error', { max: 3 }],
-    },
-  },
-  pluginEslintPlugin.configs.recommended,
-  {
-    ...pluginEslintNode.configs['flat/recommended-module'],
-    rules: {
-      ...pluginEslintNode.configs['flat/recommended-module'].rules,
-      'n/no-missing-import': ['error', { allowModules: ['estree'] }],
-    },
-  },
-  {
-    languageOptions: {
-      parserOptions: {
-        project: true,
-      },
-    },
-    rules: {
+      ...configTS.rules,
       '@typescript-eslint/naming-convention': [
         'error',
         // for ruleListener
@@ -82,6 +63,16 @@ export default [
           format: ['camelCase', 'PascalCase'],
         },
       ],
+    },
+  },
+  configVitest,
+  pluginEslintPlugin.configs.recommended,
+  pluginEslintNode.configs['flat/recommended-module'],
+  {
+    languageOptions: {
+      parserOptions: {
+        project: true,
+      },
     },
   },
 ];
