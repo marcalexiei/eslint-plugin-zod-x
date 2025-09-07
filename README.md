@@ -11,6 +11,15 @@ Custom ESLint rules for [Zod](https://github.com/colinhacks/zod).
 
 <!-- begin auto-generated rules list -->
 
+💼 Configurations enabled in.\
+✅ Set in the `recommended` configuration.\
+🔧 Automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/user-guide/command-line-interface#--fix).
+
+| Name                                                             | Description                                                             | 💼  | 🔧  |
+| :--------------------------------------------------------------- | :---------------------------------------------------------------------- | :-- | :-- |
+| [array-style](docs/rules/array-style.md)                         | Enforce consistent Zod array style                                      | ✅  | 🔧  |
+| [prefer-namespace-import](docs/rules/prefer-namespace-import.md) | Enforce importing zod as a namespace import (import \* as z from 'zod') | ✅  | 🔧  |
+
 <!-- end auto-generated rules list -->
 
 ## Installation

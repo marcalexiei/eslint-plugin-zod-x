@@ -13,30 +13,30 @@ ruleTester.run('array-style', arrayStyle, {
     {
       name: '`function` option',
       code: `z.array(z.string())`,
-      options: ['function'],
+      options: [{ style: 'function' }],
     },
     {
       name: '`method` option',
       code: `z.string().array()`,
-      options: ['method'],
+      options: [{ style: 'method' }],
     },
   ],
   invalid: [
     {
       code: `z.string().array()`,
-      options: ['function'],
+      options: [{ style: 'function' }],
       errors: [{ messageId: 'useFunction' }],
       output: `z.array(z.string())`,
     },
     {
       code: `z.array(z.string())`,
-      options: ['method'],
+      options: [{ style: 'method' }],
       errors: [{ messageId: 'useMethod' }],
       output: `z.string().array()`,
     },
     {
       code: `z.array(z.string().trim())`,
-      options: ['method'],
+      options: [{ style: 'method' }],
       errors: [{ messageId: 'useMethod' }],
       output: `z.string().trim().array()`,
     },

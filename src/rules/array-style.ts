@@ -2,11 +2,15 @@ import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
 
-export type Options = ['function' | 'method'];
-export type MessageIds = 'useFunction' | 'useMethod';
+interface Options {
+  style: 'function' | 'method';
+}
+type MessageIds = 'useFunction' | 'useMethod';
+
+const defaultOptions: Options = { style: 'function' };
 
 export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
-  Options,
+  [Options],
   MessageIds
 >({
   name: 'consistent-array-style',
@@ -22,15 +26,19 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
     },
     schema: [
       {
-        description: 'control style',
-        type: 'string',
-        enum: ['function', 'method'],
+        type: 'object',
+        properties: {
+          style: {
+            description: 'Decides which style for zod array function',
+            type: 'string',
+            enum: ['function', 'method'],
+          },
+        },
       },
     ],
-    defaultOptions: ['function'],
   },
-  defaultOptions: ['function'],
-  create(context, [style]) {
+  defaultOptions: [defaultOptions],
+  create(context, [{ style }]) {
     const { sourceCode } = context;
 
     return {

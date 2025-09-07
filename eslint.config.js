@@ -66,7 +66,14 @@ export default [
     },
   },
   configVitest,
-  pluginEslintPlugin.configs.recommended,
+  {
+    ...pluginEslintPlugin.configs.recommended,
+    rules: {
+      ...pluginEslintPlugin.configs.recommended.rules,
+      // handled by typescript-eslint ESLintUtils.`RuleCreator`
+      'eslint-plugin/require-meta-default-options': 'off',
+    },
+  },
   pluginEslintNode.configs['flat/recommended-module'],
   {
     languageOptions: {
