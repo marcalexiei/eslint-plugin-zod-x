@@ -1,9 +1,21 @@
 # eslint-plugin-zod-x
 
-[![CI](https://github.com/marcalexiei/eslint-plugin-zod-x/actions/workflows/CI.yml/badge.svg)](https://github.com/marcalexiei/eslint-plugin-zod-x/actions/workflows/CI.yml)
-[![Code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io)
-[![npm version](https://img.shields.io/npm/v/eslint-plugin-zod-x.svg?style=flat-square)](https://www.npmjs.com/package/eslint-plugin-zod-x)
-[![issues](https://img.shields.io/github/issues/marcalexiei/eslint-plugin-zod-x.svg)](https://github.com/marcalexiei/eslint-plugin-zod-x/issues)
+[![CI][CIBadge]][CIURL]
+[![Code style: prettier][CodeStyleBadge]][CodeStyleURL]
+[![Lint: eslint][lintBadge]][lintURL]
+[![npm version][npmVersionBadge]][npmVersionURL]
+[![issues][issuesBadge]][issuesURL]
+
+[CIBadge]: https://img.shields.io/github/actions/workflow/status/marcalexiei/eslint-plugin-zod-x/ci.yml?style=for-the-badge&logo=github&event=push&label=CI
+[CIURL]: https://github.com/marcalexiei/eslint-plugin-zod-x/actions/workflows/CI.yml/badge.svg
+[CodeStyleBadge]: https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=for-the-badge&logo=prettier
+[CodeStyleURL]: https://prettier.io
+[npmVersionBadge]: https://img.shields.io/npm/v/eslint-plugin-zod-x.svg?style=for-the-badge&logo=npm
+[lintBadge]: https://img.shields.io/badge/lint-eslint-3A33D1?logo=eslint&style=for-the-badge
+[lintURL]: https://eslint.org
+[npmVersionURL]: https://www.npmjs.com/package/eslint-plugin-zod-x
+[issuesBadge]: https://img.shields.io/github/issues/marcalexiei/eslint-plugin-zod-x.svg?style=for-the-badge
+[issuesURL]: https://github.com/marcalexiei/eslint-plugin-zod-x/issues
 
 Custom ESLint rules for [Zod](https://github.com/colinhacks/zod).
 
