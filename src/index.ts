@@ -2,10 +2,11 @@ import type { TSESLint } from '@typescript-eslint/utils';
 
 import { PLUGIN_NAME, PLUGIN_VERSION } from './meta.js';
 import { arrayStyle } from './rules/array-style.js';
-import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
+import { noAny } from './rules/no-any.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
+import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
 
-const eslintPluginZodX: TSESLint.FlatConfig.Plugin = {
+const eslintPluginZodX = {
   meta: {
     name: PLUGIN_NAME,
     version: PLUGIN_VERSION,
@@ -14,13 +15,17 @@ const eslintPluginZodX: TSESLint.FlatConfig.Plugin = {
   rules: {
     /* eslint-disable @typescript-eslint/naming-convention */
     'array-style': arrayStyle,
+    'no-any': noAny,
     'no-throw-in-refine': noThrowInRefine,
     'prefer-namespace-import': preferNamespaceImport,
     /* eslint-enable @typescript-eslint/naming-convention */
   },
-};
+} as const satisfies TSESLint.FlatConfig.Plugin;
 
-Object.assign(eslintPluginZodX.configs!, {
+Object.assign<
+  (typeof eslintPluginZodX)['configs'],
+  { recommended: TSESLint.FlatConfig.Config }
+>(eslintPluginZodX.configs, {
   recommended: {
     name: `${PLUGIN_NAME}/recommended`,
     files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
@@ -30,6 +35,7 @@ Object.assign(eslintPluginZodX.configs!, {
     },
     rules: {
       'zod-x/array-style': ['error'],
+      'zod-x/no-any': ['error'],
       'zod-x/no-throw-in-refine': ['error'],
       'zod-x/prefer-namespace-import': ['error'],
     },

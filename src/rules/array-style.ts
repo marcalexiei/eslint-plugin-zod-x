@@ -1,8 +1,9 @@
 import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
+import { isZodSchemaDeclaration } from '../utils/is-zod-expression.js';
 
-interface Options {
+export interface Options {
   style: 'function' | 'method';
 }
 type MessageIds = 'useFunction' | 'useMethod';
@@ -21,8 +22,8 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
       description: 'Enforce consistent Zod array style',
     },
     messages: {
-      useFunction: 'Use z.array(schema) instead of schema.array()',
-      useMethod: 'Use schema.array() instead of z.array(schema)',
+      useFunction: 'Use z.array(schema) instead of schema.array().',
+      useMethod: 'Use schema.array() instead of z.array(schema).',
     },
     schema: [
       {
@@ -47,13 +48,7 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
 
         if (style === 'method') {
           // z.array(...)
-          if (
-            callee.type === AST_NODE_TYPES.MemberExpression &&
-            callee.object.type === AST_NODE_TYPES.Identifier &&
-            callee.object.name === 'z' &&
-            callee.property.type === AST_NODE_TYPES.Identifier &&
-            callee.property.name === 'array'
-          ) {
+          if (isZodSchemaDeclaration(callee, 'array')) {
             context.report({
               node,
               messageId: 'useMethod',

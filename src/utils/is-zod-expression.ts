@@ -26,3 +26,16 @@ export function isZodExpression(
 
   return false;
 }
+
+export function isZodSchemaDeclaration(
+  node: TSESTree.Expression,
+  schemaTypeName: string,
+): boolean {
+  return (
+    node.type === AST_NODE_TYPES.MemberExpression &&
+    node.object.type === AST_NODE_TYPES.Identifier &&
+    node.object.name === 'z' &&
+    node.property.type === AST_NODE_TYPES.Identifier &&
+    node.property.name === schemaTypeName
+  );
+}

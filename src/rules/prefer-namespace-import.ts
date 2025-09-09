@@ -2,13 +2,7 @@ import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
 
-type Options = Array<never>;
-type MessageIds = 'useNamespace';
-
-export const preferNamespaceImport = ESLintUtils.RuleCreator(getRuleURL)<
-  Options,
-  MessageIds
->({
+export const preferNamespaceImport = ESLintUtils.RuleCreator(getRuleURL)({
   name: 'prefer-namespace-import',
   meta: {
     type: 'suggestion',

@@ -18,6 +18,7 @@ Custom ESLint rules for [Zod](https://github.com/colinhacks/zod).
 | Name                                                             | Description                                                             | 💼  | 🔧  |
 | :--------------------------------------------------------------- | :---------------------------------------------------------------------- | :-- | :-- |
 | [array-style](docs/rules/array-style.md)                         | Enforce consistent Zod array style                                      | ✅  | 🔧  |
+| [no-any](docs/rules/no-any.md)                                   | Disallow usage of z.any() in Zod schemas                                | ✅  |     |
 | [no-throw-in-refine](docs/rules/no-throw-in-refine.md)           | Disallow throwing errors directly inside Zod refine callbacks           | ✅  |     |
 | [prefer-namespace-import](docs/rules/prefer-namespace-import.md) | Enforce importing zod as a namespace import (import \* as z from 'zod') | ✅  | 🔧  |
 
