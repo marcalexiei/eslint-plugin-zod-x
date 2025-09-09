@@ -21,30 +21,39 @@ This rule enforces a consistent style for defining arrays in Zod schemas. You ca
 - **Function style**: `z.array(...)`
 - **Method style**: `.array()`
 
+By default, `function` is used to maintain consistency with TypeScript’s `Array` generic syntax.
+For more details on the reasoning behind this, see <https://tkdodo.eu/blog/array-types-in-type-script>.
+
 ## Examples
 
-### Valid
+### `function`
+
+#### Valid
 
 ```ts
-z.array(z.string()); // default / function
+z.array(z.string());
+```
+
+#### Invalid
+
+```ts
+z.string().array();
+
+z.string().trim().array();
+```
+
+### `method`
+
+#### Valid
+
+```ts
 z.string().array(); // method
 ```
 
-### Invalid
+#### Invalid
 
 ```ts
-// ❌ Method used when function is required
-z.string().array();
-// ✅ Correct
 z.array(z.string());
 
-// ❌ Function used when method is required
-z.array(z.string());
-// ✅ Correct
-z.string().array();
-
-// ❌ Function with chained methods
 z.array(z.string().trim());
-// ✅ Correct
-z.string().trim().array();
 ```

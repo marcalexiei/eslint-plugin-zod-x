@@ -29,6 +29,12 @@ ruleTester.run('array-style', arrayStyle, {
       output: `z.array(z.string())`,
     },
     {
+      code: `z.string().trim().array()`,
+      options: [{ style: 'function' }],
+      errors: [{ messageId: 'useFunction' }],
+      output: `z.array(z.string().trim())`,
+    },
+    {
       code: `z.array(z.string())`,
       options: [{ style: 'method' }],
       errors: [{ messageId: 'useMethod' }],
