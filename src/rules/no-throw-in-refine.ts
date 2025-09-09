@@ -69,11 +69,7 @@ export const noThrowInRefine = ESLintUtils.RuleCreator(getRuleURL)({
 
     return {
       CallExpression(node): void {
-        if (
-          isZodExpression(node.callee) &&
-          node.callee.property.type === AST_NODE_TYPES.Identifier &&
-          node.callee.property.name === 'refine'
-        ) {
+        if (isZodExpression(node.callee, 'refine')) {
           const [callback] = node.arguments;
           if (
             callback.type === AST_NODE_TYPES.ArrowFunctionExpression ||

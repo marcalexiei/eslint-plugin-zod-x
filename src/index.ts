@@ -11,7 +11,7 @@ const eslintPluginZodX = {
     name: PLUGIN_NAME,
     version: PLUGIN_VERSION,
   },
-  configs: {},
+  configs: {} as { recommended: TSESLint.FlatConfig.Config },
   rules: {
     /* eslint-disable @typescript-eslint/naming-convention */
     'array-style': arrayStyle,
@@ -22,25 +22,20 @@ const eslintPluginZodX = {
   },
 } as const satisfies TSESLint.FlatConfig.Plugin;
 
-Object.assign<
-  (typeof eslintPluginZodX)['configs'],
-  { recommended: TSESLint.FlatConfig.Config }
->(eslintPluginZodX.configs, {
-  recommended: {
-    name: `${PLUGIN_NAME}/recommended`,
-    files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
-    /* eslint-disable @typescript-eslint/naming-convention */
-    plugins: {
-      'zod-x': eslintPluginZodX,
-    },
-    rules: {
-      'zod-x/array-style': ['error'],
-      'zod-x/no-any': ['error'],
-      'zod-x/no-throw-in-refine': ['error'],
-      'zod-x/prefer-namespace-import': ['error'],
-    },
-    /* eslint-enable @typescript-eslint/naming-convention */
+eslintPluginZodX.configs.recommended = {
+  name: `${PLUGIN_NAME}/recommended`,
+  files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
+  /* eslint-disable @typescript-eslint/naming-convention */
+  plugins: {
+    'zod-x': eslintPluginZodX,
   },
-});
+  rules: {
+    'zod-x/array-style': ['error'],
+    'zod-x/no-any': ['error'],
+    'zod-x/no-throw-in-refine': ['error'],
+    'zod-x/prefer-namespace-import': ['error'],
+  },
+  /* eslint-enable @typescript-eslint/naming-convention */
+};
 
 export default eslintPluginZodX;

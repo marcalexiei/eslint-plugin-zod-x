@@ -1,7 +1,11 @@
-import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
+import { ESLintUtils } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
-import { isZodSchemaDeclaration } from '../utils/is-zod-expression.js';
+import {
+  isZodExpression,
+  isZodIdentifier,
+  isZodSchemaDeclaration,
+} from '../utils/is-zod-expression.js';
 
 export interface Options {
   style: 'function' | 'method';
@@ -66,13 +70,8 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
 
         // z.something().array()
         if (
-          callee.type === AST_NODE_TYPES.MemberExpression &&
-          callee.property.type === AST_NODE_TYPES.Identifier &&
-          callee.property.name === 'array' &&
-          !(
-            callee.object.type === AST_NODE_TYPES.Identifier &&
-            callee.object.name === 'z'
-          )
+          isZodExpression(callee, 'array') &&
+          !isZodIdentifier(callee.object)
         ) {
           context.report({
             node,
