@@ -3,6 +3,7 @@ import type { TSESLint } from '@typescript-eslint/utils';
 import { PLUGIN_NAME, PLUGIN_VERSION } from './meta.js';
 import { arrayStyle } from './rules/array-style.js';
 import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
+import { noThrowInRefine } from './rules/no-throw-in-refine.js';
 
 const eslintPluginZodX: TSESLint.FlatConfig.Plugin = {
   meta: {
@@ -13,6 +14,7 @@ const eslintPluginZodX: TSESLint.FlatConfig.Plugin = {
   rules: {
     /* eslint-disable @typescript-eslint/naming-convention */
     'array-style': arrayStyle,
+    'no-throw-in-refine': noThrowInRefine,
     'prefer-namespace-import': preferNamespaceImport,
     /* eslint-enable @typescript-eslint/naming-convention */
   },
@@ -28,6 +30,7 @@ Object.assign(eslintPluginZodX.configs!, {
     },
     rules: {
       'zod-x/array-style': ['error'],
+      'zod-x/no-throw-in-refine': ['error'],
       'zod-x/prefer-namespace-import': ['error'],
     },
     /* eslint-enable @typescript-eslint/naming-convention */
