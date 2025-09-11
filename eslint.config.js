@@ -7,7 +7,7 @@ import pluginEslintNode from 'eslint-plugin-n';
 /** @type {Array<import('eslint').Linter.Config>} */
 export default [
   {
-    ignores: ['dist', 'coverage', 'tests/fixtures/**/*'],
+    ignores: ['dist', 'coverage'],
   },
   configBase,
   {
@@ -16,7 +16,6 @@ export default [
       ...configTS.rules,
       '@typescript-eslint/naming-convention': [
         'error',
-        // for ruleListener
         {
           selector: 'default',
           format: ['camelCase'],
@@ -31,21 +30,14 @@ export default [
 
         {
           selector: 'variable',
-          format: [
-            'camelCase',
-            'UPPER_CASE',
-            'PascalCase', // for React/Solid
-          ],
+          format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
           leadingUnderscore: 'allow',
           trailingUnderscore: 'allow',
         },
 
         {
           selector: 'function',
-          format: [
-            'camelCase',
-            'PascalCase', // for React/Solid
-          ],
+          format: ['camelCase', 'PascalCase'],
         },
 
         {
@@ -57,7 +49,7 @@ export default [
           selector: 'enumMember',
           format: ['UPPER_CASE'],
         },
-
+        // for ruleListener
         {
           selector: 'objectLiteralMethod',
           format: ['camelCase', 'PascalCase'],

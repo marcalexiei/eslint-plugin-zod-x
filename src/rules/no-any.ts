@@ -20,11 +20,9 @@ export const noAny = ESLintUtils.RuleCreator(getRuleURL)({
   create(context) {
     return {
       CallExpression(node): void {
-        if (!isZodSchemaDeclaration(node.callee, 'any')) {
-          return;
+        if (isZodSchemaDeclaration(node.callee, 'any')) {
+          context.report({ node, messageId: 'noZAny' });
         }
-
-        context.report({ node, messageId: 'noZAny' });
       },
     };
   },

@@ -10,7 +10,7 @@ export function isZodIdentifier(
 function isZodAtTheBeginningOfMemberExpression(
   node: TSESTree.MemberExpression,
 ): boolean {
-  // CHeck if we are at the beginning of the expression and it starts with zod
+  // Check if we are at the beginning of the expression and it starts with zod
   if (isZodIdentifier(node.object)) {
     return true;
   }
@@ -31,7 +31,7 @@ function isZodAtTheBeginningOfMemberExpression(
  * ending with the specified property name.
  * Returns `true`
  * - if the {@link node} is a `MemberExpression`,
- * - the chain starts with `zod`
+ * - the chain starts with `z.`
  * - the final property matches {@link propName}.
  */
 export function isZodExpression(

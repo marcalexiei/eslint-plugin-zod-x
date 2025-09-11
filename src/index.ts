@@ -4,6 +4,7 @@ import { PLUGIN_NAME, PLUGIN_VERSION } from './meta.js';
 import { arrayStyle } from './rules/array-style.js';
 import { noAny } from './rules/no-any.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
+import { preferMeta } from './rules/prefer-meta.js';
 import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
 
 const eslintPluginZodX = {
@@ -17,6 +18,7 @@ const eslintPluginZodX = {
     'array-style': arrayStyle,
     'no-any': noAny,
     'no-throw-in-refine': noThrowInRefine,
+    'prefer-meta': preferMeta,
     'prefer-namespace-import': preferNamespaceImport,
     /* eslint-enable @typescript-eslint/naming-convention */
   },
@@ -33,6 +35,7 @@ eslintPluginZodX.configs.recommended = {
     'zod-x/array-style': ['error'],
     'zod-x/no-any': ['error'],
     'zod-x/no-throw-in-refine': ['error'],
+    'zod-x/prefer-meta': ['error'],
     'zod-x/prefer-namespace-import': ['error'],
   },
   /* eslint-enable @typescript-eslint/naming-convention */
