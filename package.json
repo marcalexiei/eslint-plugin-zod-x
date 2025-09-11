@@ -61,7 +61,8 @@
     "@typescript-eslint/utils": "^8.42.0"
   },
   "peerDependencies": {
-    "eslint": "^9"
+    "eslint": "^9",
+    "zod": "^4"
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.5.1",
