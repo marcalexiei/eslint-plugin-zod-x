@@ -21,7 +21,10 @@ export const preferNamespaceImport = ESLintUtils.RuleCreator(getRuleURL)({
   create(context) {
     return {
       ImportDeclaration(node): void {
-        if (node.source.value !== 'zod') {
+        if (
+          node.source.value !== 'zod' &&
+          !node.source.value.startsWith('zod/')
+        ) {
           return;
         }
 
@@ -39,7 +42,7 @@ export const preferNamespaceImport = ESLintUtils.RuleCreator(getRuleURL)({
               const localName = firstSpecifier.local.name;
               return fixer.replaceText(
                 node,
-                `import * as ${localName} from 'zod';`,
+                `import * as ${localName} from '${node.source.value}';`,
               );
             },
           });
