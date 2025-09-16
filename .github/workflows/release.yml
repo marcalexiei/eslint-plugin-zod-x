@@ -61,7 +61,6 @@ jobs:
           setupGitUser: false
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   on-ci-fail:
     name: 'Failure'

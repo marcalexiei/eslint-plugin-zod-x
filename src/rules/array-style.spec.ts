@@ -2,7 +2,7 @@ import { RuleTester } from '@typescript-eslint/rule-tester';
 
 import { arrayStyle } from './array-style.js';
 
-const ruleTester = new RuleTester({});
+const ruleTester = new RuleTester();
 
 ruleTester.run('array-style', arrayStyle, {
   valid: [

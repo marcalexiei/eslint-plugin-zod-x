@@ -58,9 +58,7 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
               messageId: 'useMethod',
               fix: (fixer) => {
                 // extract inner schema
-                const argText = node.arguments.length
-                  ? sourceCode.getText(node.arguments[0])
-                  : 'z.any()';
+                const argText = sourceCode.getText(node.arguments[0]);
                 return fixer.replaceText(node, `${argText}.array()`);
               },
             });

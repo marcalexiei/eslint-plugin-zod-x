@@ -2,7 +2,7 @@ import { RuleTester } from '@typescript-eslint/rule-tester';
 
 import { noThrowInRefine } from './no-throw-in-refine.js';
 
-const ruleTester = new RuleTester({});
+const ruleTester = new RuleTester();
 
 ruleTester.run('no-throw-in-refine', noThrowInRefine, {
   valid: [
@@ -26,6 +26,12 @@ ruleTester.run('no-throw-in-refine', noThrowInRefine, {
   ],
   invalid: [
     {
+      name: 'inside arrow function',
+      code: `z.string().refine(() => { throw new Error(); });`,
+      errors: [{ messageId: 'noThrowInRefine' }],
+    },
+    {
+      name: 'inside arrow function within if',
       code: `
       z.number().refine((val) => {
         if (val < 0) throw new Error('Invalid');
@@ -34,7 +40,24 @@ ruleTester.run('no-throw-in-refine', noThrowInRefine, {
       errors: [{ messageId: 'noThrowInRefine' }],
     },
     {
-      code: `z.string().refine(() => { throw new Error(); });`,
+      name: 'inside arrow function within else',
+      code: `
+      z.number().refine((val) => {
+        if (val < 0) return true
+        else throw new Error('Invalid');
+      });
+      `,
+      errors: [{ messageId: 'noThrowInRefine' }],
+    },
+    {
+      name: 'inside arrow function within cucle',
+      code: `
+      z.number().refine((val) => {
+        for (const it of val) {
+          throw new Error('Invalid')
+        }
+      });
+      `,
       errors: [{ messageId: 'noThrowInRefine' }],
     },
   ],
