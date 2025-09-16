@@ -67,7 +67,7 @@ export function isZodExpression(
 export function isZodSchemaDeclaration(
   node: TSESTree.Expression,
   schemaTypeName: string,
-): boolean {
+): node is TSESTree.MemberExpression {
   return (
     node.type === AST_NODE_TYPES.MemberExpression &&
     isZodIdentifier(node.object) &&

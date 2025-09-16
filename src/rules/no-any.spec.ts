@@ -13,11 +13,28 @@ ruleTester.run('no-z-any', noAny, {
   invalid: [
     {
       code: 'const schema = z.any();',
-      errors: [{ messageId: 'noZAny' }],
+      errors: [
+        {
+          messageId: 'noZAny',
+          suggestions: [
+            { messageId: 'useUnknown', output: 'const schema = z.unknown();' },
+          ],
+        },
+      ],
     },
     {
       code: 'const schema = z.object({ prop: z.any() });',
-      errors: [{ messageId: 'noZAny' }],
+      errors: [
+        {
+          messageId: 'noZAny',
+          suggestions: [
+            {
+              messageId: 'useUnknown',
+              output: 'const schema = z.object({ prop: z.unknown() });',
+            },
+          ],
+        },
+      ],
     },
   ],
 });
