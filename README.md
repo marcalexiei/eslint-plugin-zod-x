@@ -17,7 +17,7 @@
 [issuesBadge]: https://img.shields.io/github/issues/marcalexiei/eslint-plugin-zod-x.svg?style=for-the-badge
 [issuesURL]: https://github.com/marcalexiei/eslint-plugin-zod-x/issues
 
-Custom ESLint rules for [Zod](https://github.com/colinhacks/zod).
+Custom ESLint rules for [Zod](https://github.com/colinhacks/zod) and [ESLint@9](https://eslint.org).
 
 ## Rules
 
@@ -56,25 +56,24 @@ pnpm add --save-dev eslint eslint-plugin-zod-x
 
 ### Typescript
 
-> [!NOTE]
-> In order to replace all type occurrences typescript parser should be used
-
 ```js
 // eslint.config.js
-import eslintPluginZodX from 'eslint-plugin-zod-x';
-import typescriptEslintParser from '@typescript-eslint/parser';
+import eslint from "@eslint/js";
+import { defineConfig } from "eslint/config";
+import tseslint from "typescript-eslint";
+import eslintPluginZodX from "eslint-plugin-zod-x";
 
-export default [
-  // other configs
-  // ...
+export default defineConfig(
+  eslint.configs.recommended,
+  tseslint.configs.recommendedTypeChecked,
+  eslintPluginZodX.configs.recommended,
   {
-    ...eslintPluginZodX.configs.recommended,
     languageOptions: {
-      ...eslintPluginZodX.configs.recommended.languageOptions,
-      parser: typescriptEslintParser,
+      // ...
     },
-  },
-];
+  }
+);
+
 ```
 
 ### Javascript
