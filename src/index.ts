@@ -5,6 +5,7 @@ import { arrayStyle } from './rules/array-style.js';
 import { noAny } from './rules/no-any.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
 import { preferMeta } from './rules/prefer-meta.js';
+import { preferMetaLast } from './rules/prefer-meta-last.js';
 import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
 
 const eslintPluginZodX = {
@@ -19,6 +20,7 @@ const eslintPluginZodX = {
     'no-any': noAny,
     'no-throw-in-refine': noThrowInRefine,
     'prefer-meta': preferMeta,
+    'prefer-meta-last': preferMetaLast,
     'prefer-namespace-import': preferNamespaceImport,
     /* eslint-enable @typescript-eslint/naming-convention */
   },
@@ -32,11 +34,12 @@ eslintPluginZodX.configs.recommended = {
     'zod-x': eslintPluginZodX,
   },
   rules: {
-    'zod-x/array-style': ['error'],
-    'zod-x/no-any': ['error'],
-    'zod-x/no-throw-in-refine': ['error'],
-    'zod-x/prefer-meta': ['error'],
-    'zod-x/prefer-namespace-import': ['error'],
+    'zod-x/array-style': 'error',
+    'zod-x/no-any': 'error',
+    'zod-x/no-throw-in-refine': 'error',
+    'zod-x/prefer-meta': 'error',
+    'zod-x/prefer-meta-last': 'error',
+    'zod-x/prefer-namespace-import': 'error',
   },
   /* eslint-enable @typescript-eslint/naming-convention */
 };
