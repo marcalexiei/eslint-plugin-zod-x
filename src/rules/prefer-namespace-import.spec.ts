@@ -8,23 +8,23 @@ ruleTester.run('prefer-namespace-import', preferNamespaceImport, {
   valid: [
     {
       name: 'Correct usage',
-      code: `import * as z from "zod";`,
+      code: 'import * as z from "zod";',
     },
     {
       name: 'Alias is fine',
-      code: `import * as myZod from "zod";`,
+      code: 'import * as myZod from "zod";',
     },
     {
       name: 'Type imports',
-      code: `import type * as myZod from "zod";`,
+      code: 'import type * as myZod from "zod";',
     },
     {
       name: 'Unrelated imports',
-      code: `import { something } from "react";`,
+      code: 'import { something } from "react";',
     },
     {
       name: 'zod/mini',
-      code: `import * as z from "zod/mini";`,
+      code: 'import * as z from "zod/mini";',
     },
   ],
 
@@ -45,7 +45,7 @@ ruleTester.run('prefer-namespace-import', preferNamespaceImport, {
       name: 'Multiple named imports',
       code: `import { object, string } from "zod";`,
       errors: [{ messageId: 'useNamespace' }],
-      output: `import * as object from 'zod';`, // fixes to first specifier name
+      output: `import * as object from 'zod';`,
     },
     {
       name: 'Mixed default + named',

@@ -8,16 +8,16 @@ ruleTester.run('prefer-meta', preferMeta, {
   valid: [
     {
       name: 'Correct usage',
-      code: `z.string().meta({ description: 'desc' })`,
+      code: 'z.string().meta({ description: "desc" })',
     },
   ],
 
   invalid: [
     {
       name: 'describe with string',
-      code: `z.string().describe('desc').trim()`,
+      code: 'z.string().describe("desc").trim()',
       errors: [{ messageId: 'preferMeta' }],
-      output: `z.string().meta({ description: 'desc' }).trim()`,
+      output: 'z.string().meta({ description: "desc" }).trim()',
     },
     {
       name: 'describe with literal',

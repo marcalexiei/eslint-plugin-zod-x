@@ -28,9 +28,9 @@ ruleTester.run('prefer-meta-last', preferMetaLast, {
   invalid: [
     {
       name: 'meta() before another method',
-      code: `z.string().meta({ description: 'desc' }).trim()`,
+      code: 'z.string().meta({ description: "desc" }).trim()',
       errors: [{ messageId: 'metaNotLast' }],
-      output: `z.string().trim().meta({ description: 'desc' })`,
+      output: `z.string().trim().meta({ description: "desc" })`,
     },
     {
       name: 'meta() followed by transform()',
