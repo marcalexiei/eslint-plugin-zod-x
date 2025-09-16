@@ -7,6 +7,7 @@ import { noThrowInRefine } from './rules/no-throw-in-refine.js';
 import { preferMeta } from './rules/prefer-meta.js';
 import { preferMetaLast } from './rules/prefer-meta-last.js';
 import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
+import { preferStrictObjet } from './rules/prefer-strict-object.js';
 
 const eslintPluginZodX = {
   meta: {
@@ -22,6 +23,7 @@ const eslintPluginZodX = {
     'prefer-meta': preferMeta,
     'prefer-meta-last': preferMetaLast,
     'prefer-namespace-import': preferNamespaceImport,
+    'prefer-strict-object': preferStrictObjet,
     /* eslint-enable @typescript-eslint/naming-convention */
   },
 } as const satisfies TSESLint.FlatConfig.Plugin;

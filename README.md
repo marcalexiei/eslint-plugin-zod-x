@@ -35,6 +35,7 @@ Custom ESLint rules for [Zod](https://github.com/colinhacks/zod) and [ESLint@9](
 | [prefer-meta](docs/rules/prefer-meta.md)                         | Enforce usage of .meta() over .describe()                               | ✅  | 🔧  |
 | [prefer-meta-last](docs/rules/prefer-meta-last.md)               | Enforce .meta() as last method                                          | ✅  | 🔧  |
 | [prefer-namespace-import](docs/rules/prefer-namespace-import.md) | Enforce importing zod as a namespace import (import \* as z from 'zod') | ✅  | 🔧  |
+| [prefer-strict-object](docs/rules/prefer-strict-object.md)       | Enforce usage of .strictObject() over .object() and/or .looseObject()   |     |     |
 
 <!-- end auto-generated rules list -->
 
@@ -58,10 +59,10 @@ pnpm add --save-dev eslint eslint-plugin-zod-x
 
 ```js
 // eslint.config.js
-import eslint from "@eslint/js";
-import { defineConfig } from "eslint/config";
-import tseslint from "typescript-eslint";
-import eslintPluginZodX from "eslint-plugin-zod-x";
+import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
+import tseslint from 'typescript-eslint';
+import eslintPluginZodX from 'eslint-plugin-zod-x';
 
 export default defineConfig(
   eslint.configs.recommended,
@@ -71,9 +72,8 @@ export default defineConfig(
     languageOptions: {
       // ...
     },
-  }
+  },
 );
-
 ```
 
 ### Javascript
