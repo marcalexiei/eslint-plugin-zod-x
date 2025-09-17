@@ -44,8 +44,6 @@ const schema = z.strictObject({ foo: z.string() });
 ✅ Allows only `z.strictObject()`
 ❌ Reports both `z.object()` and `z.looseObject()`
 
----
-
 ### Allow `object`
 
 ```json
@@ -58,8 +56,6 @@ const schema = z.strictObject({ foo: z.string() });
 
 ✅ Allows `z.object()` and `z.strictObject()`
 ❌ Reports `z.looseObject()`
-
----
 
 ### Allow `object` and `looseObject`
 
