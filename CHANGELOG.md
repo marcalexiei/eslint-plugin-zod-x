@@ -1,5 +1,11 @@
 # eslint-plugin-zod-x
 
+## 1.0.2
+
+### Patch Changes
+
+- [`4ad66fc`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/4ad66fcaa29c0d214a0b204bec39a8ea21c45d2b) Thanks [@marcalexiei](https://github.com/marcalexiei)! - chore: refine `.npmrc` (userland not affected)
+
 ## 1.0.1
 
 ### Patch Changes
