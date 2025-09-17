@@ -25,3 +25,7 @@ pnpm run lint:docs
 ## Commit rules
 
 <https://marcalexiei.github.io/contribute/commit-rules.html>
+
+## Release
+
+<https://marcalexiei.github.io/contribute/release-changesets.html>
