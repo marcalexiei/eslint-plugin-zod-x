@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-zod-x",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "description": "ESLint plugin for Zod",
   "engines": {
