@@ -7,8 +7,7 @@
     "node": "^20 || ^22 || ^24"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.cts",
