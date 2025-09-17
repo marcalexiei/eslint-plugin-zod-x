@@ -17,6 +17,7 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
         cache: 'pnpm'
+        registry-url: 'https://registry.npmjs.org'
 
     - name: Setup Node.js (via .nvmrc)
       if: ${{ !inputs.node-version }}
@@ -24,6 +25,7 @@ runs:
       with:
         node-version-file: '.nvmrc'
         cache: 'pnpm'
+        registry-url: 'https://registry.npmjs.org'
 
     - name: Install Dependencies
       shell: bash
