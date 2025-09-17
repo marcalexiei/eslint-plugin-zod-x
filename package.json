@@ -36,7 +36,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/marcalexiei/eslint-plugin-zod-x.git"
+    "url": "https://github.com/marcalexiei/eslint-plugin-zod-x"
   },
   "zshy": {
     "exports": "./src/index.ts"
