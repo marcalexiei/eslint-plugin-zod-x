@@ -1,5 +1,11 @@
 # eslint-plugin-zod-x
 
+## 1.0.1
+
+### Patch Changes
+
+- [`dccc798`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/dccc798bffad3300e1da7de4f48d73afa7696e22) Thanks [@marcalexiei](https://github.com/marcalexiei)! - chore: retry trusted publising
+
 ## 1.0.0
 
 ### Major Changes
