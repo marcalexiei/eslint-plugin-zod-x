@@ -3,6 +3,7 @@ import type { TSESLint } from '@typescript-eslint/utils';
 import { PLUGIN_NAME, PLUGIN_VERSION } from './meta.js';
 import { arrayStyle } from './rules/array-style.js';
 import { noAny } from './rules/no-any.js';
+import { noEmptyCustomSchema } from './rules/no-empty-custom-schema.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
 import { preferMeta } from './rules/prefer-meta.js';
 import { preferMetaLast } from './rules/prefer-meta-last.js';
@@ -19,6 +20,7 @@ const eslintPluginZodX = {
     /* eslint-disable @typescript-eslint/naming-convention */
     'array-style': arrayStyle,
     'no-any': noAny,
+    'no-empty-custom-schema': noEmptyCustomSchema,
     'no-throw-in-refine': noThrowInRefine,
     'prefer-meta': preferMeta,
     'prefer-meta-last': preferMetaLast,
@@ -38,6 +40,7 @@ eslintPluginZodX.configs.recommended = {
   rules: {
     'zod-x/array-style': 'error',
     'zod-x/no-any': 'error',
+    'zod-x/no-empty-custom-schema': 'error',
     'zod-x/no-throw-in-refine': 'error',
     'zod-x/prefer-meta': 'error',
     'zod-x/prefer-meta-last': 'error',
