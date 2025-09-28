@@ -32,6 +32,7 @@ Custom ESLint rules for [Zod](https://github.com/colinhacks/zod) and [ESLint@9](
 | :--------------------------------------------------------------- | :---------------------------------------------------------------------- | :-- | :-- | :-- |
 | [array-style](docs/rules/array-style.md)                         | Enforce consistent Zod array style                                      | ✅  | 🔧  |     |
 | [no-any](docs/rules/no-any.md)                                   | Disallow usage of z.any() in Zod schemas                                | ✅  |     | 💡  |
+| [no-empty-custom-schema](docs/rules/no-empty-custom-schema.md)   | Disallow usage of z.custom() without arguments                          | ✅  |     |     |
 | [no-throw-in-refine](docs/rules/no-throw-in-refine.md)           | Disallow throwing errors directly inside Zod refine callbacks           | ✅  |     |     |
 | [prefer-meta](docs/rules/prefer-meta.md)                         | Enforce usage of .meta() over .describe()                               | ✅  | 🔧  |     |
 | [prefer-meta-last](docs/rules/prefer-meta-last.md)               | Enforce .meta() as last method                                          | ✅  | 🔧  |     |

@@ -17,7 +17,7 @@ describe('plugin export', async () => {
     .filter((item) => item.isFile() && !item.name.includes('.spec'))
     .map((item) => path.basename(item.name, '.ts'));
 
-  it('exposes all rules', () => {
+  it('should include all rules created inside `src/rules` folder', () => {
     expect(plugin.rules).toBeTypeOf('object');
     expect(plugin.meta.name).toBeTypeOf('string');
     expect(plugin.meta.version).toBeTypeOf('string');
@@ -26,7 +26,7 @@ describe('plugin export', async () => {
     );
   });
 
-  it('exposes base config', () => {
+  it('should include recommend config', () => {
     const recommendedConfig = plugin.configs.recommended;
     expect(recommendedConfig).toBeTypeOf('object');
     expect(recommendedConfig.name).toBe('eslint-plugin-zod-x/recommended');
