@@ -17,14 +17,14 @@ which defeats its purpose and could lead to runtime issues.
 
 ## Examples
 
-### ❌ Incorrect
+### ❌ Invalid
 
 ```ts
 z.custom();
 z.custom<`${number}px`>(); // Type parameter alone is not enough
 ```
 
-### ✅ Correct
+### ✅ Valid
 
 ```ts
 z.custom((val) => {

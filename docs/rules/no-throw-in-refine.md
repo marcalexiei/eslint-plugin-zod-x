@@ -8,7 +8,19 @@ This ESLint rule detects and prevents **throw statements directly inside Zod `.r
 
 ## Examples
 
-### Valid
+### ❌ Invalid
+
+```ts
+z.number().refine((val) => {
+  if (val < 0) throw new Error('Invalid');
+});
+
+z.string().refine(() => {
+  throw new Error('No');
+});
+```
+
+### ✅ Valid
 
 ```ts
 z.number()
@@ -21,16 +33,4 @@ z.string().refine((val) => {
   }; // Nested function is OK
   return val.length > 0;
 });
-```
-
-### Invalid
-
-```ts
-z.number().refine((val) => {
-  if (val < 0) throw new Error('Invalid'); // ❌ flagged
-});
-
-z.string().refine(() => {
-  throw new Error('No');
-}); // ❌ flagged
 ```

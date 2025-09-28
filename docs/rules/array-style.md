@@ -22,19 +22,18 @@ This rule enforces a consistent style for defining arrays in Zod schemas. You ca
 - **Method style**: `.array()`
 
 By default, `function` is used to maintain consistency with TypeScript’s `Array` generic syntax.
-For more details on the reasoning behind this, see <https://tkdodo.eu/blog/array-types-in-type-script>.
 
 ## Examples
 
 ### `function`
 
-#### Valid
+#### ✅ Valid
 
 ```ts
 z.array(z.string());
 ```
 
-#### Invalid
+#### ❌ Invalid
 
 ```ts
 z.string().array();
@@ -44,16 +43,20 @@ z.string().trim().array();
 
 ### `method`
 
-#### Valid
+#### ✅ Valid
 
 ```ts
 z.string().array(); // method
 ```
 
-#### Invalid
+#### ❌ Invalid
 
 ```ts
 z.array(z.string());
 
 z.array(z.string().trim());
 ```
+
+## Further Reading
+
+- [Array Types in TypeScript](https://tkdodo.eu/blog/array-types-in-type-script)
