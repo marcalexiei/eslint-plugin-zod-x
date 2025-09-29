@@ -2,6 +2,7 @@ import type { TSESLint } from '@typescript-eslint/utils';
 
 import { PLUGIN_NAME, PLUGIN_VERSION } from './meta.js';
 import { arrayStyle } from './rules/array-style.js';
+import { consistentImportSource } from './rules/consistent-import-source.js';
 import { noAny } from './rules/no-any.js';
 import { noEmptyCustomSchema } from './rules/no-empty-custom-schema.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
@@ -19,6 +20,7 @@ const eslintPluginZodX = {
   rules: {
     /* eslint-disable @typescript-eslint/naming-convention */
     'array-style': arrayStyle,
+    'consistent-import-source': consistentImportSource,
     'no-any': noAny,
     'no-empty-custom-schema': noEmptyCustomSchema,
     'no-throw-in-refine': noThrowInRefine,

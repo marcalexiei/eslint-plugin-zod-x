@@ -28,16 +28,17 @@ Custom ESLint rules for [Zod](https://github.com/colinhacks/zod) and [ESLint@9](
 🔧 Automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/user-guide/command-line-interface#--fix).\
 💡 Manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).
 
-| Name                                                             | Description                                                             | 💼  | 🔧  | 💡  |
-| :--------------------------------------------------------------- | :---------------------------------------------------------------------- | :-- | :-- | :-- |
-| [array-style](docs/rules/array-style.md)                         | Enforce consistent Zod array style                                      | ✅  | 🔧  |     |
-| [no-any](docs/rules/no-any.md)                                   | Disallow usage of z.any() in Zod schemas                                | ✅  |     | 💡  |
-| [no-empty-custom-schema](docs/rules/no-empty-custom-schema.md)   | Disallow usage of z.custom() without arguments                          | ✅  |     |     |
-| [no-throw-in-refine](docs/rules/no-throw-in-refine.md)           | Disallow throwing errors directly inside Zod refine callbacks           | ✅  |     |     |
-| [prefer-meta](docs/rules/prefer-meta.md)                         | Enforce usage of .meta() over .describe()                               | ✅  | 🔧  |     |
-| [prefer-meta-last](docs/rules/prefer-meta-last.md)               | Enforce .meta() as last method                                          | ✅  | 🔧  |     |
-| [prefer-namespace-import](docs/rules/prefer-namespace-import.md) | Enforce importing zod as a namespace import (import \* as z from 'zod') | ✅  | 🔧  |     |
-| [prefer-strict-object](docs/rules/prefer-strict-object.md)       | Enforce usage of .strictObject() over .object() and/or .looseObject()   |     |     |     |
+| Name                                                               | Description                                                             | 💼  | 🔧  | 💡  |
+| :----------------------------------------------------------------- | :---------------------------------------------------------------------- | :-- | :-- | :-- |
+| [array-style](docs/rules/array-style.md)                           | Enforce consistent Zod array style                                      | ✅  | 🔧  |     |
+| [consistent-import-source](docs/rules/consistent-import-source.md) | Enforce consistent source from Zod imports                              |     |     |     |
+| [no-any](docs/rules/no-any.md)                                     | Disallow usage of z.any() in Zod schemas                                | ✅  |     | 💡  |
+| [no-empty-custom-schema](docs/rules/no-empty-custom-schema.md)     | Disallow usage of z.custom() without arguments                          | ✅  |     |     |
+| [no-throw-in-refine](docs/rules/no-throw-in-refine.md)             | Disallow throwing errors directly inside Zod refine callbacks           | ✅  |     |     |
+| [prefer-meta](docs/rules/prefer-meta.md)                           | Enforce usage of .meta() over .describe()                               | ✅  | 🔧  |     |
+| [prefer-meta-last](docs/rules/prefer-meta-last.md)                 | Enforce .meta() as last method                                          | ✅  | 🔧  |     |
+| [prefer-namespace-import](docs/rules/prefer-namespace-import.md)   | Enforce importing zod as a namespace import (import \* as z from 'zod') | ✅  | 🔧  |     |
+| [prefer-strict-object](docs/rules/prefer-strict-object.md)         | Enforce usage of .strictObject() over .object() and/or .looseObject()   |     |     |     |
 
 <!-- end auto-generated rules list -->
 
