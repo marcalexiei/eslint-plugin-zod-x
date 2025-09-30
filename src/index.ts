@@ -10,6 +10,7 @@ import { preferMeta } from './rules/prefer-meta.js';
 import { preferMetaLast } from './rules/prefer-meta-last.js';
 import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
 import { preferStrictObjet } from './rules/prefer-strict-object.js';
+import { requireSchemaSuffix } from './rules/require-schema-suffix.js';
 
 const eslintPluginZodX = {
   meta: {
@@ -28,6 +29,7 @@ const eslintPluginZodX = {
     'prefer-meta-last': preferMetaLast,
     'prefer-namespace-import': preferNamespaceImport,
     'prefer-strict-object': preferStrictObjet,
+    'require-schema-suffix': requireSchemaSuffix,
     /* eslint-enable @typescript-eslint/naming-convention */
   },
 } as const satisfies TSESLint.FlatConfig.Plugin;
@@ -47,6 +49,7 @@ eslintPluginZodX.configs.recommended = {
     'zod-x/prefer-meta': 'error',
     'zod-x/prefer-meta-last': 'error',
     'zod-x/prefer-namespace-import': 'error',
+    'zod-x/require-schema-suffix': 'error',
   },
   /* eslint-enable @typescript-eslint/naming-convention */
 };
