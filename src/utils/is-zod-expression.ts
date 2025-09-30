@@ -7,7 +7,7 @@ export function isZodIdentifier(
   return node.type === AST_NODE_TYPES.Identifier && node.name === 'z';
 }
 
-function isZodAtTheBeginningOfMemberExpression(
+export function isZodAtTheBeginningOfMemberExpression(
   node: TSESTree.MemberExpression,
 ): boolean {
   // Check if we are at the beginning of the expression and it starts with zod
