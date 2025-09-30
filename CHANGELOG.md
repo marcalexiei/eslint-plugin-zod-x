@@ -1,5 +1,11 @@
 # eslint-plugin-zod-x
 
+## 1.3.0
+
+### Minor Changes
+
+- [#21](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/21) [`530182d`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/530182d3d135aa85dc042ba322da551f23ae3f51) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(require-schema-suffix): add new rule
+
 ## 1.2.0
 
 ### Minor Changes
