@@ -1,4 +1,3 @@
-/* eslint import-x/no-extraneous-dependencies: ['error', { devDependencies: true }] */
 import * as prettier from 'prettier';
 import prettierConfig from '@marcalexiei/prettier-config';
 

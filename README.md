@@ -62,8 +62,8 @@ pnpm add --save-dev eslint eslint-plugin-zod-x
 
 ```js
 // eslint.config.js
-import eslint from '@eslint/js';
 import { defineConfig } from 'eslint/config';
+import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import eslintPluginZodX from 'eslint-plugin-zod-x';
 
