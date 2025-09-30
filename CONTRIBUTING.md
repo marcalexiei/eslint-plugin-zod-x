@@ -7,7 +7,7 @@
 To check that every thing works correctly run:
 
 ```shell
-pnpm run build && pnpm run test
+pnpm run check-all
 ```
 
 ## Documentation changes
