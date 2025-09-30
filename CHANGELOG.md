@@ -1,5 +1,11 @@
 # eslint-plugin-zod-x
 
+## 1.2.0
+
+### Minor Changes
+
+- [#19](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/19) [`f2b43dd`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/f2b43dd52faba9253a2f8610d3c7ae30c9b6c73a) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(consistent-import-source): add new rule
+
 ## 1.1.0
 
 ### Minor Changes
