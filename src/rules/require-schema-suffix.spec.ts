@@ -25,8 +25,15 @@ ruleTester.run('require-schema-suffix', requireSchemaSuffix, {
       code: 'const myVar = 1',
     },
     {
-      name: 'Ignore non-zod',
-      code: 'const result = someOtherFunction();',
+      name: 'Ignore z.codec',
+      code: `const stringToDate = z.codec(
+              z.iso.datetime(),
+              z.date(),
+              {
+                decode: (isoString) => new Date(isoString),
+                encode: (date) => date.toISOString(),
+              }
+            );`,
     },
   ],
 
