@@ -45,18 +45,26 @@ export const requireSchemaSuffix = ESLintUtils.RuleCreator(getRuleURL)<
           return;
         }
 
+        const {
+          init: { callee },
+        } = node;
+
         // Check that the initializer is a zod schema declaration
         if (
-          node.init.callee.type !== AST_NODE_TYPES.MemberExpression ||
-          !isZodAtTheBeginningOfMemberExpression(node.init.callee)
+          callee.type !== AST_NODE_TYPES.MemberExpression ||
+          !isZodAtTheBeginningOfMemberExpression(callee)
         ) {
           return;
         }
 
-        const { callee } = node.init;
-
-        // Check that the expression doesn't a method returning data instead of a schema declaration
         if (callee.property.type === AST_NODE_TYPES.Identifier) {
+          // Bail if a codec property is used is detected
+          if (callee.property.name === 'codec') {
+            return;
+          }
+
+          // Check that the expression doesn't have a method
+          // returning data instead of a schema declaration
           const zodMethodNotReturningASchema = [
             'parse',
             'safeParse',

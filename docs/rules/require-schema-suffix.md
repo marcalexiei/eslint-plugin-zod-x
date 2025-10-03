@@ -11,6 +11,12 @@
 This rule enforces a consistent naming convention for Zod schema variables by requiring them to end with a specified suffix (default: 'Schema').
 This helps identify schema declarations and maintains consistent naming across your codebase.
 
+The rule ignores:
+
+- Variables that store parsed values (e.g., `.parse()`, `.safeParse()`)
+- Variables that use `z.codec()` transformations
+- Non-Zod variable declarations
+
 ## Why?
 
 Using a consistent suffix for Zod schemas provides several benefits:
@@ -56,6 +62,12 @@ const userType = z.string();
 // Non-schema declarations are ignored
 const parsedValue = z.string().parse('test');
 const result = someOtherFunction();
+
+// Codec transformations are ignored
+const stringToDate = z.codec(z.iso.datetime(), z.date(), {
+  decode: (isoString) => new Date(isoString),
+  encode: (date) => date.toISOString(),
+});
 ```
 
 ## Configuration
