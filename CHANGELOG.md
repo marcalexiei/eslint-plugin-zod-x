@@ -1,5 +1,17 @@
 # eslint-plugin-zod-x
 
+## 1.4.0
+
+### Minor Changes
+
+- [#26](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/26) [`426005f`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/426005f3ca646051309968ad38131a25908a3628) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(require-error-message): add new rule
+
+### Patch Changes
+
+- [#28](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/28) [`5156928`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/5156928b8fe2713e193d1f7a8d46f3d031a0c09a) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(require-schema-suffix): some data returning methods are missing
+
+- [#29](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/29) [`2cf9d64`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/2cf9d64f641e00fc632151a93583cb2735eca900) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(require-schema-suffix): ignore codec
+
 ## 1.3.0
 
 ### Minor Changes
