@@ -59,11 +59,18 @@ export const requireSchemaSuffix = ESLintUtils.RuleCreator(getRuleURL)<
         if (callee.property.type === AST_NODE_TYPES.Identifier) {
           const zodMethodNotReturningASchema = [
             'parse',
-            'parseAsync',
-            'decode',
-            'decodeAsync',
             'safeParse',
+            'parseAsync',
             'safeParseAsync',
+            'spa', // alias for `safeParseAsync`
+            'encode',
+            'decode',
+            'encodeAsync',
+            'decodeAsync',
+            'safeEncode',
+            'safeDecode',
+            'safeEncodeAsync',
+            'safeDecodeAsync',
           ];
           if (zodMethodNotReturningASchema.includes(callee.property.name)) {
             return;
