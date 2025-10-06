@@ -1,0 +1,73 @@
+name: ✨ New rule
+description: File a proposal for a new rule
+title: 'Add `name` rule'
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 🧩 Description
+      description: |
+        What problem does this rule solve? Why is it valuable?
+        Why is this rule needed? How does it improve code quality or developer experience?
+    validations:
+      required: true
+
+  - type: textarea
+    id: options
+    attributes:
+      label: ⚙️ Options
+      description: What configuration options should this rule support? (if no configuration is expected fill with "N/A")
+    validations:
+      required: true
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: 🧾 Example Configuration
+      description: Show how the rule would be configured in `eslint.config.js`
+      placeholder: |
+        ```ts
+        {
+          "rules": {
+            "zod-x/require-schema-description": "error"
+          }
+        }
+        ```
+    validations:
+      required: false
+
+  - type: textarea
+    id: valid
+    attributes:
+      label: ✅ Valid Code Examples
+      description: Provide one or more **correct** code snippets
+      render: typescript
+      placeholder: |
+        const user = z.object({
+          name: z.string()
+        });
+    validations:
+      required: true
+
+  - type: textarea
+    id: invalid
+    attributes:
+      label: ❌ Invalid Code Examples
+      description: Provide one or more **incorrect** code snippets that the rule should flag
+      render: typescript
+      placeholder: |
+        const user = z.object({
+          name: z.string()
+        });
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: ✒️ Additional context
+      description: |
+        Add any other relevant context info.
+    validations:
+      required: false

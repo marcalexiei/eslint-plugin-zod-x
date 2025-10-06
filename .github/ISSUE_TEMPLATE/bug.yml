@@ -1,0 +1,57 @@
+name: 🐛 Bug Report
+description: File a bug report
+title: 'Bug([rule-name]): <short title>'
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Please fill in the details below** — the clearer the report, the faster we can diagnose and fix it.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 🧩 Description
+      description: |
+        A clear and concise description of *what* the bug is (and in what context).
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: 🪜 How to reproduce
+      description: |
+        Steps to reproduce the issue (include minimal code, link to repo, environment, etc.).
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: ✅ Expected behavior
+      description: |
+        What you expected to happen instead (i.e. no lint error, or a different error).
+      placeholder: |
+        I expected **no rule violation** since `.default()` ensures a value is always present.
+    validations:
+      required: true
+
+  - type: textarea
+    id: system-info
+    attributes:
+      label: 💻 System info
+      description: |
+        Output of `npx envinfo --system --npmPackages 'eslint,eslint-plugin-zod-x' --binaries`
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: ✒️ additional_context
+    attributes:
+      label: ✒️ Additional context
+      description: |
+        Any other info
+    validations:
+      required: false
