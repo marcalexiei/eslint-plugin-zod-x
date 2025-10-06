@@ -17,7 +17,7 @@
 [issuesBadge]: https://img.shields.io/github/issues/marcalexiei/eslint-plugin-zod-x.svg?style=for-the-badge
 [issuesURL]: https://github.com/marcalexiei/eslint-plugin-zod-x/issues
 
-Custom ESLint rules for [Zod](https://github.com/colinhacks/zod) and [ESLint@9](https://eslint.org).
+[ESLint](https://eslint.org) plugin that adds custom linting rules to enforce best practices when using [Zod](https://github.com/colinhacks/zod)
 
 ## Rules
 
@@ -60,8 +60,6 @@ pnpm add --save-dev eslint eslint-plugin-zod-x
 
 ## Configuration
 
-### Typescript
-
 ```js
 // eslint.config.js
 import { defineConfig } from 'eslint/config';
@@ -73,14 +71,5 @@ export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
   eslintPluginZodX.configs.recommended,
-  {
-    languageOptions: {
-      // ...
-    },
-  },
 );
 ```
-
-### Javascript
-
-TODO (?)
