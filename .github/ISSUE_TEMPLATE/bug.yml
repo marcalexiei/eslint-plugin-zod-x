@@ -48,7 +48,7 @@ body:
       required: true
 
   - type: textarea
-    id: ✒️ additional_context
+    id: additional-context
     attributes:
       label: ✒️ Additional context
       description: |

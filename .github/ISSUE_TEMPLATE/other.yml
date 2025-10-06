@@ -18,9 +18,9 @@ body:
       required: true
 
   - type: textarea
-    id: ✒️ additional-context
+    id: additional-context
     attributes:
-      label: Additional context
+      label: ✒️ Additional context
       description: |
         Add any other relevant context info.
     validations:
