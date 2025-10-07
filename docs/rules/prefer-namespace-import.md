@@ -37,7 +37,6 @@ import { z } from 'zod';
 import z from 'zod';
 import { object, string } from 'zod';
 import z, { object } from 'zod';
-import * as z from 'zod';
 ```
 
 ### ✅ Valid
