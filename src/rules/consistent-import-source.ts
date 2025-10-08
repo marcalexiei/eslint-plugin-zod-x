@@ -2,7 +2,7 @@ import { ESLintUtils } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
 
-const ZOD_IMPORT_SOURCES = ['zod', 'zod/v4', 'zod/v3'] as const;
+const ZOD_IMPORT_SOURCES = ['zod', 'zod/mini', 'zod/v4', 'zod/v3'] as const;
 
 type ZodImportSource = (typeof ZOD_IMPORT_SOURCES)[number];
 
