@@ -23,6 +23,18 @@ ruleTester.run('prefer-meta-last', preferMetaLast, {
       name: 'multiple chained metas at the end (still valid)',
       code: 'z.string().min(5).max(10).meta({ a: 1 }).meta({ b: 2 });',
     },
+    {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/42
+      name: 'meta not belonging to zod',
+      code: `export const t = initTRPC
+              .meta<Meta>()
+              .context<typeof createTRPCContext>()
+              .create({});`,
+    },
+    {
+      name: 'meta not belonging to zod',
+      code: 'const t = meta<Meta>()',
+    },
   ],
 
   invalid: [
