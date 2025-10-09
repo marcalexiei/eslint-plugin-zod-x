@@ -1,5 +1,19 @@
 # eslint-plugin-zod-x
 
+## 1.5.0
+
+### Minor Changes
+
+- [#41](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/41) [`0e7b30a`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/0e7b30aeddacdcc37308dd741af5a280a6646214) Thanks [@SimonVadier](https://github.com/SimonVadier)! - feat(consistent-import-source): add support for `zod/mini` and `zod/v4-mini`
+
+### Patch Changes
+
+- [#40](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/40) [`8dff683`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/8dff6836adbf9a22952a498f180c58d214404053) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(prefer-namespace-import): account for type imports
+
+- [#36](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/36) [`da86f6f`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/da86f6f84cbb91cca411d281402d57a4c1fcd261) Thanks [@marcalexiei](https://github.com/marcalexiei)! - docs: improve description meta
+
+- [#43](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/43) [`66f2ab5`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/66f2ab56674853d0fb580b2d153c990a1416088e) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(prefer-meta-last): Matching meta() from other packages
+
 ## 1.4.0
 
 ### Minor Changes
