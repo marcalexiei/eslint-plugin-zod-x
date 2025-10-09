@@ -9,6 +9,11 @@ ruleTester.run('consistent-import-source', consistentImportSource, {
     { code: 'import z from "zod"' },
     { code: 'import z from "zod"', options: [{ sources: ['zod'] }] },
     { code: 'import z from "zod/v4"', options: [{ sources: ['zod/v4'] }] },
+    { code: 'import z from "zod/mini"', options: [{ sources: ['zod/mini'] }] },
+    {
+      code: 'import z from "zod/v4-mini"',
+      options: [{ sources: ['zod/v4-mini'] }],
+    },
   ],
   invalid: [
     {
@@ -27,6 +32,15 @@ ruleTester.run('consistent-import-source', consistentImportSource, {
         {
           messageId: 'sourceNotAllowed',
           data: { source: 'zod/v4', sources: '"zod"' },
+        },
+      ],
+    },
+    {
+      code: 'import z from "zod/mini"',
+      errors: [
+        {
+          messageId: 'sourceNotAllowed',
+          data: { source: 'zod/mini', sources: '"zod"' },
         },
       ],
     },
