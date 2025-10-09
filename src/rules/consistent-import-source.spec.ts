@@ -10,6 +10,10 @@ ruleTester.run('consistent-import-source', consistentImportSource, {
     { code: 'import z from "zod"', options: [{ sources: ['zod'] }] },
     { code: 'import z from "zod/v4"', options: [{ sources: ['zod/v4'] }] },
     { code: 'import z from "zod/mini"', options: [{ sources: ['zod/mini'] }] },
+    {
+      code: 'import z from "zod/v4-mini"',
+      options: [{ sources: ['zod/v4-mini'] }],
+    },
   ],
   invalid: [
     {
