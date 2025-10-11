@@ -33,7 +33,7 @@ const eslintPluginZodX = {
     'require-error-message': requireErrorMessage,
     'require-schema-suffix': requireSchemaSuffix,
     /* eslint-enable @typescript-eslint/naming-convention */
-  },
+  } as Record<string, TSESLint.LooseRuleDefinition>,
 } as const satisfies TSESLint.FlatConfig.Plugin;
 
 eslintPluginZodX.configs.recommended = {

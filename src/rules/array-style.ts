@@ -7,7 +7,7 @@ import {
   isZodSchemaDeclaration,
 } from '../utils/is-zod-expression.js';
 
-export interface Options {
+interface Options {
   style: 'function' | 'method';
 }
 type MessageIds = 'useFunction' | 'useMethod';
