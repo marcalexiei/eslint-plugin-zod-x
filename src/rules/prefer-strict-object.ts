@@ -5,7 +5,7 @@ import { getRuleURL } from '../meta.js';
 
 const methodsPoll = ['object', 'looseObject'] as const;
 
-export interface Options {
+interface Options {
   allow: Array<(typeof methodsPoll)[number]>;
 }
 type MessageIds = 'useStrictObject';

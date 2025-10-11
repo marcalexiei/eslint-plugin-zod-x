@@ -3,7 +3,7 @@ import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 import { isZodAtTheBeginningOfMemberExpression } from '../utils/is-zod-expression.js';
 import { getRuleURL } from '../meta.js';
 
-export interface Options {
+interface Options {
   suffix: string;
 }
 

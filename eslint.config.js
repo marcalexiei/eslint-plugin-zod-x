@@ -13,40 +13,7 @@ export default defineConfig(
     rules: {
       ...configTS.rules,
       '@typescript-eslint/naming-convention': [
-        'error',
-        {
-          selector: 'default',
-          format: ['camelCase'],
-          leadingUnderscore: 'allow',
-          trailingUnderscore: 'allow',
-        },
-
-        {
-          selector: 'import',
-          format: ['camelCase', 'PascalCase'],
-        },
-
-        {
-          selector: 'variable',
-          format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
-          leadingUnderscore: 'allow',
-          trailingUnderscore: 'allow',
-        },
-
-        {
-          selector: 'function',
-          format: ['camelCase', 'PascalCase'],
-        },
-
-        {
-          selector: 'typeLike',
-          format: ['PascalCase'],
-        },
-
-        {
-          selector: 'enumMember',
-          format: ['UPPER_CASE'],
-        },
+        ...configTS.rules['@typescript-eslint/naming-convention'],
         // for ruleListener
         {
           selector: 'objectLiteralMethod',
