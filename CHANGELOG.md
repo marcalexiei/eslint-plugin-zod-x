@@ -1,5 +1,20 @@
 # eslint-plugin-zod-x
 
+## 1.5.1
+
+### Patch Changes
+
+- [#45](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/45) [`caee00f`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/caee00fc60cb29193ea90d696969dd9ab9ab96b6) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: simplify plugin type
+
+  Refactor plugin `rules` object to use `Record<string, TSESLint.LooseRuleDefinition>` type.
+  This eliminates the need to export rule options from individual rule files, fixing the `TS4023` TypeScript error:
+
+  ```text
+  Exported variable 'eslintPluginZodX' has or is using name 'Options' from external module "./src/rules/array-style" but cannot be named.
+  ```
+
+- [#50](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/50) [`65f6dc8`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/65f6dc809179e444329e812fe4b8a9800478f9ca) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: plugin type is incompatible with `eslint#defineConfig`
+
 ## 1.5.0
 
 ### Minor Changes
