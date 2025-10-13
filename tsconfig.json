@@ -15,6 +15,9 @@
     "module": "NodeNext",
     "target": "ES6",
 
+    // Emit
+    "removeComments": true,
+
     // Language and Environment
     "moduleResolution": "NodeNext",
 
