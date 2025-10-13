@@ -1,4 +1,4 @@
-import type { TSESLint } from '@typescript-eslint/utils';
+import type { ESLint, Linter, Rule } from 'eslint';
 
 import { PLUGIN_NAME, PLUGIN_VERSION } from './meta.js';
 import { arrayStyle } from './rules/array-style.js';
@@ -18,7 +18,6 @@ const eslintPluginZodX = {
     name: PLUGIN_NAME,
     version: PLUGIN_VERSION,
   },
-  configs: {} as { recommended: TSESLint.FlatConfig.Config },
   rules: {
     /* eslint-disable @typescript-eslint/naming-convention */
     'array-style': arrayStyle,
@@ -33,15 +32,15 @@ const eslintPluginZodX = {
     'require-error-message': requireErrorMessage,
     'require-schema-suffix': requireSchemaSuffix,
     /* eslint-enable @typescript-eslint/naming-convention */
-  } as Record<string, TSESLint.LooseRuleDefinition>,
-} as const satisfies TSESLint.FlatConfig.Plugin;
+  } as unknown as Record<string, Rule.RuleModule>,
+} as const;
 
-eslintPluginZodX.configs.recommended = {
+const recommendedConfig: Linter.Config = {
   name: `${PLUGIN_NAME}/recommended`,
   files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
   /* eslint-disable @typescript-eslint/naming-convention */
   plugins: {
-    'zod-x': eslintPluginZodX,
+    'zod-x': eslintPluginZodX as ESLint.Plugin,
   },
   rules: {
     'zod-x/array-style': 'error',
@@ -57,4 +56,13 @@ eslintPluginZodX.configs.recommended = {
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 
-export default eslintPluginZodX;
+export default {
+  ...eslintPluginZodX,
+  configs: {
+    recommended: recommendedConfig,
+  },
+} satisfies ESLint.Plugin;
+/**
+ * why `satisfies`?
+ * @see https://github.com/marcalexiei/eslint-plugin-zod-x/issues/49
+ */
