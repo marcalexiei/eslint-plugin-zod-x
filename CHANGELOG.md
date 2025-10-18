@@ -1,5 +1,11 @@
 # eslint-plugin-zod-x
 
+## 1.6.0
+
+### Minor Changes
+
+- [#53](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/53) [`2dba641`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/2dba641334936362e95a8d802ff8a182344434fd) Thanks [@ulrichstark](https://github.com/ulrichstark)! - feat(no-optional-and-default-together): add new rule
+
 ## 1.5.1
 
 ### Patch Changes
