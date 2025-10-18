@@ -8,7 +8,8 @@
 
 ## Rule Details
 
-This rule reports when both `.optional()` and `.default()` are used on the same Zod schema. Having a default value already makes a schema optional, so using both is redundant.
+This rule reports when both `.optional()` and `.default()` are used on the same Zod schema.
+Since having a default value implicitly makes a schema optional, using both methods is redundant.
 
 ## Options
 
@@ -22,7 +23,8 @@ This rule reports when both `.optional()` and `.default()` are used on the same 
 
 ### `preferredMethod: 'none'` (default)
 
-Reports the error without providing an automatic fix. This allows developers to manually decide how to resolve the issue.
+Reports the error without providing an automatic fix.
+This allows developers to manually decide how to resolve the issue.
 
 ### `preferredMethod: 'default'`
 
@@ -120,7 +122,8 @@ z.number().default(42).optional();
 
 ## When Not To Use It
 
-If you have a specific use case where you intentionally want both `.optional()` and `.default()` in your schema, you may want to disable this rule. However, this is generally not recommended as it creates redundant code.
+If you have a specific use case that requires both `.optional()` and `.default()` in your schema, you may want to disable this rule.
+However, this is generally not recommended as it creates redundant and potentially confusing code.
 
 ## Further Reading
 
