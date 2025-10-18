@@ -1,6 +1,8 @@
 name: ✨ New rule
 description: File a proposal for a new rule
 title: 'Add `<name>` rule'
+labels:
+  - enhancement
 
 body:
   - type: textarea
