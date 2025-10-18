@@ -5,6 +5,7 @@ import { arrayStyle } from './rules/array-style.js';
 import { consistentImportSource } from './rules/consistent-import-source.js';
 import { noAny } from './rules/no-any.js';
 import { noEmptyCustomSchema } from './rules/no-empty-custom-schema.js';
+import { noOptionalAndDefaultTogether } from './rules/no-optional-and-default-together.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
 import { preferMeta } from './rules/prefer-meta.js';
 import { preferMetaLast } from './rules/prefer-meta-last.js';
@@ -24,6 +25,7 @@ const eslintPluginZodX = {
     'consistent-import-source': consistentImportSource,
     'no-any': noAny,
     'no-empty-custom-schema': noEmptyCustomSchema,
+    'no-optional-and-default-together': noOptionalAndDefaultTogether,
     'no-throw-in-refine': noThrowInRefine,
     'prefer-meta': preferMeta,
     'prefer-meta-last': preferMetaLast,
@@ -46,6 +48,7 @@ const recommendedConfig: Linter.Config = {
     'zod-x/array-style': 'error',
     'zod-x/no-any': 'error',
     'zod-x/no-empty-custom-schema': 'error',
+    'zod-x/no-optional-and-default-together': 'error',
     'zod-x/no-throw-in-refine': 'error',
     'zod-x/prefer-meta': 'error',
     'zod-x/prefer-meta-last': 'error',
