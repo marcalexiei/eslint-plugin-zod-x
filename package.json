@@ -67,7 +67,7 @@
   "devDependencies": {
     "@changesets/changelog-github": "0.5.1",
     "@changesets/cli": "2.29.7",
-    "@marcalexiei/eslint-config": "4.0.0",
+    "@marcalexiei/eslint-config": "4.1.0",
     "@marcalexiei/prettier-config": "1.1.4",
     "@types/node": "24.7.0",
     "@typescript-eslint/rule-tester": "8.46.0",
