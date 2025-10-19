@@ -22,26 +22,20 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      id-token: write # added for provenance
+      id-token: write # Required for OIDC (Trusted publishing)
 
     steps:
-      - name: Create access token for GitHub App
-        uses: actions/create-github-app-token@v2
-        id: app-token
+      - name: Setup release helper
+        id: release-helper
+        uses: marcalexiei/github-actions/.github/actions/setup-github-app-user-bot@main
         with:
           app-id: ${{ vars.RELEASE_HELPER_APP_ID }}
           private-key: ${{ secrets.RELEASE_HELPER_PRIVATE_KEY }}
 
-      - name: Get GitHub App User ID
-        id: app-user-id
-        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-
       - name: Configure git user for GitHub App
         run: |
-          git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
-          git config --global user.email '${{ steps.app-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
+          git config --global user.name '${{ steps.release-helper.outputs.bot-name }}'
+          git config --global user.email '${{ steps.release-helper.outputs.bot-email }}'
 
       - name: Checkout
         uses: actions/checkout@v5
@@ -60,7 +54,7 @@ jobs:
           publish: 'pnpm release'
           setupGitUser: false
         env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          GITHUB_TOKEN: ${{ steps.release-helper.outputs.token }}
 
   on-ci-fail:
     name: 'Failure'
