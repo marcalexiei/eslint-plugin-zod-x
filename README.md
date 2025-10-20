@@ -34,6 +34,7 @@
 | [consistent-import-source](docs/rules/consistent-import-source.md)                 | Enforce consistent source from Zod imports                                |     |     |     |
 | [no-any](docs/rules/no-any.md)                                                     | Disallow usage of z.any() in Zod schemas                                  | ✅  |     | 💡  |
 | [no-empty-custom-schema](docs/rules/no-empty-custom-schema.md)                     | Disallow usage of z.custom() without arguments                            | ✅  |     |     |
+| [no-number-schema-with-int](docs/rules/no-number-schema-with-int.md)               | Disallow usage of `z.number().int()` as it is considered legacy           | ✅  | 🔧  |     |
 | [no-optional-and-default-together](docs/rules/no-optional-and-default-together.md) | Disallow using both `.optional()` and `.default()` on the same Zod schema | ✅  | 🔧  |     |
 | [no-throw-in-refine](docs/rules/no-throw-in-refine.md)                             | Disallow throwing errors directly inside Zod refine callbacks             | ✅  |     |     |
 | [prefer-meta](docs/rules/prefer-meta.md)                                           | Enforce usage of .meta() over .describe()                                 | ✅  | 🔧  |     |
