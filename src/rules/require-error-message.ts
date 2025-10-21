@@ -83,7 +83,7 @@ export const requireErrorMessage = ESLintUtils.RuleCreator(getRuleURL)({
                 let [, end] = messagePropertyNode.range;
 
                 // If there’s a comma after the property, include it
-                if (nextToken && nextToken.value === ',') {
+                if (nextToken?.value === ',') {
                   end = nextToken.range[1];
                 }
 
