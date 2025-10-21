@@ -14,6 +14,19 @@ import { preferStrictObjet } from './rules/prefer-strict-object.js';
 import { requireErrorMessage } from './rules/require-error-message.js';
 import { requireSchemaSuffix } from './rules/require-schema-suffix.js';
 
+interface CompatibleConfig {
+  name?: string;
+  rules?: object;
+  plugins?: Record<string, CompatiblePlugin>;
+}
+
+interface CompatiblePlugin {
+  meta: {
+    name: string;
+    version: string;
+  };
+}
+
 const eslintPluginZodX = {
   meta: {
     name: PLUGIN_NAME,
@@ -35,14 +48,14 @@ const eslintPluginZodX = {
     'require-schema-suffix': requireSchemaSuffix,
     /* eslint-enable @typescript-eslint/naming-convention */
   } as unknown as Record<string, Rule.RuleModule>,
-} as const;
+} satisfies ESLint.Plugin as CompatiblePlugin;
 
-const recommendedConfig: Linter.Config = {
+const recommendedConfig = {
   name: `${PLUGIN_NAME}/recommended`,
   files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
   /* eslint-disable @typescript-eslint/naming-convention */
   plugins: {
-    'zod-x': eslintPluginZodX as ESLint.Plugin,
+    'zod-x': eslintPluginZodX,
   },
   rules: {
     'zod-x/array-style': 'error',
@@ -57,7 +70,7 @@ const recommendedConfig: Linter.Config = {
     'zod-x/require-schema-suffix': 'error',
   },
   /* eslint-enable @typescript-eslint/naming-convention */
-};
+} satisfies Linter.Config as CompatibleConfig;
 
 export default {
   ...eslintPluginZodX,

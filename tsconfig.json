@@ -16,12 +16,15 @@
     "target": "ES6",
 
     // Emit
+    "noEmit": true,
     "removeComments": true,
 
     // Language and Environment
     "moduleResolution": "NodeNext",
 
     // Interop Constraints
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+
+    "skipLibCheck": true
   }
 }
