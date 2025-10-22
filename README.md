@@ -48,6 +48,8 @@
 
 ## Installation
 
+Install **eslint** and **eslint-plugin-zod-x** using your preferred package manager:
+
 ```shell
 npm i --save-dev eslint eslint-plugin-zod-x
 ```
@@ -62,16 +64,28 @@ pnpm add --save-dev eslint eslint-plugin-zod-x
 
 ## Configuration
 
-```js
+1. Import the plugin
+
+   ```ts
+   import eslintPluginZodX from 'eslint-plugin-zod-x';
+   ```
+
+2. Add `recommended` config to your ESLint setup
+
+   ```ts
+   eslintPluginZodX.configs.recommended,
+   ```
+
+Here’s a minimal example using the flat config format:
+
+```ts
 // eslint.config.js
 import { defineConfig } from 'eslint/config';
 import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
 import eslintPluginZodX from 'eslint-plugin-zod-x';
 
 export default defineConfig(
   eslint.configs.recommended,
-  tseslint.configs.recommendedTypeChecked,
   eslintPluginZodX.configs.recommended,
 );
 ```
