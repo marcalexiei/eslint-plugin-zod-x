@@ -17,7 +17,7 @@ export const preferNamespaceImport = ESLintUtils.RuleCreator(getRuleURL)({
     type: 'suggestion',
     docs: {
       description:
-        "Enforce importing zod as a namespace import (import * as z from 'zod')",
+        "Enforce importing zod as a namespace import (`import * as z from 'zod'`)",
     },
     fixable: 'code',
     messages: {

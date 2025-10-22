@@ -1,4 +1,4 @@
-# Enforce usage of .strictObject() over .object() and/or .looseObject() (`zod-x/prefer-strict-object`)
+# Enforce usage of `.strictObject()` over `.object()` and/or `.looseObject()` (`zod-x/prefer-strict-object`)
 
 <!-- end auto-generated rule header -->
 

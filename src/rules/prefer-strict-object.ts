@@ -21,10 +21,10 @@ export const preferStrictObjet = ESLintUtils.RuleCreator(getRuleURL)<
     type: 'suggestion',
     docs: {
       description:
-        'Enforce usage of .strictObject() over .object() and/or .looseObject()',
+        'Enforce usage of `.strictObject()` over `.object()` and/or `.looseObject()`',
     },
     messages: {
-      useStrictObject: 'Use .strictObject() instead of .{{method}}()',
+      useStrictObject: 'Use `.strictObject()` instead of `.{{method}}()`',
     },
     schema: [
       {

@@ -9,11 +9,11 @@ export const preferMetaLast = ESLintUtils.RuleCreator(getRuleURL)({
   meta: {
     type: 'suggestion',
     docs: {
-      description: 'Enforce .meta() as last method',
+      description: 'Enforce `.meta()` as last method',
     },
     fixable: 'code',
     messages: {
-      metaNotLast: 'The .meta() methods should be the last one called',
+      metaNotLast: 'The `.meta()` methods should be the last one called',
     },
     schema: [],
   },

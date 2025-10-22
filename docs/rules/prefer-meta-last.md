@@ -1,4 +1,4 @@
-# Enforce .meta() as last method (`zod-x/prefer-meta-last`)
+# Enforce `.meta()` as last method (`zod-x/prefer-meta-last`)
 
 💼 This rule is enabled in the ✅ `recommended` config.
 
