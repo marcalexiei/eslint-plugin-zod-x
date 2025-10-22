@@ -9,11 +9,11 @@ export const noEmptyCustomSchema = ESLintUtils.RuleCreator(getRuleURL)({
     hasSuggestions: false,
     type: 'suggestion',
     docs: {
-      description: 'Disallow usage of z.custom() without arguments',
+      description: 'Disallow usage of `z.custom()` without arguments',
     },
     messages: {
       noEmptyCustomSchema:
-        'You should provide a validate function within z.custom() ',
+        'You should provide a validate function within `z.custom()`',
     },
     schema: [],
   },

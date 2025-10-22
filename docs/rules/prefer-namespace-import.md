@@ -1,4 +1,4 @@
-# Enforce importing zod as a namespace import (import \* as z from 'zod') (`zod-x/prefer-namespace-import`)
+# Enforce importing zod as a namespace import (`import * as z from 'zod'`) (`zod-x/prefer-namespace-import`)
 
 💼 This rule is enabled in the ✅ `recommended` config.
 

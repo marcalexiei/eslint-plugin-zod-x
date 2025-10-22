@@ -9,11 +9,11 @@ export const preferMeta = ESLintUtils.RuleCreator(getRuleURL)({
     type: 'suggestion',
     fixable: 'code',
     docs: {
-      description: 'Enforce usage of .meta() over .describe()',
+      description: 'Enforce usage of `.meta()` over `.describe()`',
     },
     messages: {
       preferMeta:
-        'The .describe() method still exists for compatibility with Zod 3, but .meta() is now the recommended approach.',
+        'The `.describe()` method still exists for compatibility with Zod 3, but `.meta()` is now the recommended approach.',
     },
     schema: [],
   },

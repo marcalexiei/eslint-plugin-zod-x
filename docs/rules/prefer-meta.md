@@ -1,4 +1,4 @@
-# Enforce usage of .meta() over .describe() (`zod-x/prefer-meta`)
+# Enforce usage of `.meta()` over `.describe()` (`zod-x/prefer-meta`)
 
 💼 This rule is enabled in the ✅ `recommended` config.
 
