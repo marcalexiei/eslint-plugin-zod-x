@@ -1,5 +1,21 @@
 # eslint-plugin-zod-x
 
+## 1.7.0
+
+### Minor Changes
+
+- [#61](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/61) [`926b6bd`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/926b6bdd12902bb68e0c689b8f7c58e09f38e5aa) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(no-number-schema-with-int): add new rule
+
+  Thanks to @ulrichstark for the proposal
+
+### Patch Changes
+
+- [#67](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/67) [`e1b3955`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/e1b3955a12ecdcdd92b438e3a759906d3beae008) Thanks [@marcalexiei](https://github.com/marcalexiei)! - docs: format rules descriptions consistently marking methods with “`”
+
+- [#68](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/68) [`ce8132a`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/ce8132a2c021c94edf4dffbb88ed726b6a0ba08d) Thanks [@marcalexiei](https://github.com/marcalexiei)! - docs(README): improve install and configuration
+
+- [#65](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/65) [`45dbdc8`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/45dbdc81f1e9f43955c5c41232858ad39ace4e54) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: create compatible plugin/config types to avoid external types references
+
 ## 1.6.0
 
 ### Minor Changes
