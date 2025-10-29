@@ -35,6 +35,36 @@ ruleTester.run('prefer-meta-last', preferMetaLast, {
       name: 'meta not belonging to zod',
       code: 'const t = meta<Meta>()',
     },
+    {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/70
+      name: 'inside object',
+      code: `
+      export const baseEventPayloadSchema = z.object({
+        type: z.string(),
+        action: z.string().meta({ description: "a" }),
+      })
+      `,
+    },
+    {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/42
+      name: 'inside looseObject',
+      code: `
+      export const baseEventPayloadSchema = z.looseObject({
+        type: z.string(),
+        action: z.string().meta({ description: "a" }),
+      })
+      `,
+    },
+    {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/42
+      name: 'inside strictObject',
+      code: `
+      export const baseEventPayloadSchema = z.strictObject({
+        type: z.string(),
+        action: z.string().meta({ description: "a" }),
+      })
+      `,
+    },
   ],
 
   invalid: [
@@ -56,6 +86,23 @@ ruleTester.run('prefer-meta-last', preferMetaLast, {
       code: 'z.string().min(5).meta({ foo: "bar" }).max(10);',
       errors: [{ messageId: 'metaNotLast' }],
       output: 'z.string().min(5).max(10).meta({ foo: "bar" });',
+    },
+    {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/42
+      name: 'inside strictObject',
+      code: `
+      export const baseEventPayloadSchema = z.strictObject({
+        type: z.string(),
+        action: z.string().meta({ description: "a" }).min(1),
+      })
+      `,
+      errors: [{ messageId: 'metaNotLast' }],
+      output: `
+      export const baseEventPayloadSchema = z.strictObject({
+        type: z.string(),
+        action: z.string().min(1).meta({ description: "a" }),
+      })
+      `,
     },
   ],
 });
