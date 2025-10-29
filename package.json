@@ -19,7 +19,7 @@
       "require": "./dist/index.cjs"
     }
   },
-  "homepage": "https://github.com/marcalexiei/eslint-plugin-zod-x",
+  "homepage": "https://github.com/marcalexiei/eslint-plugin-zod-x#readme",
   "bugs": {
     "url": "https://github.com/marcalexiei/eslint-plugin-zod-x/issues"
   },
