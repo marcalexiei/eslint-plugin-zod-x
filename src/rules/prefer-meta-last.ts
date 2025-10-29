@@ -2,7 +2,7 @@ import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
-import { isZodAtTheBeginningOfMemberExpression } from '../utils/is-zod-expression.js';
+import { isZodExpression } from '../utils/is-zod-expression.js';
 
 export const preferMetaLast = ESLintUtils.RuleCreator(getRuleURL)({
   name: 'prefer-meta-last',
@@ -25,12 +25,7 @@ export const preferMetaLast = ESLintUtils.RuleCreator(getRuleURL)({
           return;
         }
 
-        const isZodExpressionContainingMeta =
-          isZodAtTheBeginningOfMemberExpression(node.callee) &&
-          node.callee.property.type === AST_NODE_TYPES.Identifier &&
-          node.callee.property.name === 'meta';
-
-        if (!isZodExpressionContainingMeta) {
+        if (!isZodExpression(node.callee, 'meta')) {
           return;
         }
 
@@ -39,10 +34,16 @@ export const preferMetaLast = ESLintUtils.RuleCreator(getRuleURL)({
         let hasAnotherMethodAfterMeta = false;
 
         while (current) {
+          if (current.type === AST_NODE_TYPES.Property) {
+            // We've reached the end of the chain (inside an object)
+            break;
+          }
+
           if (
             current.type === AST_NODE_TYPES.CallExpression &&
             current.callee.type === AST_NODE_TYPES.MemberExpression
           ) {
+            // We found another method call
             const prop = current.callee.property;
             if (
               prop.type === AST_NODE_TYPES.Identifier &&
@@ -52,6 +53,7 @@ export const preferMetaLast = ESLintUtils.RuleCreator(getRuleURL)({
               break;
             }
           }
+
           current = current.parent ?? undefined;
         }
 
