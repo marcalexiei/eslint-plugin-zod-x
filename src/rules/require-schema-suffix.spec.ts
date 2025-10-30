@@ -7,9 +7,11 @@ const ruleTester = new RuleTester();
 ruleTester.run('require-schema-suffix', requireSchemaSuffix, {
   valid: [
     {
+      name: 'valid usage',
       code: 'const mySchema = z.string()',
     },
     {
+      name: 'valid usage with multiple declarations',
       code: 'const mySchema = z.string(), addressSchema = z.object({ street: z.string() });',
     },
     {
@@ -21,19 +23,21 @@ ruleTester.run('require-schema-suffix', requireSchemaSuffix, {
       options: [{ suffix: 'Var' }],
     },
     {
-      name: 'Ignore non-zod',
+      name: 'ignores non-zod',
       code: 'const myVar = 1',
     },
     {
-      name: 'Ignore z.codec',
-      code: `const stringToDate = z.codec(
-              z.iso.datetime(),
-              z.date(),
-              {
-                decode: (isoString) => new Date(isoString),
-                encode: (date) => date.toISOString(),
-              }
-            );`,
+      name: 'ignores z.codec',
+      code: `
+        const stringToDate = z.codec(
+          z.iso.datetime(),
+          z.date(),
+          {
+            decode: (isoString) => new Date(isoString),
+            encode: (date) => date.toISOString(),
+          }
+        );
+      `,
     },
   ],
 

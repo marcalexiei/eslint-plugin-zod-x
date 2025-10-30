@@ -42,7 +42,7 @@ import z, { object } from 'zod';
 ### ✅ Valid
 
 ```ts
-import * as z from 'zod'; // correct usage
+import * as z from 'zod'; // valid usage
 import type * as z from 'zod'; // type imports
 ```
 

@@ -7,8 +7,12 @@ const ruleTester = new RuleTester();
 ruleTester.run('prefer-meta', preferMeta, {
   valid: [
     {
-      name: 'Correct usage',
+      name: 'valid usage',
       code: 'z.string().meta({ description: "desc" })',
+    },
+    {
+      name: 'No meta... no error',
+      code: 'z.string().min(5).max(10);',
     },
   ],
 

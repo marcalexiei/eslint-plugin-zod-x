@@ -7,16 +7,16 @@ const ruleTester = new RuleTester();
 ruleTester.run('prefer-strict-object', preferStrictObjet, {
   valid: [
     {
-      name: 'Correct usage',
+      name: 'valid usage',
       code: 'z.strictObject()',
     },
     {
-      name: 'Correct usage with allow `object`',
+      name: 'valid usage with allow `object`',
       options: [{ allow: ['object'] }],
       code: 'z.object()',
     },
     {
-      name: 'Correct usage with allow `looseObject`',
+      name: 'valid usage with allow `looseObject`',
       options: [{ allow: ['looseObject'] }],
       code: 'z.looseObject()',
     },
