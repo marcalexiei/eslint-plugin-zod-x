@@ -7,7 +7,7 @@ const ruleTester = new RuleTester();
 ruleTester.run('no-number-schema-with-int', noNumberSchemaWithInt, {
   valid: [
     {
-      name: 'standard',
+      name: 'valid usage',
       code: 'z.int()',
     },
     {

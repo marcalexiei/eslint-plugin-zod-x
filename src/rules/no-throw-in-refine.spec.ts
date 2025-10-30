@@ -13,11 +13,11 @@ ruleTester.run('no-throw-in-refine', noThrowInRefine, {
     {
       name: 'nested function not reported',
       code: `
-    z.string().refine((val) => {
-      const fn = () => { throw new Error("nested"); }; // nested function is fine
-      return val.length > 0;
-    });
-    `,
+        z.string().refine((val) => {
+          const fn = () => { throw new Error("nested"); }; // nested function is fine
+          return val.length > 0;
+        });
+      `,
     },
     {
       name: 'refine not starting with `z`',
@@ -33,30 +33,30 @@ ruleTester.run('no-throw-in-refine', noThrowInRefine, {
     {
       name: 'inside arrow function within if',
       code: `
-      z.number().refine((val) => {
-        if (val < 0) throw new Error('Invalid');
-      });
+        z.number().refine((val) => {
+          if (val < 0) throw new Error('Invalid');
+        });
       `,
       errors: [{ messageId: 'noThrowInRefine' }],
     },
     {
       name: 'inside arrow function within else',
       code: `
-      z.number().refine((val) => {
-        if (val < 0) return true
-        else throw new Error('Invalid');
-      });
+        z.number().refine((val) => {
+          if (val < 0) return true
+          else throw new Error('Invalid');
+        });
       `,
       errors: [{ messageId: 'noThrowInRefine' }],
     },
     {
       name: 'inside arrow function within cucle',
       code: `
-      z.number().refine((val) => {
-        for (const it of val) {
-          throw new Error('Invalid')
-        }
-      });
+        z.number().refine((val) => {
+          for (const it of val) {
+            throw new Error('Invalid')
+          }
+        });
       `,
       errors: [{ messageId: 'noThrowInRefine' }],
     },
