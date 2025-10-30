@@ -1,7 +1,9 @@
+import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { isZodAtTheBeginningOfMemberExpression } from '../utils/is-zod-expression.js';
 import { getRuleURL } from '../meta.js';
+import { collectZodChainMethods } from '../utils/collect-zod-chain-methods.js';
 
 interface Options {
   suffix: string;
@@ -40,49 +42,50 @@ export const requireSchemaSuffix = ESLintUtils.RuleCreator(getRuleURL)<
   defaultOptions: [{ suffix: 'Schema' }],
   create(context, [{ suffix }]) {
     return {
-      VariableDeclarator(node): void {
-        if (node.init?.type !== AST_NODE_TYPES.CallExpression) {
-          return;
-        }
-
-        const {
-          init: { callee },
-        } = node;
-
-        // Check that the initializer is a zod schema declaration
+      VariableDeclarator(node: TSESTree.VariableDeclarator): void {
+        const initNode = node.init;
         if (
-          callee.type !== AST_NODE_TYPES.MemberExpression ||
-          !isZodAtTheBeginningOfMemberExpression(callee)
+          !initNode ||
+          initNode.type !== AST_NODE_TYPES.CallExpression ||
+          initNode.callee.type !== AST_NODE_TYPES.MemberExpression ||
+          // Check that the initializer is a zod schema declaration
+          !isZodAtTheBeginningOfMemberExpression(initNode.callee)
         ) {
           return;
         }
 
-        if (callee.property.type === AST_NODE_TYPES.Identifier) {
-          // Bail if a codec property is used is detected
-          if (callee.property.name === 'codec') {
-            return;
-          }
+        // Collect all methods from the chain
+        const chainMethods = collectZodChainMethods(initNode).map(
+          (it) => it.name,
+        );
 
-          // Check that the expression doesn't have a method
-          // returning data instead of a schema declaration
-          const zodMethodNotReturningASchema = [
-            'parse',
-            'safeParse',
-            'parseAsync',
-            'safeParseAsync',
-            'spa', // alias for `safeParseAsync`
-            'encode',
-            'decode',
-            'encodeAsync',
-            'decodeAsync',
-            'safeEncode',
-            'safeDecode',
-            'safeEncodeAsync',
-            'safeDecodeAsync',
-          ];
-          if (zodMethodNotReturningASchema.includes(callee.property.name)) {
-            return;
-          }
+        // Methods that either produce non-schema outputs or are unrelated to schemas (e.g., codecs)
+        const methodsThatProduceSomethingThatShouldNotBeValidated = [
+          // parse methods
+          'parse',
+          'parseAsync',
+          'safeParse',
+          'safeParseAsync',
+          'spa', // alias for `safeParseAsync`
+          'encode',
+          'encodeAsync',
+          'decode',
+          'decodeAsync',
+          'safeEncode',
+          'safeEncodeAsync',
+          'safeDecode',
+          'safeDecodeAsync',
+
+          // codec
+          'codec',
+        ];
+
+        if (
+          methodsThatProduceSomethingThatShouldNotBeValidated.some((it) =>
+            chainMethods.includes(it),
+          )
+        ) {
+          return;
         }
 
         if (node.id.type === AST_NODE_TYPES.Identifier) {

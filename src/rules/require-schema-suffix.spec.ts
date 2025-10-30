@@ -39,6 +39,28 @@ ruleTester.run('require-schema-suffix', requireSchemaSuffix, {
         );
       `,
     },
+    {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/71
+      name: 'should handle methods after parsing methods',
+      code: `
+      const data1 = z.array(z.string()).parse([]).filter(() => true)
+      const data2 = z.array(z.string()).safeParse([]).filter(() => true)
+      const data3 = z.array(z.string()).encode([]).filter(() => true)
+      const data4 = z.array(z.string()).decode([]).filter(() => true)
+      const data5 = z.array(z.string()).safeEncode([]).filter(() => true)
+      const data6 = z.array(z.string()).safeDecode([]).filter(() => true)
+      `,
+    },
+    {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/71
+      name: 'should handle properties after `safeParse`',
+      code: 'const data = z.array(z.string()).safeParse([]).success',
+    },
+    {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/71
+      name: 'should handle methods after spa (alias for safeParseAsync)',
+      code: 'const data = z.array(z.string()).spa([]).then(result => result.success)',
+    },
   ],
 
   invalid: [
