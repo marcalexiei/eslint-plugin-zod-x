@@ -1,6 +1,6 @@
 name: 🐛 Bug Report
 description: File a bug report
-title: 'Bug(<rule-name>): <short title>'
+title: 'bug(<rule-name>): <short title>'
 labels:
   - bug
 

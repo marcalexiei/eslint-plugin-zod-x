@@ -1,6 +1,6 @@
 name: ✨ New rule
 description: File a proposal for a new rule
-title: 'Add `<name>` rule'
+title: 'add `<name>` rule'
 labels:
   - enhancement
 
