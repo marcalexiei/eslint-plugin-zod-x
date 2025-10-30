@@ -10,6 +10,20 @@ To check that every thing works correctly run:
 pnpm run check-all
 ```
 
+## Test your changes
+
+If you need to test your changes use
+
+```shell
+pnpm test
+```
+
+To run only runtime tests you can use
+
+```shell
+pnpm test --typecheck=false
+```
+
 ## Documentation changes
 
 ```shell
