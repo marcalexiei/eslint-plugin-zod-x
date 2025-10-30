@@ -1,5 +1,15 @@
 # eslint-plugin-zod-x
 
+## 1.7.1
+
+### Patch Changes
+
+- [#69](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/69) [`fb209b7`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/fb209b79d5e17ef68f6d10232ebf61b2909a575b) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(package.json): add hash to readme in `homepage` field
+
+- [#75](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/75) [`c8718d8`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/c8718d85b221fe901a286c9020e7df92ed4fc6de) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(require-schema-suffix): false positive if last method in chain is not a parse-like method
+
+- [#73](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/73) [`01820c0`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/01820c0bb414b0b1da820eb379572b7be6b2d77e) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(prefer-meta-last): handle meta inside objects
+
 ## 1.7.0
 
 ### Minor Changes
