@@ -19,28 +19,28 @@ updates:
         patterns:
           - '@changesets/*'
 
-      dev-code-checks:
+      dev-format:
         applies-to: 'version-updates'
         dependency-type: 'development'
         patterns:
           - '@marcalexiei/prettier-config'
-          - '@marcalexiei/eslint-config'
-          - 'eslint-doc-generator'
-          - 'eslint-plugin-eslint-plugin'
-          - 'eslint-plugin-n'
-          - '@vitest/eslint-plugin'
-          - 'knip'
           - 'prettier'
-          - 'typescript'
-          - typescript-eslint
 
-      dev:
+      dev-code-checks:
         applies-to: 'version-updates'
         dependency-type: 'development'
         patterns:
+          - '@marcalexiei/eslint-config'
           - '@types/*'
           - '@typescript-eslint/rule-tester'
           - '@typescript-eslint/utils'
+          - '@vitest/eslint-plugin'
           - 'eslint'
+          - 'eslint-doc-generator'
+          - 'eslint-plugin-eslint-plugin'
+          - 'eslint-plugin-n'
+          - 'knip'
+          - 'typescript'
+          - 'typescript-eslint'
           - 'vitest'
           - 'zshy'
