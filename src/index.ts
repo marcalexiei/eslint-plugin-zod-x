@@ -14,6 +14,7 @@ import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
 import { preferStrictObjet } from './rules/prefer-strict-object.js';
 import { requireErrorMessage } from './rules/require-error-message.js';
 import { requireSchemaSuffix } from './rules/require-schema-suffix.js';
+import { schemaErrorPropertyStyle } from './rules/schema-error-property-style.js';
 
 interface CompatibleConfig {
   name?: string;
@@ -48,6 +49,7 @@ const eslintPluginZodX = {
     'prefer-strict-object': preferStrictObjet,
     'require-error-message': requireErrorMessage,
     'require-schema-suffix': requireSchemaSuffix,
+    'schema-error-property-style': schemaErrorPropertyStyle,
     /* eslint-enable @typescript-eslint/naming-convention */
   } as unknown as Record<string, Rule.RuleModule>,
 } satisfies ESLint.Plugin as CompatiblePlugin;

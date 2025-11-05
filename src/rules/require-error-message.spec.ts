@@ -15,6 +15,11 @@ ruleTester.run('prefer-strict-object (refine)', requireErrorMessage, {
       code: 'z.string().refine(() => true, "error msg")',
     },
     {
+      name: 'string error message (template)',
+      // eslint-disable-next-line no-template-curly-in-string
+      code: 'const a = "a"; z.string().refine(() => true, `error msg ${a}`)',
+    },
+    {
       name: 'function error',
       code: 'z.string().refine(() => true, { error: () => "ciao" })',
     },
