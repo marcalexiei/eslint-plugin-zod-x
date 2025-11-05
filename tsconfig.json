@@ -21,6 +21,13 @@
 
     // Language and Environment
     "moduleResolution": "NodeNext",
+    "lib": [
+      "es2024",
+      "ESNext.Array",
+      "ESNext.Collection",
+      "ESNext.Iterator",
+      "ESNext.Promise"
+    ],
 
     // Interop Constraints
     "verbatimModuleSyntax": true,
