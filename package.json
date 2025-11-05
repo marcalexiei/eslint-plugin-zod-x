@@ -4,7 +4,7 @@
   "type": "module",
   "description": "ESLint plugin that adds custom linting rules to enforce best practices when using Zod",
   "engines": {
-    "node": "^20 || ^22 || ^24"
+    "node": "^20 || ^22 || >=24"
   },
   "publishConfig": {
     "access": "public"
