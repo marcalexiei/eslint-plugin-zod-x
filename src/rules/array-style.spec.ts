@@ -8,43 +8,43 @@ ruleTester.run('array-style', arrayStyle, {
   valid: [
     {
       name: 'default option',
-      code: `z.array(z.string())`,
+      code: 'z.array(z.string())',
     },
     {
       name: '`function` option',
-      code: `z.array(z.string())`,
+      code: 'z.array(z.string())',
       options: [{ style: 'function' }],
     },
     {
       name: '`method` option',
-      code: `z.string().array()`,
+      code: 'z.string().array()',
       options: [{ style: 'method' }],
     },
   ],
   invalid: [
     {
-      code: `z.string().array()`,
+      code: 'z.string().array()',
       options: [{ style: 'function' }],
       errors: [{ messageId: 'useFunction' }],
-      output: `z.array(z.string())`,
+      output: 'z.array(z.string())',
     },
     {
-      code: `z.string().trim().array()`,
+      code: 'z.string().trim().array()',
       options: [{ style: 'function' }],
       errors: [{ messageId: 'useFunction' }],
-      output: `z.array(z.string().trim())`,
+      output: 'z.array(z.string().trim())',
     },
     {
-      code: `z.array(z.string())`,
+      code: 'z.array(z.string())',
       options: [{ style: 'method' }],
       errors: [{ messageId: 'useMethod' }],
-      output: `z.string().array()`,
+      output: 'z.string().array()',
     },
     {
-      code: `z.array(z.string().trim())`,
+      code: 'z.array(z.string().trim())',
       options: [{ style: 'method' }],
       errors: [{ messageId: 'useMethod' }],
-      output: `z.string().trim().array()`,
+      output: 'z.string().trim().array()',
     },
   ],
 });
