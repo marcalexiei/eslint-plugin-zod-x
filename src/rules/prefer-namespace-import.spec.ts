@@ -26,6 +26,22 @@ ruleTester.run('prefer-namespace-import', preferNamespaceImport, {
       name: 'zod/mini',
       code: 'import * as z from "zod/mini";',
     },
+    {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/93
+      name: 'zod v4 and v3',
+      code: `
+        import * as z3 from "zod/v3";
+        import * as z from "zod";
+      `,
+    },
+    {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/93
+      name: 'zod v4 (types) and v3',
+      code: `
+        import * as z3 from "zod/v3";
+        import type * as z from "zod";
+      `,
+    },
   ],
 
   invalid: [
@@ -89,6 +105,19 @@ ruleTester.run('prefer-namespace-import', preferNamespaceImport, {
         { messageId: 'removeDuplicate', line: 2 },
       ],
       output: 'import * as z from "zod";\n',
+    },
+    {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/93
+      name: 'zod v4 and v3 (named)',
+      code: `
+        import z3 from "zod/v3";
+        import * as z from "zod";
+      `,
+      errors: [{ messageId: 'useNamespace', line: 2 }],
+      output: `
+        import * as z3 from "zod/v3";
+        import * as z from "zod";
+      `,
     },
   ],
 });
