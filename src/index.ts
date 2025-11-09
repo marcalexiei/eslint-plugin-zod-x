@@ -15,6 +15,7 @@ import { preferStrictObjet } from './rules/prefer-strict-object.js';
 import { requireErrorMessage } from './rules/require-error-message.js';
 import { requireSchemaSuffix } from './rules/require-schema-suffix.js';
 import { schemaErrorPropertyStyle } from './rules/schema-error-property-style.js';
+import { requireBrandTypeParameter } from './rules/require-brand-type-parameter.js';
 
 interface CompatibleConfig {
   name?: string;
@@ -47,6 +48,7 @@ const eslintPluginZodX = {
     'prefer-meta-last': preferMetaLast,
     'prefer-namespace-import': preferNamespaceImport,
     'prefer-strict-object': preferStrictObjet,
+    'require-brand-type-parameter': requireBrandTypeParameter,
     'require-error-message': requireErrorMessage,
     'require-schema-suffix': requireSchemaSuffix,
     'schema-error-property-style': schemaErrorPropertyStyle,
@@ -71,6 +73,7 @@ const recommendedConfig = {
     'zod-x/prefer-meta': 'error',
     'zod-x/prefer-meta-last': 'error',
     'zod-x/prefer-namespace-import': 'error',
+    'zod-x/require-brand-type-parameter': 'error',
     'zod-x/require-error-message': 'error',
     'zod-x/require-schema-suffix': 'error',
   },
