@@ -1,4 +1,3 @@
-import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { isZodAtTheBeginningOfMemberExpression } from '../utils/is-zod-expression.js';
@@ -42,7 +41,7 @@ export const requireSchemaSuffix = ESLintUtils.RuleCreator(getRuleURL)<
   defaultOptions: [{ suffix: 'Schema' }],
   create(context, [{ suffix }]) {
     return {
-      VariableDeclarator(node: TSESTree.VariableDeclarator): void {
+      VariableDeclarator(node): void {
         const initNode = node.init;
         if (
           !initNode ||
