@@ -1,5 +1,15 @@
 # eslint-plugin-zod-x
 
+## 1.8.0
+
+### Minor Changes
+
+- [#90](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/90) [`13653a6`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/13653a68372779dea5ef626b997d109d487580b7) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(schema-error-property-style): add new rule
+
+- [#89](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/89) [`56e9aff`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/56e9aff6086ea3c76e8b7bdffbba54662b93bea9) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: support Node 25
+
+- [#92](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/92) [`707ee6f`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/707ee6f6ca054432879a970f7db7e38196638e32) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(require-brand-type-parameter): add new rule
+
 ## 1.7.1
 
 ### Patch Changes
