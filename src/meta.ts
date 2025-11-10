@@ -7,11 +7,12 @@ const packageJSON = JSON.parse(
 const {
   name: PLUGIN_NAME,
   version: PLUGIN_VERSION,
-  homepage: PLUGIN_HOMEPAGE,
 } = packageJSON;
 
 export { PLUGIN_NAME, PLUGIN_VERSION };
 
+const PLUGIN_HOMEPAGE = packageJSON.homepage.replace(/#[^#]*$/, '');
+
 export function getRuleURL(ruleID: string): string {
-  return `${PLUGIN_HOMEPAGE}/blob/main/docs/rules/${ruleID}.md`;
+  return `${PLUGIN_HOMEPAGE}/blob/HEAD/docs/rules/${ruleID}.md`;
 }
