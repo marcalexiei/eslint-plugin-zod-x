@@ -1,5 +1,17 @@
 # eslint-plugin-zod-x
 
+## 1.8.1
+
+### Patch Changes
+
+- [#96](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/96) [`6b282b4`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/6b282b4076801556c4fdbc20be2fd650d75ddca2) Thanks [@andreww2012](https://github.com/andreww2012)! - fix(array-style): disallow extra properties in rule options
+
+- [#95](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/95) [`7b28d3a`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/7b28d3a28ae91ae0a3ff55f3ad530d2691cecf2a) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(prefer-namespace-import): treat each source as standalone group to allow using multiple versions
+
+- [#96](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/96) [`6b282b4`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/6b282b4076801556c4fdbc20be2fd650d75ddca2) Thanks [@andreww2012](https://github.com/andreww2012)! - fix(prefer-strict-object): disallow extra properties in rule options
+
+- [#97](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/97) [`4ae924f`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/4ae924f488e8305d2bf5d6a2e9de7f3bb87e3eac) Thanks [@andreww2012](https://github.com/andreww2012)! - fix(meta): remove anchor from rule url prefix
+
 ## 1.8.0
 
 ### Minor Changes
