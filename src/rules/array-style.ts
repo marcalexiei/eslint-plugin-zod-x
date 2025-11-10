@@ -32,6 +32,7 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
     schema: [
       {
         type: 'object',
+        additionalProperties: false,
         properties: {
           style: {
             description: 'Decides which style for zod array function',

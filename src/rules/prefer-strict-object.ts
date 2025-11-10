@@ -29,6 +29,7 @@ export const preferStrictObjet = ESLintUtils.RuleCreator(getRuleURL)<
     schema: [
       {
         type: 'object',
+        additionalProperties: false,
         properties: {
           allow: {
             description: 'Decides which style for zod array function',
