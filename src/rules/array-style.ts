@@ -39,6 +39,7 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
             enum: ['function', 'method'],
           },
         },
+        additionalProperties: false,
       },
     ],
   },

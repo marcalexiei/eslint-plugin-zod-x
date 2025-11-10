@@ -39,6 +39,7 @@ export const preferStrictObjet = ESLintUtils.RuleCreator(getRuleURL)<
             },
           },
         },
+        additionalProperties: false,
       },
     ],
   },
