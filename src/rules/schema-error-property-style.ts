@@ -14,7 +14,7 @@ export const schemaErrorPropertyStyle = ESLintUtils.RuleCreator(getRuleURL)<
   [{ selector: string; example: string }],
   MessageIds
 >({
-  name: 'consistent-import-source',
+  name: 'schema-error-property-style',
   meta: {
     type: 'suggestion',
     docs: {
