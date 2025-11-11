@@ -18,7 +18,7 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
   [Options],
   MessageIds
 >({
-  name: 'consistent-array-style',
+  name: 'array-style',
   meta: {
     type: 'suggestion',
     fixable: 'code',
