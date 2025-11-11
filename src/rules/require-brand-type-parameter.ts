@@ -15,7 +15,7 @@ export const requireBrandTypeParameter = ESLintUtils.RuleCreator(getRuleURL)({
     messages: {
       missingTypeParameter: 'Type parameter is required when using `.brand()`',
       removeBrandFunction:
-        'Brand is a static-only construct. If not paramter is required consider removal',
+        'Brand is a static-only construct. If not parameter is required consider removal',
     },
     schema: [],
   },
