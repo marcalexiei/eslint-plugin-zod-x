@@ -1,5 +1,15 @@
 # eslint-plugin-zod-x
 
+## 1.8.2
+
+### Patch Changes
+
+- [#102](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/102) [`8dd776d`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/8dd776dd2bdca0ddbf81489a7eb394cb64499220) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(array-style): correct rule name
+
+- [#99](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/99) [`a07e3fc`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/a07e3fc52272d8165c0816abf23dd67ee41beffd) Thanks [@V1RE](https://github.com/V1RE)! - fix(schema-error-property-style): correct rule name from 'consistent-import-source'
+
+- [#101](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/101) [`0642e50`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/0642e5001d1fcaf566dc871e5cc326acd1ccf3f7) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(require-brand-type-parameter): correct `removeBrandFunction` message typo
+
 ## 1.8.1
 
 ### Patch Changes
