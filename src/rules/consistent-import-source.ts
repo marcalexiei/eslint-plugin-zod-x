@@ -1,3 +1,4 @@
+import type { TSESLint } from '@typescript-eslint/utils';
 import { ESLintUtils } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
@@ -12,7 +13,7 @@ const ZOD_IMPORT_SOURCES = [
 
 type ZodImportSource = (typeof ZOD_IMPORT_SOURCES)[number];
 
-type MessageIds = 'sourceNotAllowed';
+type MessageIds = 'sourceNotAllowed' | 'replaceSource';
 
 export const consistentImportSource = ESLintUtils.RuleCreator(getRuleURL)<
   [{ sources: Array<ZodImportSource> }],
@@ -20,6 +21,7 @@ export const consistentImportSource = ESLintUtils.RuleCreator(getRuleURL)<
 >({
   name: 'consistent-import-source',
   meta: {
+    hasSuggestions: true,
     type: 'suggestion',
     docs: {
       description: 'Enforce consistent source from Zod imports',
@@ -27,6 +29,7 @@ export const consistentImportSource = ESLintUtils.RuleCreator(getRuleURL)<
     messages: {
       sourceNotAllowed:
         '"{{source}}" is not allowed. Available values are: {{sources}}',
+      replaceSource: 'Replace "{{invalid}}" with "{{valid}}"',
     },
     schema: [
       {
@@ -67,6 +70,19 @@ export const consistentImportSource = ESLintUtils.RuleCreator(getRuleURL)<
             source: sourceValue,
             sources: sources.map((s) => `"${s}"`).join(', '),
           },
+          suggest: sources.map<
+            TSESLint.ReportSuggestionArray<MessageIds>[number]
+          >((it) => ({
+            messageId: 'replaceSource',
+            data: { valid: it, invalid: sourceValue },
+            fix: (fixer): TSESLint.RuleFix =>
+              fixer.replaceText(
+                node.source,
+                // Replacing using the raw value
+                // to keep quote style consistent with the user code
+                node.source.raw.replace(sourceValue, it),
+              ),
+          })),
         });
       },
     };
