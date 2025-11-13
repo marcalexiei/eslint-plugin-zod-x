@@ -66,6 +66,11 @@
     "eslint": "^9",
     "zod": "^4"
   },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@changesets/changelog-github": "0.5.1",
     "@changesets/cli": "2.29.7",

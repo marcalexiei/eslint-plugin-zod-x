@@ -91,3 +91,14 @@ export default defineConfig(
   eslintPluginZodX.configs.recommended,
 );
 ```
+
+## Zod peer dependency version
+
+`eslint-plugin-zod-x` is designed for projects that use `zod@^4`.
+While the plugin analyzes Zod schemas in your code,
+it doesn’t import or depend on Zod at runtime.
+To document this relationship without forcing installation,
+Zod is declared as an optional peer dependency in the plugin’s `package.json`.
+
+If your project uses Zod v4, the plugin will automatically lint your schemas.
+If you’re not using Zod (for example, in a separate ESLint workspace), you don’t need to install it.
