@@ -1,5 +1,11 @@
 # eslint-plugin-zod-x
 
+## 1.8.3
+
+### Patch Changes
+
+- [#105](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/105) [`3dfcd52`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/3dfcd525464018da8e89003d4cee7058ac5be767) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(meta): make zod an optional peer dependency
+
 ## 1.8.2
 
 ### Patch Changes
