@@ -31,7 +31,7 @@
 | Name                                                                               | Description                                                                                   | 💼  | 🔧  | 💡  |
 | :--------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------- | :-- | :-- | :-- |
 | [array-style](docs/rules/array-style.md)                                           | Enforce consistent Zod array style                                                            | ✅  | 🔧  |     |
-| [consistent-import-source](docs/rules/consistent-import-source.md)                 | Enforce consistent source from Zod imports                                                    |     |     |     |
+| [consistent-import-source](docs/rules/consistent-import-source.md)                 | Enforce consistent source from Zod imports                                                    |     |     | 💡  |
 | [no-any](docs/rules/no-any.md)                                                     | Disallow usage of `z.any()` in Zod schemas                                                    | ✅  |     | 💡  |
 | [no-empty-custom-schema](docs/rules/no-empty-custom-schema.md)                     | Disallow usage of `z.custom()` without arguments                                              | ✅  |     |     |
 | [no-number-schema-with-int](docs/rules/no-number-schema-with-int.md)               | Disallow usage of `z.number().int()` as it is considered legacy                               | ✅  | 🔧  |     |
