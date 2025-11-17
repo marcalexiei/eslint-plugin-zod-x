@@ -1,5 +1,11 @@
 # eslint-plugin-zod-x
 
+## 1.9.0
+
+### Minor Changes
+
+- [#103](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/103) [`44fb4bf`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/44fb4bfc20b0afb3d205cb1d9f2bc3556778c949) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(consistent-import-source): add suggestion
+
 ## 1.8.3
 
 ### Patch Changes
