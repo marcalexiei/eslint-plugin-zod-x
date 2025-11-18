@@ -1,31 +1,6 @@
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 import type { TSESTree } from '@typescript-eslint/utils';
 
-export function isZodIdentifier(
-  node: TSESTree.Node,
-): node is TSESTree.Identifier {
-  return node.type === AST_NODE_TYPES.Identifier && node.name === 'z';
-}
-
-export function isZodAtTheBeginningOfMemberExpression(
-  node: TSESTree.MemberExpression,
-): boolean {
-  // Check if we are at the beginning of the expression and it starts with zod
-  if (isZodIdentifier(node.object)) {
-    return true;
-  }
-
-  // if not continue navigate the member expression
-  if (
-    node.object.type === AST_NODE_TYPES.CallExpression &&
-    node.object.callee.type === AST_NODE_TYPES.MemberExpression
-  ) {
-    return isZodAtTheBeginningOfMemberExpression(node.object.callee);
-  }
-
-  return false;
-}
-
 /**
  * Type guard that checks whether a given AST {@link node} is a zod member expression
  * ending with the specified property name.
@@ -34,16 +9,11 @@ export function isZodAtTheBeginningOfMemberExpression(
  * - the chain starts with `z.`
  * - the final property matches {@link propName}.
  */
-export function isZodExpression(
+export function isZodExpressionEndingWithMethod(
   node: TSESTree.Node,
   propName: string,
 ): node is TSESTree.MemberExpression {
   if (node.type !== AST_NODE_TYPES.MemberExpression) {
-    return false;
-  }
-
-  // Ensure that there is zod at the beginning of member expression chain
-  if (!isZodAtTheBeginningOfMemberExpression(node)) {
     return false;
   }
 
@@ -57,21 +27,4 @@ export function isZodExpression(
   }
 
   return false;
-}
-
-/**
- * Check if the given {@link node} is a zod schema declaration like:
- * `z.string` or `z.strictObject` were `string` and `strictObject`
- * are provided as {@link schemaTypeName}
- */
-export function isZodSchemaDeclaration(
-  node: TSESTree.Expression,
-  schemaTypeName: string,
-): node is TSESTree.MemberExpression {
-  return (
-    node.type === AST_NODE_TYPES.MemberExpression &&
-    isZodIdentifier(node.object) &&
-    node.property.type === AST_NODE_TYPES.Identifier &&
-    node.property.name === schemaTypeName
-  );
 }

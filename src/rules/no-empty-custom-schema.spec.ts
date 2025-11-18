@@ -1,4 +1,5 @@
 import { RuleTester } from '@typescript-eslint/rule-tester';
+import dedent from 'dedent';
 
 import { noEmptyCustomSchema } from './no-empty-custom-schema.js';
 
@@ -8,12 +9,39 @@ ruleTester.run('no-empty-custom-schema', noEmptyCustomSchema, {
   valid: [
     {
       name: 'valid usage',
-      code: 'z.custom((val) => typeof val === "string" ? /^\\d+px$/.test(val) : false);',
+      code: dedent`
+        import * as z from 'zod';
+        z.custom((val) => typeof val === "string" ? /^\\d+px$/.test(val) : false);
+      `,
+    },
+    {
+      name: 'valid usage (named)',
+      code: dedent`
+        import { custom } from 'zod';
+        custom((val) => typeof val === "string" ? /^\\d+px$/.test(val) : false);
+      `,
+    },
+    {
+      name: 'valid usage (named renamed)',
+      code: dedent`
+        import { custom as zCustom } from 'zod';
+        zCustom((val) => typeof val === "string" ? /^\\d+px$/.test(val) : false);
+      `,
     },
     {
       name: 'type and function',
-      code: `
+      code: dedent`
+        import * as z from 'zod';
         z.custom<\`\${number}px\`>((val) => {
+          return typeof val === "string" ? /^\\d+px$/.test(val) : false;
+        });
+      `,
+    },
+    {
+      name: 'type and function (named)',
+      code: dedent`
+        import { custom } from 'zod';
+        custom<\`\${number}px\`>((val) => {
           return typeof val === "string" ? /^\\d+px$/.test(val) : false;
         });
       `,
@@ -22,12 +50,34 @@ ruleTester.run('no-empty-custom-schema', noEmptyCustomSchema, {
   invalid: [
     {
       name: 'invalid usage',
-      code: 'z.custom();',
+      code: dedent`
+        import * as z from 'zod';
+        z.custom();
+      `,
+      errors: [{ messageId: 'noEmptyCustomSchema' }],
+    },
+    {
+      name: 'invalid usage (named)',
+      code: dedent`
+        import { custom } from 'zod';
+        custom();
+      `,
       errors: [{ messageId: 'noEmptyCustomSchema' }],
     },
     {
       name: 'type without function',
-      code: `z.custom<\`\${number}px\`>();`,
+      code: dedent`
+        import * as z from 'zod';
+        z.custom<\`\${number}px\`>();
+      `,
+      errors: [{ messageId: 'noEmptyCustomSchema' }],
+    },
+    {
+      name: 'type without function (named)',
+      code: dedent`
+        import { custom } from 'zod';
+        custom<\`\${number}px\`>();
+      `,
       errors: [{ messageId: 'noEmptyCustomSchema' }],
     },
   ],

@@ -3,10 +3,7 @@ import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 import esquery from 'esquery';
 
 import { getRuleURL } from '../meta.js';
-import {
-  isZodExpression,
-  isZodSchemaDeclaration,
-} from '../utils/is-zod-expression.js';
+import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
 type MessageIds = 'invalidStyle';
 
@@ -47,11 +44,24 @@ export const schemaErrorPropertyStyle = ESLintUtils.RuleCreator(getRuleURL)<
     { selector: 'Literal,TemplateLiteral', example: "'error message'" },
   ],
   create(context, [{ selector, example }]) {
+    const {
+      //
+      importDeclarationNodeHandler,
+      detectZodSchemaRootNode,
+      collectZodChainMethods,
+    } = trackZodSchemaImports();
+
     return {
+      ImportDeclaration: importDeclarationNodeHandler,
       CallExpression(node): void {
+        const zodSchemaMeta = detectZodSchemaRootNode(node);
+        if (!zodSchemaMeta) {
+          return;
+        }
+
         if (
-          !isZodExpression(node.callee, 'refine') &&
-          !isZodSchemaDeclaration(node.callee, 'custom')
+          zodSchemaMeta.schemaType !== 'custom' &&
+          !collectZodChainMethods(node).some((it) => it.name === 'refine')
         ) {
           return;
         }

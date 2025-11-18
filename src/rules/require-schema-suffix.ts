@@ -1,8 +1,7 @@
 import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
-import { isZodAtTheBeginningOfMemberExpression } from '../utils/is-zod-expression.js';
 import { getRuleURL } from '../meta.js';
-import { collectZodChainMethods } from '../utils/collect-zod-chain-methods.js';
+import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
 interface Options {
   suffix: string;
@@ -40,16 +39,28 @@ export const requireSchemaSuffix = ESLintUtils.RuleCreator(getRuleURL)<
   },
   defaultOptions: [{ suffix: 'Schema' }],
   create(context, [{ suffix }]) {
+    const {
+      //
+      importDeclarationNodeHandler,
+      detectZodSchemaRootNode: isZodSchema,
+      collectZodChainMethods,
+    } = trackZodSchemaImports();
+
     return {
+      ImportDeclaration: importDeclarationNodeHandler,
       VariableDeclarator(node): void {
         const initNode = node.init;
+
         if (
           !initNode ||
-          initNode.type !== AST_NODE_TYPES.CallExpression ||
-          initNode.callee.type !== AST_NODE_TYPES.MemberExpression ||
-          // Check that the initializer is a zod schema declaration
-          !isZodAtTheBeginningOfMemberExpression(initNode.callee)
+          !isZodSchema(initNode, context.sourceCode.getAncestors(node))
         ) {
+          return;
+        }
+
+        // If it's a zod schema but the initNode is a member expression,
+        // it's likely that a property is accessed so the final output is not a schema
+        if (initNode.type === AST_NODE_TYPES.MemberExpression) {
           return;
         }
 

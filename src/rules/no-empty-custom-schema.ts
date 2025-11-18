@@ -1,7 +1,7 @@
 import { ESLintUtils } from '@typescript-eslint/utils';
 
-import { isZodSchemaDeclaration } from '../utils/is-zod-expression.js';
 import { getRuleURL } from '../meta.js';
+import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
 export const noEmptyCustomSchema = ESLintUtils.RuleCreator(getRuleURL)({
   name: 'no-empty-custom-schema',
@@ -19,10 +19,24 @@ export const noEmptyCustomSchema = ESLintUtils.RuleCreator(getRuleURL)({
   },
   defaultOptions: [],
   create(context) {
+    const {
+      //
+      importDeclarationNodeHandler,
+      detectZodSchemaRootNode,
+    } = trackZodSchemaImports();
+
     return {
+      ImportDeclaration: importDeclarationNodeHandler,
       CallExpression(node): void {
+        const zodSchemaMeta = detectZodSchemaRootNode(
+          node,
+          context.sourceCode.getAncestors(node),
+        );
+        if (!zodSchemaMeta) {
+          return;
+        }
         if (
-          isZodSchemaDeclaration(node.callee, 'custom') &&
+          zodSchemaMeta.schemaType === 'custom' &&
           node.arguments.length === 0
         ) {
           context.report({

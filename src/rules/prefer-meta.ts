@@ -1,6 +1,6 @@
 import { ESLintUtils } from '@typescript-eslint/utils';
 
-import { isZodExpression } from '../utils/is-zod-expression.js';
+import { isZodExpressionEndingWithMethod } from '../utils/is-zod-expression.js';
 import { getRuleURL } from '../meta.js';
 
 export const preferMeta = ESLintUtils.RuleCreator(getRuleURL)({
@@ -21,7 +21,7 @@ export const preferMeta = ESLintUtils.RuleCreator(getRuleURL)({
   create(context) {
     return {
       CallExpression(node): void {
-        if (isZodExpression(node.callee, 'describe')) {
+        if (isZodExpressionEndingWithMethod(node.callee, 'describe')) {
           const {
             callee,
             arguments: [describeArg],

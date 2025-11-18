@@ -8,11 +8,15 @@ ruleTester.run('no-throw-in-refine', noThrowInRefine, {
   valid: [
     {
       name: 'refine with arrow body shorthand',
-      code: 'z.number().min(0).refine((val) => true);',
+      code: `
+        import * as z from 'zod';
+        z.number().min(0).refine((val) => true);
+      `,
     },
     {
       name: 'nested function not reported',
       code: `
+        import * as z from 'zod';
         z.string().refine((val) => {
           const fn = () => { throw new Error("nested"); }; // nested function is fine
           return val.length > 0;
@@ -27,12 +31,24 @@ ruleTester.run('no-throw-in-refine', noThrowInRefine, {
   invalid: [
     {
       name: 'inside arrow function',
-      code: `z.string().refine(() => { throw new Error(); });`,
+      code: `
+        import * as z from 'zod';
+        z.string().refine(() => { throw new Error(); });
+      `,
+      errors: [{ messageId: 'noThrowInRefine' }],
+    },
+    {
+      name: 'inside arrow function (named)',
+      code: `
+        import { string } from 'zod';
+        string().refine(() => { throw new Error(); });
+      `,
       errors: [{ messageId: 'noThrowInRefine' }],
     },
     {
       name: 'inside arrow function within if',
       code: `
+        import * as z from 'zod';
         z.number().refine((val) => {
           if (val < 0) throw new Error('Invalid');
         });
@@ -42,6 +58,7 @@ ruleTester.run('no-throw-in-refine', noThrowInRefine, {
     {
       name: 'inside arrow function within else',
       code: `
+        import * as z from 'zod';
         z.number().refine((val) => {
           if (val < 0) return true
           else throw new Error('Invalid');
@@ -50,8 +67,9 @@ ruleTester.run('no-throw-in-refine', noThrowInRefine, {
       errors: [{ messageId: 'noThrowInRefine' }],
     },
     {
-      name: 'inside arrow function within cucle',
+      name: 'inside arrow function within cycle',
       code: `
+        import * as z from 'zod';
         z.number().refine((val) => {
           for (const it of val) {
             throw new Error('Invalid')

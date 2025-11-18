@@ -2,7 +2,8 @@ import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
-import { isZodExpression } from '../utils/is-zod-expression.js';
+import { isZodExpressionEndingWithMethod } from '../utils/is-zod-expression.js';
+import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
 export const preferMetaLast = ESLintUtils.RuleCreator(getRuleURL)({
   name: 'prefer-meta-last',
@@ -19,13 +20,23 @@ export const preferMetaLast = ESLintUtils.RuleCreator(getRuleURL)({
   },
   defaultOptions: [],
   create(context) {
+    const { importDeclarationNodeHandler, detectZodSchemaRootNode } =
+      trackZodSchemaImports();
     return {
+      ImportDeclaration: importDeclarationNodeHandler,
       CallExpression(node): void {
+        const zodSchemaMeta = detectZodSchemaRootNode(
+          node,
+          context.sourceCode.getAncestors(node),
+        );
+        if (!zodSchemaMeta) {
+          return;
+        }
         if (node.callee.type !== AST_NODE_TYPES.MemberExpression) {
           return;
         }
 
-        if (!isZodExpression(node.callee, 'meta')) {
+        if (!isZodExpressionEndingWithMethod(node.callee, 'meta')) {
           return;
         }
 

@@ -1,8 +1,9 @@
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
 import { ESLintUtils } from '@typescript-eslint/utils';
 
-import { isZodExpression } from '../utils/is-zod-expression.js';
+import { isZodExpressionEndingWithMethod } from '../utils/is-zod-expression.js';
 import { getRuleURL } from '../meta.js';
+import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
 export const requireBrandTypeParameter = ESLintUtils.RuleCreator(getRuleURL)({
   name: 'require-brand-type-parameter',
@@ -21,9 +22,21 @@ export const requireBrandTypeParameter = ESLintUtils.RuleCreator(getRuleURL)({
   },
   defaultOptions: [],
   create(context) {
+    const {
+      //
+      importDeclarationNodeHandler,
+      detectZodSchemaRootNode,
+    } = trackZodSchemaImports();
+
     return {
+      ImportDeclaration: importDeclarationNodeHandler,
       CallExpression(node): void {
-        if (!isZodExpression(node.callee, 'brand')) {
+        const zodSchemaMeta = detectZodSchemaRootNode(node);
+        if (!zodSchemaMeta) {
+          return;
+        }
+
+        if (!isZodExpressionEndingWithMethod(node.callee, 'brand')) {
           return;
         }
 
