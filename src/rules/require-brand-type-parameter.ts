@@ -1,7 +1,6 @@
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
 import { ESLintUtils } from '@typescript-eslint/utils';
 
-import { isZodExpressionEndingWithMethod } from '../utils/is-zod-expression.js';
 import { getRuleURL } from '../meta.js';
 import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
@@ -26,6 +25,7 @@ export const requireBrandTypeParameter = ESLintUtils.RuleCreator(getRuleURL)({
       //
       importDeclarationNodeHandler,
       detectZodSchemaRootNode,
+      collectZodChainMethods,
     } = trackZodSchemaImports();
 
     return {
@@ -36,28 +36,34 @@ export const requireBrandTypeParameter = ESLintUtils.RuleCreator(getRuleURL)({
           return;
         }
 
-        if (!isZodExpressionEndingWithMethod(node.callee, 'brand')) {
+        const methods = collectZodChainMethods(zodSchemaMeta.node);
+
+        const brandMethod = methods.find((it) => it.name === 'brand');
+
+        if (!brandMethod) {
           return;
         }
 
-        const { typeArguments } = node;
+        const brandNode = brandMethod.node;
+
+        const { typeArguments } = brandNode;
 
         if (typeArguments && typeArguments.params.length > 0) {
           return;
         }
 
+        const brandCalleeNode = brandNode.callee as TSESTree.MemberExpression;
+
         context.report({
           messageId: 'missingTypeParameter',
-          node: node.callee.property,
+          node: brandCalleeNode.property,
           suggest: [
             {
               messageId: 'removeBrandFunction',
               fix(fixer): TSESLint.RuleFix {
-                const brandCalleeNode =
-                  node.callee as TSESTree.MemberExpression;
                 return fixer.removeRange([
                   brandCalleeNode.object.range[1],
-                  node.range[1],
+                  brandNode.range[1],
                 ]);
               },
             },

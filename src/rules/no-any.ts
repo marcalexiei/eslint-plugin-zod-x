@@ -30,10 +30,7 @@ export const noAny = ESLintUtils.RuleCreator(getRuleURL)({
     return {
       ImportDeclaration: importDeclarationNodeHandler,
       CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(
-          node,
-          context.sourceCode.getAncestors(node),
-        );
+        const zodSchemaMeta = detectZodSchemaRootNode(node);
 
         if (zodSchemaMeta?.schemaType === 'any') {
           const { callee } = node;

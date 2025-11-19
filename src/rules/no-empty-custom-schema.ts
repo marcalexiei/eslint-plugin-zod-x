@@ -28,10 +28,7 @@ export const noEmptyCustomSchema = ESLintUtils.RuleCreator(getRuleURL)({
     return {
       ImportDeclaration: importDeclarationNodeHandler,
       CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(
-          node,
-          context.sourceCode.getAncestors(node),
-        );
+        const zodSchemaMeta = detectZodSchemaRootNode(node);
         if (!zodSchemaMeta) {
           return;
         }

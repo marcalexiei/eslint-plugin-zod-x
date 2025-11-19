@@ -3,6 +3,7 @@ import { ESLintUtils } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
 import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
+import { getOutermostCall } from '../utils/get-outermost-call.js';
 
 export const noNumberSchemaWithInt = ESLintUtils.RuleCreator(getRuleURL)({
   name: 'no-number-schema-with-int',
@@ -20,10 +21,11 @@ export const noNumberSchemaWithInt = ESLintUtils.RuleCreator(getRuleURL)({
     schema: [],
   },
   defaultOptions: [],
+
   create(context) {
     const { sourceCode } = context;
+
     const {
-      //
       importDeclarationNodeHandler,
       detectZodSchemaRootNode,
       collectZodChainMethods,
@@ -31,65 +33,85 @@ export const noNumberSchemaWithInt = ESLintUtils.RuleCreator(getRuleURL)({
 
     return {
       ImportDeclaration: importDeclarationNodeHandler,
+
       CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(
-          node,
-          sourceCode.getAncestors(node),
-        );
+        const outer = getOutermostCall(node) ?? node;
 
-        if (zodSchemaMeta?.schemaType !== 'number') {
+        const zodSchemaMeta = detectZodSchemaRootNode(outer);
+        if (!zodSchemaMeta) {
           return;
         }
 
-        // We expect objectNode to be a CallExpression (result of previous chain),
-        // but it could be nested; pass the whole CallExpression node for traversal.
-        const methods = collectZodChainMethods(node);
-
-        const intMethod = methods.find((it) => it.name === 'int');
-        if (!intMethod) {
+        // Only care about number schemas
+        if (zodSchemaMeta.schemaType !== 'number') {
           return;
         }
 
-        const intNode = intMethod.node;
-        // Only report once: ensure we're handling the CallExpression that *is* `.int()`,
-        // not a parent call further up the chain (e.g. `.min()`).
-        if (intNode !== node) {
+        // Collect the full chain from the outermost call (left-to-right)
+        const methods = collectZodChainMethods(outer);
+
+        // find number and int positions
+        const numberIndex = methods.findIndex((m) => m.name === 'number');
+        const intIndex = methods.findIndex((m) => m.name === 'int');
+
+        if (numberIndex === -1 || intIndex === -1) {
           return;
         }
-        const numberNode = methods.find((it) => it.name === 'number')!.node;
 
+        const numberMethod = methods[numberIndex];
+        const intMethod = methods[intIndex];
+
+        // We only report once — when ESLint visits the `.int()` call-expression itself.
+        if (node !== intMethod.node) {
+          return;
+        }
+
+        // If it's a named import usage (e.g. `import { number } from 'zod'`), report but do not fix.
         if (zodSchemaMeta.importType === 'named') {
           context.report({
-            node: intNode,
+            node,
             messageId: 'removeNumber',
           });
           return;
         }
 
+        // Namespace import (e.g. z.number()) — prepare a fixer
         context.report({
-          node: intNode,
+          node,
           messageId: 'removeNumber',
-          fix(fixer) {
-            const numberCallee = numberNode.callee;
-            const [start] = numberNode.range;
-            const [, end] = node.range;
+          fix: (fixer) => {
+            const numberNode = numberMethod.node;
+            const intNode = intMethod.node;
 
-            // Get the chain prefix (z)
-            const prefix = sourceCode.getText(
-              (numberCallee as TSESTree.MemberExpression).object,
-            );
+            // prefix is the namespace (e.g. "z")
+            const numberCallee = numberNode.callee as TSESTree.MemberExpression;
+            const prefixObj = numberCallee.object;
+            const prefixText = sourceCode.getText(prefixObj);
 
-            // Get the intermediate chain methods by taking everything after number()
-            // up to but not including .int()
-            const afterNumber = sourceCode.text.slice(numberNode.range[1], end);
-            const beforeInt = afterNumber.slice(
-              0,
-              afterNumber.lastIndexOf('.int()'),
-            );
+            // Methods between number and int should be moved after .int()
+            // Example: z.number().min(1).int() -> methodsBetween = [min]
+            const methodsBetween = methods.slice(numberIndex + 1, intIndex);
 
+            // For each intermediate method, extract only its ".name(args…)" suffix.
+            // We do this by taking full text of the call expression and slicing off
+            // the text of its callee.object (the part before the dot).
+            const betweenSuffixes = methodsBetween.map((m) => {
+              // m.node is a CallExpression with MemberExpression callee (e.g. X.min(1))
+              const callee = m.node.callee as TSESTree.MemberExpression;
+              const objText = sourceCode.getText(callee.object);
+              const fullText = sourceCode.getText(m.node);
+              return fullText.slice(objText.length); // starts with ".min(...)" or similar
+            });
+
+            // Construct replacement text:
+            // from `numberNode.range[0]` through `intNode.range[1]` we will replace with:
+            // `${prefix}.int()` + betweenSuffixes.join('')
+            const replacement = `${prefixText}.int()${betweenSuffixes.join('')}`;
+
+            // Replace the whole span from the start of `z.number()` up to the end of `.int()`.
             return fixer.replaceTextRange(
-              [start, end],
-              `${prefix}.int()${beforeInt}`,
+              [numberNode.range[0], intNode.range[1]],
+              replacement,
             );
           },
         });

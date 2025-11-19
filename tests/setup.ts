@@ -1,4 +1,3 @@
-/* eslint import-x/no-extraneous-dependencies: ['error', { devDependencies: true }] */
 import { RuleTester } from '@typescript-eslint/rule-tester';
 import { afterAll, describe, it } from 'vitest';
 

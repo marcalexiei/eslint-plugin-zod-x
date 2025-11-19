@@ -53,10 +53,7 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
     return {
       ImportDeclaration: importDeclarationNodeHandler,
       CallExpression(node): void {
-        const zodSchema = detectZodSchemaRootNode(
-          node,
-          sourceCode.getAncestors(node),
-        );
+        const zodSchema = detectZodSchemaRootNode(node);
         if (!zodSchema) {
           return;
         }
