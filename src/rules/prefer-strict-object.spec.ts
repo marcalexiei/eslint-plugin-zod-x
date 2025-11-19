@@ -1,4 +1,5 @@
 import { RuleTester } from '@typescript-eslint/rule-tester';
+import dedent from 'dedent';
 
 import { preferStrictObjet } from './prefer-strict-object.js';
 
@@ -8,30 +9,65 @@ ruleTester.run('prefer-strict-object', preferStrictObjet, {
   valid: [
     {
       name: 'valid usage',
-      code: 'z.strictObject()',
+      code: dedent`
+        import * as z from 'zod';
+        z.strictObject()
+      `,
     },
     {
       name: 'valid usage with allow `object`',
       options: [{ allow: ['object'] }],
-      code: 'z.object()',
+      code: dedent`
+        import * as z from 'zod';
+        z.object()
+      `,
     },
     {
       name: 'valid usage with allow `looseObject`',
       options: [{ allow: ['looseObject'] }],
-      code: 'z.looseObject()',
+      code: dedent`
+        import * as z from 'zod';
+        z.looseObject()
+      `,
     },
   ],
 
   invalid: [
     {
       name: 'object',
-      code: 'z.object({ foo: "bar" })',
+      code: dedent`
+        import * as z from 'zod';
+        z.object({ foo: "bar" })
+      `,
+      errors: [{ messageId: 'useStrictObject', data: { method: 'object' } }],
+      output: null,
+    },
+    {
+      name: 'object (named)',
+      code: dedent`
+        import { object } from 'zod';
+        object({ foo: "bar" })
+      `,
       errors: [{ messageId: 'useStrictObject', data: { method: 'object' } }],
       output: null,
     },
     {
       name: 'looseObject',
-      code: 'z.looseObject({ foo: "bar" })',
+      code: dedent`
+        import * as z from 'zod';
+        z.looseObject({ foo: "bar" })
+      `,
+      errors: [
+        { messageId: 'useStrictObject', data: { method: 'looseObject' } },
+      ],
+      output: null,
+    },
+    {
+      name: 'looseObject (named)',
+      code: dedent`
+        import { looseObject } from 'zod';
+        looseObject({ foo: "bar" })
+      `,
       errors: [
         { messageId: 'useStrictObject', data: { method: 'looseObject' } },
       ],

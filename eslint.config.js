@@ -16,7 +16,7 @@ export default defineConfig(
         ...configTS.rules['@typescript-eslint/naming-convention'],
         // for rules listeners
         {
-          selector: 'objectLiteralMethod',
+          selector: ['objectLiteralProperty', 'objectLiteralMethod'],
           format: ['camelCase', 'PascalCase'],
         },
       ],

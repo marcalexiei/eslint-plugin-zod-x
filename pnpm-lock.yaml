@@ -42,6 +42,9 @@ importers:
       '@vitest/eslint-plugin':
         specifier: 1.4.0
         version: 1.4.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)(vitest@4.0.6(@types/node@24.10.0)(jiti@2.6.1))
+      dedent:
+        specifier: 1.7.0
+        version: 1.7.0
       eslint:
         specifier: 9.39.1
         version: 9.39.1(jiti@2.6.1)
@@ -1026,6 +1029,14 @@ packages:
       supports-color: '*'
     peerDependenciesMeta:
       supports-color:
+        optional: true
+
+  dedent@1.7.0:
+    resolution: {integrity: sha512-HGFtf8yhuhGhqO07SV79tRp+br4MnbdjeVxotpn1QBl30pcLLCQjX5b2295ll0fv8RKDKsmWYrl05usHM9CewQ==}
+    peerDependencies:
+      babel-plugin-macros: ^3.1.0
+    peerDependenciesMeta:
+      babel-plugin-macros:
         optional: true
 
   deep-is@0.1.4:
@@ -2826,6 +2837,8 @@ snapshots:
   debug@4.4.3:
     dependencies:
       ms: 2.1.3
+
+  dedent@1.7.0: {}
 
   deep-is@0.1.4: {}
 

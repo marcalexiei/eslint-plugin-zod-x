@@ -2,7 +2,8 @@ import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 import type { TSESTree } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
-import { isZodExpression } from '../utils/is-zod-expression.js';
+import { isZodExpressionEndingWithMethod } from '../utils/is-zod-expression.js';
+import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
 export const noThrowInRefine = ESLintUtils.RuleCreator(getRuleURL)({
   name: 'no-throw-in-refine',
@@ -20,6 +21,9 @@ export const noThrowInRefine = ESLintUtils.RuleCreator(getRuleURL)({
   },
   defaultOptions: [],
   create(context) {
+    const { importDeclarationNodeHandler, detectZodSchemaRootNode } =
+      trackZodSchemaImports();
+
     function checkNode(node: TSESTree.Node | null): void {
       if (!node) {
         return;
@@ -68,8 +72,18 @@ export const noThrowInRefine = ESLintUtils.RuleCreator(getRuleURL)({
     }
 
     return {
+      ImportDeclaration: importDeclarationNodeHandler,
       CallExpression(node): void {
-        if (isZodExpression(node.callee, 'refine')) {
+        const zodSchemaMeta = detectZodSchemaRootNode(
+          node,
+          context.sourceCode.getAncestors(node),
+        );
+
+        if (!zodSchemaMeta) {
+          return;
+        }
+
+        if (isZodExpressionEndingWithMethod(node.callee, 'refine')) {
           const [callback] = node.arguments;
           if (
             callback.type === AST_NODE_TYPES.ArrowFunctionExpression ||

@@ -1,4 +1,5 @@
 import { RuleTester } from '@typescript-eslint/rule-tester';
+import dedent from 'dedent';
 
 import { requireErrorMessage } from './require-error-message.js';
 
@@ -8,49 +9,100 @@ ruleTester.run('prefer-strict-object (refine)', requireErrorMessage, {
   valid: [
     {
       name: 'object with error property',
-      code: 'z.string().refine(() => true, { error: "error msg" })',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine(() => true, { error: "error msg" });
+      `,
+    },
+    {
+      name: 'object with error property (named)',
+      code: dedent`
+        import { string } from 'zod';
+        string().refine(() => true, { error: "error msg" });
+      `,
     },
     {
       name: 'string error message',
-      code: 'z.string().refine(() => true, "error msg")',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine(() => true, "error msg");
+      `,
     },
     {
       name: 'string error message (template)',
-      // eslint-disable-next-line no-template-curly-in-string
-      code: 'const a = "a"; z.string().refine(() => true, `error msg ${a}`)',
+
+      code: dedent`
+        import * as z from 'zod';
+        const a = "a"; z.string().refine(() => true, \`error msg \${a}\`);
+      `,
     },
     {
       name: 'function error',
-      code: 'z.string().refine(() => true, { error: () => "ciao" })',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine(() => true, { error: () => "ciao" });
+      `,
     },
     {
       name: 'chained method after refine with error message',
-      code: 'z.string().refine(() => true, { error: "error msg 2" }).trim()',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine(() => true, { error: "error msg 2" }).trim();
+      `,
     },
   ],
 
   invalid: [
     {
       name: 'missing error message parameter',
-      code: 'z.string().refine(() => true)',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine(() => true);
+      `,
+      errors: [{ messageId: 'requireErrorMessage' }],
+      output: null,
+    },
+    {
+      name: 'missing error message parameter (named)',
+      code: dedent`
+        import { string } from 'zod';
+        string().refine(() => true);
+      `,
       errors: [{ messageId: 'requireErrorMessage' }],
       output: null,
     },
     {
       name: 'object without error message',
-      code: 'z.string().refine(() => true, { abort: true })',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine(() => true, { abort: true });
+      `,
       errors: [{ messageId: 'requireErrorMessage' }],
       output: null,
     },
     {
-      code: 'z.string().refine(() => true, { message: "hello" })',
+      name: 'asd',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine(() => true, { message: "hello" });
+      `,
       errors: [{ messageId: 'preferError' }],
-      output: 'z.string().refine(() => true, { error: "hello" })',
+      output: dedent`
+        import * as z from 'zod';
+        z.string().refine(() => true, { error: "hello" });
+      `,
     },
     {
-      code: 'z.string().refine(() => true, { message: "hello", error: "hello" })',
+      name: 'remove error',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine(() => true, { message: "hello", error: "hello" });
+      `,
       errors: [{ messageId: 'removeMessage' }],
-      output: 'z.string().refine(() => true, {  error: "hello" })',
+      output: dedent`
+        import * as z from 'zod';
+        z.string().refine(() => true, {  error: "hello" });
+      `,
     },
   ],
 });
@@ -59,28 +111,52 @@ ruleTester.run('prefer-strict-object (custom)', requireErrorMessage, {
   valid: [
     {
       name: 'object with error property',
-      code: 'z.custom(() => true, { error: "hello there" })',
+      code: dedent`
+        import * as z from 'zod';
+        z.custom(() => true, { error: "hello there" });
+      `,
     },
     {
       name: 'string error message',
-      code: 'z.custom(() => true, "error msg")',
+      code: dedent`
+        import * as z from 'zod';
+        z.custom(() => true, "error msg");
+      `,
     },
     {
       name: 'chained method after refine with error message',
-      code: 'z.custom(() => true, { error: "error msg 2" }).trim()',
+      code: `
+        import * as z from 'zod';
+        z.custom(() => true, { error: "error msg 2" }).trim();
+      `,
     },
   ],
 
   invalid: [
     {
       name: 'missing error message parameter',
-      code: 'z.custom(() => true)',
+      code: `
+        import * as z from 'zod';
+        z.custom(() => true)
+      `,
+      errors: [{ messageId: 'requireErrorMessage' }],
+      output: null,
+    },
+    {
+      name: 'missing error message parameter (named)',
+      code: `
+        import { custom } from 'zod';
+        custom(() => true)
+      `,
       errors: [{ messageId: 'requireErrorMessage' }],
       output: null,
     },
     {
       name: 'object without error message',
-      code: 'z.custom(() => true, { abort: true })',
+      code: `
+        import * as z from 'zod';
+        z.custom(() => true, { abort: true })
+      `,
       errors: [{ messageId: 'requireErrorMessage' }],
       output: null,
     },

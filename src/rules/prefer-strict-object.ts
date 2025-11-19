@@ -1,7 +1,7 @@
-import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
+import { ESLintUtils } from '@typescript-eslint/utils';
 
-import { isZodSchemaDeclaration } from '../utils/is-zod-expression.js';
 import { getRuleURL } from '../meta.js';
+import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
 const methodsPoll = ['object', 'looseObject'] as const;
 
@@ -24,7 +24,7 @@ export const preferStrictObjet = ESLintUtils.RuleCreator(getRuleURL)<
         'Enforce usage of `.strictObject()` over `.object()` and/or `.looseObject()`',
     },
     messages: {
-      useStrictObject: 'Use `.strictObject()` instead of `.{{method}}()`',
+      useStrictObject: 'Prefer `.strictObject()`',
     },
     schema: [
       {
@@ -45,23 +45,27 @@ export const preferStrictObjet = ESLintUtils.RuleCreator(getRuleURL)<
   },
   defaultOptions: [defaultOptions],
   create(context, [{ allow }]) {
+    const {
+      //
+      importDeclarationNodeHandler,
+      detectZodSchemaRootNode,
+    } = trackZodSchemaImports();
+
     return {
+      ImportDeclaration: importDeclarationNodeHandler,
       CallExpression(node): void {
-        if (node.callee.type !== AST_NODE_TYPES.MemberExpression) {
+        const zodSchemaMeta = detectZodSchemaRootNode(node);
+        if (!zodSchemaMeta) {
           return;
         }
 
         // Exclude allowed methods from the check
         const bannedMethods = methodsPoll.filter((it) => !allow.includes(it));
 
-        if (
-          node.callee.property.type === AST_NODE_TYPES.Identifier &&
-          bannedMethods.some((it) => isZodSchemaDeclaration(node.callee, it))
-        ) {
+        if (bannedMethods.some((it) => zodSchemaMeta.schemaType === it)) {
           context.report({
             node,
             messageId: 'useStrictObject',
-            data: { method: node.callee.property.name },
           });
         }
       },

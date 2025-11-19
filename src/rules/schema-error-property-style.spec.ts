@@ -1,4 +1,5 @@
 import { RuleTester } from '@typescript-eslint/rule-tester';
+import dedent from 'dedent';
 
 import { schemaErrorPropertyStyle } from './schema-error-property-style.js';
 
@@ -8,17 +9,40 @@ ruleTester.run('error-style (custom)', schemaErrorPropertyStyle, {
   valid: [
     {
       name: 'default option',
-      code: 'z.custom(() => true, { error: "my error" })',
+      code: dedent`
+        import * as z from 'zod';
+        z.custom(() => true, { error: "my error" })
+      `,
+    },
+    {
+      name: 'default option (named)',
+      code: dedent`
+        import { custom } from 'zod';
+        custom(() => true, { error: "my error" })
+      `,
+    },
+    {
+      name: 'default option non-zod',
+      code: dedent`
+        import { custom } from '@custom';
+        custom(() => true, { error: "my error" })
+      `,
     },
     {
       name: 'default with template string',
-      code: 'z.custom(() => true, `asd`)',
+      code: dedent`
+        import * as z from 'zod';
+        z.custom(() => true, \`asd\`);
+      `,
     },
   ],
   invalid: [
     {
       name: 'arrow function',
-      code: 'z.custom(() => true, { error: () => "my error" })',
+      code: dedent`
+        import * as z from 'zod';
+        z.custom(() => true, { error: () => "my error" })
+      `,
       errors: [
         {
           messageId: 'invalidStyle',
@@ -34,7 +58,10 @@ ruleTester.run('error-style (custom)', schemaErrorPropertyStyle, {
     {
       name: 'invalid selector',
       options: [{ selector: 'asd', example: 'test' }],
-      code: 'z.custom(() => true, `template string`)',
+      code: dedent`
+        import * as z from 'zod';
+        z.custom(() => true, \`template string\`)
+      `,
       errors: [
         {
           messageId: 'invalidStyle',
@@ -64,7 +91,10 @@ ruleTester.run('error-style (refine)', schemaErrorPropertyStyle, {
   invalid: [
     {
       name: 'arrow function',
-      code: 'z.string().refine(() => true, { error: () => "my error" })',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine(() => true, { error: () => "my error" })
+      `,
       errors: [
         {
           messageId: 'invalidStyle',
@@ -80,7 +110,10 @@ ruleTester.run('error-style (refine)', schemaErrorPropertyStyle, {
     {
       name: 'invalid selector',
       options: [{ selector: 'asd', example: 'test' }],
-      code: 'z.string().refine(() => true, `template string`)',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine(() => true, \`template string\`)
+      `,
       errors: [
         {
           messageId: 'invalidStyle',

@@ -1,4 +1,5 @@
 import { RuleTester } from '@typescript-eslint/rule-tester';
+import dedent from 'dedent';
 
 import { noNumberSchemaWithInt } from './no-number-schema-with-int.js';
 
@@ -8,15 +9,31 @@ ruleTester.run('no-number-schema-with-int', noNumberSchemaWithInt, {
   valid: [
     {
       name: 'valid usage',
-      code: 'z.int()',
+      code: dedent`
+        import * as z from 'zod';
+        z.int();
+      `,
+    },
+    {
+      name: 'valid usage (named)',
+      code: dedent`
+        import int from 'zod';
+        int();
+      `,
     },
     {
       name: 'standard + chain method',
-      code: 'z.int().min(5)',
+      code: dedent`
+        import * as z from 'zod';
+        z.int().min(5);
+      `,
     },
     {
       name: 'number without .int()',
-      code: 'z.number().optional()',
+      code: dedent`
+        import * as z from 'zod';
+        z.number().optional();
+      `,
     },
     {
       name: 'unrelated to zod',
@@ -24,33 +41,69 @@ ruleTester.run('no-number-schema-with-int', noNumberSchemaWithInt, {
     },
     {
       name: 'nested valid usage',
-      code: 'z.object({ age: z.int(), count: z.number() })',
+      code: dedent`
+        import * as z from 'zod';
+        z.object({ age: z.int(), count: z.number() });
+      `,
     },
   ],
   invalid: [
     {
       name: 'number + int',
-      code: 'z.number().int()',
+      code: `
+        import * as z from 'zod';
+        z.number().int();
+      `,
       errors: [{ messageId: 'removeNumber' }],
-      output: 'z.int()',
+      output: `
+        import * as z from 'zod';
+        z.int();
+      `,
+    },
+    {
+      name: 'number + int (named)',
+      code: `
+        import { number } from 'zod';
+        number().int();
+      `,
+      errors: [{ messageId: 'removeNumber' }],
+      output: null,
     },
     {
       name: 'number + int + other method',
-      code: 'z.number().int().min(1)',
+      code: `
+        import * as z from 'zod';
+        z.number().int().min(1);
+      `,
       errors: [{ messageId: 'removeNumber' }],
-      output: 'z.int().min(1)',
+      output: `
+        import * as z from 'zod';
+        z.int().min(1);
+      `,
     },
     {
       name: 'number + other method + int',
-      code: 'z.number().min(1).int()',
+      code: `
+        import * as z from 'zod';
+        z.number().min(1).int();
+      `,
       errors: [{ messageId: 'removeNumber' }],
-      output: 'z.int().min(1)',
+      output: `
+        import * as z from 'zod';
+        z.int().min(1);
+      `,
     },
     {
       name: 'nested in object',
-      code: 'z.object({ age: z.number().int() })',
+      code: `
+        import * as z from 'zod';
+        z.object({ age: z.number().int() });
+      `,
       errors: [{ messageId: 'removeNumber' }],
-      output: 'z.object({ age: z.int() })',
+      output: `
+        import * as z from 'zod';
+        z.object({ age: z.int() });
+      `,
     },
   ],
 });

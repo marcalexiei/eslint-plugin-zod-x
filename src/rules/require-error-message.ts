@@ -2,10 +2,7 @@ import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
-import {
-  isZodExpression,
-  isZodSchemaDeclaration,
-} from '../utils/is-zod-expression.js';
+import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
 export const requireErrorMessage = ESLintUtils.RuleCreator(getRuleURL)({
   name: 'require-error-message',
@@ -25,25 +22,41 @@ export const requireErrorMessage = ESLintUtils.RuleCreator(getRuleURL)({
   },
   defaultOptions: [],
   create(context) {
+    const {
+      //
+      importDeclarationNodeHandler,
+      detectZodSchemaRootNode,
+      collectZodChainMethods,
+    } = trackZodSchemaImports();
+
     return {
+      ImportDeclaration: importDeclarationNodeHandler,
       CallExpression(node): void {
-        if (
-          !isZodExpression(node.callee, 'refine') &&
-          !isZodSchemaDeclaration(node.callee, 'custom')
-        ) {
+        const zodSchemaMeta = detectZodSchemaRootNode(node);
+        if (!zodSchemaMeta) {
           return;
         }
 
+        const refine = collectZodChainMethods(node).find(
+          (it) => it.name === 'refine' || it.name === 'custom',
+        );
+
+        if (!refine) {
+          return;
+        }
+
+        const refineNode = refine.node;
+
         // A valid error message requires 2 arguments; otherwise, it's missing
-        if (node.arguments.length < 2) {
+        if (refineNode.arguments.length < 2) {
           context.report({
             messageId: 'requireErrorMessage',
-            node: node.callee.property,
+            node: node.callee,
           });
           return;
         }
 
-        const [, params] = node.arguments;
+        const [, params] = refineNode.arguments;
 
         // Since the user passes a string, an error message is always included
         if (params.type === AST_NODE_TYPES.Literal) {

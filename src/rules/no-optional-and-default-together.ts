@@ -1,8 +1,8 @@
-import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
+import { ESLintUtils } from '@typescript-eslint/utils';
 import type { TSESTree, TSESLint } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
-import { collectZodChainMethods } from '../utils/collect-zod-chain-methods.js';
+import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
 const preferredMethods = ['none', 'default', 'optional'] as const;
 
@@ -55,16 +55,24 @@ export const noOptionalAndDefaultTogether = ESLintUtils.RuleCreator(getRuleURL)<
   create(context, [{ preferredMethod }]) {
     const { sourceCode } = context;
 
-    return {
-      CallExpression(node): void {
-        const { callee } = node;
+    const {
+      //
+      importDeclarationNodeHandler,
+      detectZodSchemaRootNode: isZodSchema,
+      collectZodChainMethods,
+    } = trackZodSchemaImports();
 
-        if (callee.type !== AST_NODE_TYPES.MemberExpression) {
+    return {
+      ImportDeclaration: importDeclarationNodeHandler,
+
+      CallExpression(node): void {
+        if (!isZodSchema(node, context.sourceCode.getAncestors(node))) {
           return;
         }
 
         // Collect all methods in the chain
         const methods = collectZodChainMethods(node);
+
         if (methods.length === 0) {
           return;
         }
