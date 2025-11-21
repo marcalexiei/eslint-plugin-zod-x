@@ -91,7 +91,7 @@ ruleTester.run('array-style (method)', arrayStyle, {
     {
       name: 'named',
       code: dedent`
-        import string from 'zod';
+        import { string } from 'zod';
         string().array();
       `,
       options: [{ style: 'method' }],

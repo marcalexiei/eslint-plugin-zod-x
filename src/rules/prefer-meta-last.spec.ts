@@ -28,7 +28,6 @@ ruleTester.run('prefer-meta-last', preferMetaLast, {
         z.string().min(5).max(10).meta({ description: "my string" });
       `,
     },
-
     {
       name: 'multiple chained meta at the end (still valid)',
       code: `

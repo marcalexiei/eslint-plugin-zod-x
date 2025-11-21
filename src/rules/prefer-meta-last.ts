@@ -4,14 +4,13 @@ import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 import { getRuleURL } from '../meta.js';
 import { isZodExpressionEndingWithMethod } from '../utils/is-zod-expression.js';
 import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
+import { getOutermostCall } from '../utils/get-outermost-call.js';
 
 export const preferMetaLast = ESLintUtils.RuleCreator(getRuleURL)({
   name: 'prefer-meta-last',
   meta: {
     type: 'suggestion',
-    docs: {
-      description: 'Enforce `.meta()` as last method',
-    },
+    docs: { description: 'Enforce `.meta()` as last method' },
     fixable: 'code',
     messages: {
       metaNotLast: 'The `.meta()` methods should be the last one called',
@@ -20,87 +19,86 @@ export const preferMetaLast = ESLintUtils.RuleCreator(getRuleURL)({
   },
   defaultOptions: [],
   create(context) {
-    const { importDeclarationNodeHandler, detectZodSchemaRootNode } =
-      trackZodSchemaImports();
+    const {
+      importDeclarationNodeHandler,
+      detectZodSchemaRootNode,
+      collectZodChainMethods,
+    } = trackZodSchemaImports();
+
     return {
       ImportDeclaration: importDeclarationNodeHandler,
+
       CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(
-          node,
-          context.sourceCode.getAncestors(node),
-        );
+        // Only interested in calls that don't end with `.meta(...)`
+        if (
+          node.callee.type !== AST_NODE_TYPES.MemberExpression ||
+          !isZodExpressionEndingWithMethod(node.callee, 'meta')
+        ) {
+          return;
+        }
+
+        // Try to see if we're inside a schema root (existing behavior)
+
+        // Get the outermost call for the whole chain
+        const outer = getOutermostCall(node);
+        if (!outer) {
+          return;
+        }
+
+        const zodSchemaMeta = detectZodSchemaRootNode(outer);
+
+        // Collect the full chain methods
+        const chain = collectZodChainMethods(outer);
+
+        // If not inside a schema root AND doesn't look like a zod chain, bail out.
+        // This preserves previous behavior while allowing standalone zod chains to be processed.
         if (!zodSchemaMeta) {
           return;
         }
-        if (node.callee.type !== AST_NODE_TYPES.MemberExpression) {
+
+        // Find the first meta() in the chain
+        const metaIndex = chain.findIndex((c) => c.name === 'meta');
+        if (metaIndex === -1) {
           return;
         }
 
-        if (!isZodExpressionEndingWithMethod(node.callee, 'meta')) {
+        // If there are only meta() calls after the first meta -> valid (allow multiple metas at end)
+        const hasAnyNonMetaAfter = chain
+          .slice(metaIndex + 1)
+          .some((c) => c.name !== 'meta');
+        if (!hasAnyNonMetaAfter) {
           return;
         }
 
-        // Walk up the AST to see if there's any chained member call after .meta()
-        let current: TSESTree.Node | undefined = node.parent;
-        let hasAnotherMethodAfterMeta = false;
+        // Report the first offending `.meta(...)`
+        const metaCall = chain[metaIndex].node;
 
-        while (current) {
-          if (current.type === AST_NODE_TYPES.Property) {
-            // We've reached the end of the chain (inside an object)
-            break;
-          }
-
-          if (
-            current.type === AST_NODE_TYPES.CallExpression &&
-            current.callee.type === AST_NODE_TYPES.MemberExpression
-          ) {
-            // We found another method call
-            const prop = current.callee.property;
-            if (
-              prop.type === AST_NODE_TYPES.Identifier &&
-              prop.name !== 'meta'
-            ) {
-              hasAnotherMethodAfterMeta = true;
-              break;
-            }
-          }
-
-          current = current.parent ?? undefined;
-        }
-
-        if (!hasAnotherMethodAfterMeta) {
-          return;
-        }
-
-        const { callee } = node;
-        const { sourceCode } = context;
+        const metaCallCallee = metaCall.callee as TSESTree.MemberExpression;
 
         context.report({
-          node: callee.property,
+          node: metaCallCallee.property,
           messageId: 'metaNotLast',
           fix: (fixer) => {
-            const metaText = sourceCode.getText(node);
-            const metaRange = node.range;
+            const source = context.sourceCode;
 
-            // Find the last call in the chain
-            let last = node.parent as TSESTree.CallExpression;
-            while (
-              last.parent.type === AST_NODE_TYPES.CallExpression &&
-              last.parent.callee.type === AST_NODE_TYPES.MemberExpression
-            ) {
-              last = last.parent;
-            }
+            // "z.string().meta({...})"
+            const metaCallText = source.getText(metaCall);
 
-            const lastRange = last.range;
+            // Extract ONLY ".meta(...)" from the call text:
+            // The metaCall.callee.object gives us the part BEFORE `.meta`
+            const objectText = source.getText(metaCallCallee.object);
+            const onlyMetaSuffix = metaCallText.slice(objectText.length); // => ".meta({...})"
+
+            // Remove `.meta(...)` where it currently is
+            const [, removeStart] = metaCallCallee.object.range;
+            const [, removeEnd] = metaCall.range;
+
+            // Last call in the chain:
+            const lastCall = chain[chain.length - 1].node;
 
             return [
-              // remove the `.meta(...)` from its current spot
-              fixer.removeRange([callee.object.range[1], metaRange[1]]),
-              // append `.meta(...)` at the end
-              fixer.insertTextAfterRange(
-                lastRange,
-                `.${/meta\(.*\)/.exec(metaText)![0]}`,
-              ),
+              fixer.removeRange([removeStart, removeEnd]),
+              fixer.insertTextAfterRange(lastCall.range, onlyMetaSuffix),
             ];
           },
         });

@@ -40,9 +40,8 @@ export const requireSchemaSuffix = ESLintUtils.RuleCreator(getRuleURL)<
   defaultOptions: [{ suffix: 'Schema' }],
   create(context, [{ suffix }]) {
     const {
-      //
       importDeclarationNodeHandler,
-      detectZodSchemaRootNode: isZodSchema,
+      detectZodSchemaRootNode,
       collectZodChainMethods,
     } = trackZodSchemaImports();
 
@@ -51,16 +50,13 @@ export const requireSchemaSuffix = ESLintUtils.RuleCreator(getRuleURL)<
       VariableDeclarator(node): void {
         const initNode = node.init;
 
-        if (
-          !initNode ||
-          !isZodSchema(initNode, context.sourceCode.getAncestors(node))
-        ) {
+        if (!initNode || !detectZodSchemaRootNode(initNode)) {
           return;
         }
 
         // If it's a zod schema but the initNode is a member expression,
         // it's likely that a property is accessed so the final output is not a schema
-        if (initNode.type === AST_NODE_TYPES.MemberExpression) {
+        if (initNode.type !== AST_NODE_TYPES.CallExpression) {
           return;
         }
 

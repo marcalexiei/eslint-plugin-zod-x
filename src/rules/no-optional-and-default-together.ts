@@ -66,7 +66,7 @@ export const noOptionalAndDefaultTogether = ESLintUtils.RuleCreator(getRuleURL)<
       ImportDeclaration: importDeclarationNodeHandler,
 
       CallExpression(node): void {
-        if (!isZodSchema(node, context.sourceCode.getAncestors(node))) {
+        if (!isZodSchema(node)) {
           return;
         }
 
