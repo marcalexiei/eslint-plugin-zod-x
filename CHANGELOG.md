@@ -1,5 +1,28 @@
 # eslint-plugin-zod-x
 
+## 1.10.0
+
+### Minor Changes
+
+- [#110](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/110) [`d54bade`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/d54bade9949834e53c11c50aef31961c2af2d3bf) Thanks [@marcalexiei](https://github.com/marcalexiei)! - This release adds support for Zod named exports.
+  All rules should now work with default, namespace, and named import styles,
+  this required a major rewrite.
+
+  ***
+
+  Some rules do not yet provide automatic fixes when using named imports.
+  Fixes for those cases are more complex because they often require modifying import statements.
+
+  ***
+
+  🤕🤕🤕
+  This is not a major release since doesn't add any breaking change,
+  however there might be some issues due to the major refactor.
+
+### Patch Changes
+
+- [#112](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/112) [`bbbb147`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/bbbb147433e554a11ad7193e0ffa7286dc8f9f0a) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: new find logic perf improvements
+
 ## 1.9.0
 
 ### Minor Changes
