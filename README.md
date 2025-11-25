@@ -32,6 +32,7 @@
 | :--------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------- | :-- | :-- | :-- |
 | [array-style](docs/rules/array-style.md)                                           | Enforce consistent Zod array style                                                            | ✅  | 🔧  |     |
 | [consistent-import-source](docs/rules/consistent-import-source.md)                 | Enforce consistent source from Zod imports                                                    |     |     | 💡  |
+| [consistent-object-schema-type](docs/rules/consistent-object-schema-type.md)       | Enforce consistent usage of Zod schema methods                                                |     |     | 💡  |
 | [no-any](docs/rules/no-any.md)                                                     | Disallow usage of `z.any()` in Zod schemas                                                    | ✅  |     | 💡  |
 | [no-empty-custom-schema](docs/rules/no-empty-custom-schema.md)                     | Disallow usage of `z.custom()` without arguments                                              | ✅  |     |     |
 | [no-number-schema-with-int](docs/rules/no-number-schema-with-int.md)               | Disallow usage of `z.number().int()` as it is considered legacy                               | ✅  | 🔧  |     |
@@ -50,7 +51,7 @@
 
 ## Installation
 
-Install **eslint** and **eslint-plugin-zod-x** using your preferred package manager:
+Install `eslint` and `eslint-plugin-zod-x` using your preferred package manager:
 
 ```shell
 npm i --save-dev eslint eslint-plugin-zod-x

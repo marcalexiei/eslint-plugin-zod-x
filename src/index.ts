@@ -3,6 +3,7 @@ import type { ESLint, Linter, Rule } from 'eslint';
 import { PLUGIN_NAME, PLUGIN_VERSION } from './meta.js';
 import { arrayStyle } from './rules/array-style.js';
 import { consistentImportSource } from './rules/consistent-import-source.js';
+import { consistentObjectSchemaType } from './rules/consistent-object-schema-type.js';
 import { noAny } from './rules/no-any.js';
 import { noEmptyCustomSchema } from './rules/no-empty-custom-schema.js';
 import { noNumberSchemaWithInt } from './rules/no-number-schema-with-int.js';
@@ -39,6 +40,7 @@ const eslintPluginZodX = {
     /* eslint-disable @typescript-eslint/naming-convention */
     'array-style': arrayStyle,
     'consistent-import-source': consistentImportSource,
+    'consistent-object-schema-type': consistentObjectSchemaType,
     'no-any': noAny,
     'no-empty-custom-schema': noEmptyCustomSchema,
     'no-number-schema-with-int': noNumberSchemaWithInt,

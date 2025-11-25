@@ -4,8 +4,10 @@ import { getRuleURL } from '../meta.js';
 import { isZodExpressionEndingWithMethod } from '../utils/is-zod-expression.js';
 import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
+const ZOD_ARRAY_STYLES = ['function', 'method'];
+
 interface Options {
-  style: 'function' | 'method';
+  style: (typeof ZOD_ARRAY_STYLES)[number];
 }
 type MessageIds = 'useFunction' | 'useMethod';
 
@@ -33,7 +35,7 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
           style: {
             description: 'Decides which style for zod array function',
             type: 'string',
-            enum: ['function', 'method'],
+            enum: ZOD_ARRAY_STYLES,
           },
         },
         additionalProperties: false,
