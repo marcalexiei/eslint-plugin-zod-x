@@ -1,5 +1,11 @@
 # eslint-plugin-zod-x
 
+## 1.11.0
+
+### Minor Changes
+
+- [#119](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/119) [`725c4de`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/725c4de6fb004489ef12bb0410b4a6f3104c6e7a) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(consistent-object-schema-type): add new rule
+
 ## 1.10.0
 
 ### Minor Changes
