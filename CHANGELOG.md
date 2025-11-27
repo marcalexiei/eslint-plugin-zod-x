@@ -1,5 +1,11 @@
 # eslint-plugin-zod-x
 
+## 1.11.1
+
+### Patch Changes
+
+- [#122](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/122) [`85a1ec7`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/85a1ec72e7508b8c1e0e7a4908b20d1b072186a7) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(prefer-meta): do not process non-zod expressions
+
 ## 1.11.0
 
 ### Minor Changes
