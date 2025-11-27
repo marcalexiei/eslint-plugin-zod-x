@@ -1,7 +1,8 @@
+import type { TSESTree } from '@typescript-eslint/utils';
 import { ESLintUtils } from '@typescript-eslint/utils';
 
-import { isZodExpressionEndingWithMethod } from '../utils/is-zod-expression.js';
 import { getRuleURL } from '../meta.js';
+import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
 export const preferMeta = ESLintUtils.RuleCreator(getRuleURL)({
   name: 'prefer-meta',
@@ -19,28 +20,51 @@ export const preferMeta = ESLintUtils.RuleCreator(getRuleURL)({
   },
   defaultOptions: [],
   create(context) {
-    return {
-      CallExpression(node): void {
-        if (isZodExpressionEndingWithMethod(node.callee, 'describe')) {
-          const {
-            callee,
-            arguments: [describeArg],
-          } = node;
+    const {
+      //
+      importDeclarationNodeHandler,
+      detectZodSchemaRootNode,
+      collectZodChainMethods,
+    } = trackZodSchemaImports();
 
-          context.report({
-            node,
-            messageId: 'preferMeta',
-            fix(fixer) {
-              return [
-                fixer.replaceText(callee.property, 'meta'),
-                fixer.replaceText(
-                  describeArg,
-                  `{ description: ${context.sourceCode.getText(describeArg)} }`,
-                ),
-              ];
-            },
-          });
+    return {
+      ImportDeclaration: importDeclarationNodeHandler,
+      CallExpression(node): void {
+        const zodSchemaMeta = detectZodSchemaRootNode(node);
+
+        if (!zodSchemaMeta) {
+          return;
         }
+
+        const describe = collectZodChainMethods(zodSchemaMeta.node).find(
+          (it) => it.name === 'describe',
+        );
+
+        if (!describe) {
+          return;
+        }
+
+        const {
+          callee,
+          arguments: [describeArg],
+        } = describe.node;
+
+        context.report({
+          node,
+          messageId: 'preferMeta',
+          fix(fixer) {
+            return [
+              fixer.replaceText(
+                (callee as TSESTree.MemberExpression).property,
+                'meta',
+              ),
+              fixer.replaceText(
+                describeArg,
+                `{ description: ${context.sourceCode.getText(describeArg)} }`,
+              ),
+            ];
+          },
+        });
       },
     };
   },
