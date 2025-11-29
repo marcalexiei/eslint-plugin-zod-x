@@ -2,8 +2,6 @@
 
 💼 This rule is enabled in the ✅ `recommended` config.
 
-🔧 This rule is automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/latest/user-guide/command-line-interface#--fix).
-
 <!-- end auto-generated rule header -->
 
 ## Rule Details
@@ -36,28 +34,51 @@ Using a consistent suffix for Zod schemas provides several benefits:
 
 <!-- end auto-generated rule options list -->
 
+## Why is there no autofix or suggestion?
+
+**TL;DR:** Use your IDE’s rename functionality, it’s far more robust and already battle-tested.
+Adding a custom autofix here would essentially reinvent the wheel.
+
+---
+
+Renaming variables safely is surprisingly complex.
+An ESLint rule cannot reliably handle all the cases involved, including:
+
+- handling linked `import` / `export` statements
+- avoiding naming conflicts within the same scope
+- preventing accidental shadowing of variables in inner or outer scopes
+- applying changes across multiple files (e.g., when the variable is exported)
+
+Because of these limitations, this rule only reports an error and does not provide an automated fix.
+To resolve the issue, rely on your IDE’s rename tools.
+They’re designed to manage all of the above scenarios correctly.
+
 ## Examples
 
-### ❌ Invalid
+### Default
 
-```ts
-// With default options ({ suffix: 'Schema' })
-const user = z.string();
-const address = z.object({ street: z.string() });
-
-// With custom suffix ({ suffix: 'Type' })
-const user = z.string();
+```json
+{
+  "rules": {
+    "zod-x/require-schema-suffix": ["error"]
+  }
+}
 ```
 
-### ✅ Valid
+❌ Invalid
 
 ```ts
-// With default options ({ suffix: 'Schema' })
+const user = z.string();
+const address = z.object({ street: z.string() });
+const userType = z.string();
+```
+
+✅ Valid
+
+```ts
 const userSchema = z.string();
 const addressSchema = z.object({ street: z.string() });
-
-// With custom suffix ({ suffix: 'Type' })
-const userType = z.string();
+const userTypeSchema = z.string();
 
 // Non-schema declarations are ignored
 const parsedValue = z.string().parse('test');
@@ -70,31 +91,43 @@ const stringToDate = z.codec(z.iso.datetime(), z.date(), {
 });
 ```
 
-## Configuration
-
-### Default
+### Custom `suffix`
 
 ```json
 {
   "rules": {
-    "zod-x/require-schema-suffix": ["error"]
+    "zod-x/require-schema-suffix": ["error", { "suffix": "_schema" }]
   }
 }
 ```
 
-### Custom Suffix
+❌ Invalid
 
-```json
-{
-  "rules": {
-    "zod-x/require-schema-suffix": ["error", { "suffix": "Type" }]
-  }
-}
+```ts
+const user = z.string();
+const address = z.object({ street: z.string() });
+const user = z.string();
+```
+
+✅ Valid
+
+```ts
+const user_schema = z.string();
+const address_schema = z.object({ street: z.string() });
+const user_type_schema = z.string();
+
+// Non-schema declarations are ignored
+const parsed_value = z.string().parse('test');
+const result = someOtherFunction();
+
+// Codec transformations are ignored
+const string_to_date = z.codec(z.iso.datetime(), z.date(), {
+  decode: (isoString) => new Date(isoString),
+  encode: (date) => date.toISOString(),
+});
 ```
 
 ## When Not To Use It
-
-If you:
 
 - Have an existing codebase with different naming conventions
 - Prefer a different way to identify schema variables
