@@ -44,7 +44,7 @@
 | [prefer-strict-object](docs/rules/prefer-strict-object.md)                         | Enforce usage of `.strictObject()` over `.object()` and/or `.looseObject()`                   |     |     |     |
 | [require-brand-type-parameter](docs/rules/require-brand-type-parameter.md)         | Require type parameter on `.brand()` functions                                                | ✅  |     | 💡  |
 | [require-error-message](docs/rules/require-error-message.md)                       | Enforce that custom refinements include an error message                                      | ✅  | 🔧  |     |
-| [require-schema-suffix](docs/rules/require-schema-suffix.md)                       | Require schema suffix when declaring a Zod schema                                             | ✅  | 🔧  |     |
+| [require-schema-suffix](docs/rules/require-schema-suffix.md)                       | Require schema suffix when declaring a Zod schema                                             | ✅  |     |     |
 | [schema-error-property-style](docs/rules/schema-error-property-style.md)           | Enforce consistent style for error messages in Zod schema validation (using ESQuery patterns) |     |     |     |
 
 <!-- end auto-generated rules list -->

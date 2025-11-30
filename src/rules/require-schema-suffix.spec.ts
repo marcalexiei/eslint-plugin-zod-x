@@ -101,33 +101,39 @@ ruleTester.run('require-schema-suffix', requireSchemaSuffix, {
         import * as z from 'zod';
         const myVar = z.string();
       `,
-      errors: [{ messageId: 'noSchemaSuffix', data: { suffix: 'Schema' } }],
-      output: dedent`
-        import * as z from 'zod';
-        const myVarSchema = z.string();
-      `,
+      errors: [
+        {
+          messageId: 'noSchemaSuffix',
+          data: { suffix: 'Schema', expected: 'myVarSchema' },
+        },
+      ],
+      output: null,
     },
     {
       code: dedent`
         import { string } from 'zod';
         const myVar = string();
       `,
-      errors: [{ messageId: 'noSchemaSuffix', data: { suffix: 'Schema' } }],
-      output: dedent`
-        import { string } from 'zod';
-        const myVarSchema = string();
-      `,
+      errors: [
+        {
+          messageId: 'noSchemaSuffix',
+          data: { suffix: 'Schema', expected: 'myVarSchema' },
+        },
+      ],
+      output: null,
     },
     {
       code: dedent`
         import { string } from 'zod';
         const myVar = string().min(1);
       `,
-      errors: [{ messageId: 'noSchemaSuffix', data: { suffix: 'Schema' } }],
-      output: dedent`
-        import { string } from 'zod';
-        const myVarSchema = string().min(1);
-      `,
+      errors: [
+        {
+          messageId: 'noSchemaSuffix',
+          data: { suffix: 'Schema', expected: 'myVarSchema' },
+        },
+      ],
+      output: null,
     },
     {
       name: 'handle schema with chained methods',
@@ -135,11 +141,13 @@ ruleTester.run('require-schema-suffix', requireSchemaSuffix, {
         import * as z from 'zod';
         const myVar = z.string().min(1);
       `,
-      errors: [{ messageId: 'noSchemaSuffix', data: { suffix: 'Schema' } }],
-      output: dedent`
-        import * as z from 'zod';
-        const myVarSchema = z.string().min(1);
-      `,
+      errors: [
+        {
+          messageId: 'noSchemaSuffix',
+          data: { suffix: 'Schema', expected: 'myVarSchema' },
+        },
+      ],
+      output: null,
     },
     {
       name: 'handle schema with chained methods (named)',
@@ -147,11 +155,13 @@ ruleTester.run('require-schema-suffix', requireSchemaSuffix, {
         import { string } from 'zod';
         const myVar = string().min(1);
       `,
-      errors: [{ messageId: 'noSchemaSuffix', data: { suffix: 'Schema' } }],
-      output: dedent`
-        import { string } from 'zod';
-        const myVarSchema = string().min(1);
-      `,
+      errors: [
+        {
+          messageId: 'noSchemaSuffix',
+          data: { suffix: 'Schema', expected: 'myVarSchema' },
+        },
+      ],
+      output: null,
     },
     {
       name: 'handle snake_case suffix',
@@ -160,11 +170,13 @@ ruleTester.run('require-schema-suffix', requireSchemaSuffix, {
         const my_string = z.string()
       `,
       options: [{ suffix: '_schema' }],
-      errors: [{ messageId: 'noSchemaSuffix', data: { suffix: '_schema' } }],
-      output: dedent`
-        import * as z from 'zod';
-        const my_string_schema = z.string()
-      `,
+      errors: [
+        {
+          messageId: 'noSchemaSuffix',
+          data: { suffix: '_schema', expected: 'my_string_schema' },
+        },
+      ],
+      output: null,
     },
     {
       name: 'handle snake_case suffix (named)',
@@ -173,11 +185,13 @@ ruleTester.run('require-schema-suffix', requireSchemaSuffix, {
         const my_string = string();
       `,
       options: [{ suffix: '_schema' }],
-      errors: [{ messageId: 'noSchemaSuffix', data: { suffix: '_schema' } }],
-      output: dedent`
-        import { string } from 'zod';
-        const my_string_schema = string();
-      `,
+      errors: [
+        {
+          messageId: 'noSchemaSuffix',
+          data: { suffix: '_schema', expected: 'my_string_schema' },
+        },
+      ],
+      output: null,
     },
   ],
 });
