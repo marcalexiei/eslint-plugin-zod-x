@@ -1,5 +1,15 @@
 # eslint-plugin-zod-x
 
+## 1.11.2
+
+### Patch Changes
+
+- [#125](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/125) [`62b8ce3`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/62b8ce30212b981f3db818e122b9a59d8fdbc839) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(require-schema-suffix): remove unsafe autofix
+
+  If you previously relied on this feature, you can safely update your code by using your IDE’s rename functionality.
+
+  For more details, see the [`require-schema-suffix` documentation](https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/require-schema-suffix.md).
+
 ## 1.11.1
 
 ### Patch Changes
