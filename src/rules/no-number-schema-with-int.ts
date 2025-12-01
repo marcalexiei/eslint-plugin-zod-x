@@ -26,13 +26,13 @@ export const noNumberSchemaWithInt = ESLintUtils.RuleCreator(getRuleURL)({
     const { sourceCode } = context;
 
     const {
-      importDeclarationNodeHandler,
+      importDeclarationListener,
       detectZodSchemaRootNode,
       collectZodChainMethods,
     } = trackZodSchemaImports();
 
     return {
-      ImportDeclaration: importDeclarationNodeHandler,
+      ImportDeclaration: importDeclarationListener,
 
       CallExpression(node): void {
         const outer = getOutermostCall(node) ?? node;

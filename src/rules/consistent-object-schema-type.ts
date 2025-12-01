@@ -54,12 +54,12 @@ export const consistentObjectSchemaType = ESLintUtils.RuleCreator(getRuleURL)<
   create(context, [{ allow: allowedList }]) {
     const {
       //
-      importDeclarationNodeHandler,
+      importDeclarationListener,
       detectZodSchemaRootNode,
     } = trackZodSchemaImports();
 
     return {
-      ImportDeclaration: importDeclarationNodeHandler,
+      ImportDeclaration: importDeclarationListener,
       CallExpression(node): void {
         const zodSchemaMeta = detectZodSchemaRootNode(node);
 

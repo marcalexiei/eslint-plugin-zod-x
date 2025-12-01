@@ -47,12 +47,12 @@ export const preferStrictObjet = ESLintUtils.RuleCreator(getRuleURL)<
   create(context, [{ allow }]) {
     const {
       //
-      importDeclarationNodeHandler,
+      importDeclarationListener,
       detectZodSchemaRootNode,
     } = trackZodSchemaImports();
 
     return {
-      ImportDeclaration: importDeclarationNodeHandler,
+      ImportDeclaration: importDeclarationListener,
       CallExpression(node): void {
         const zodSchemaMeta = detectZodSchemaRootNode(node);
         if (!zodSchemaMeta) {

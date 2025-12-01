@@ -57,13 +57,13 @@ export const noOptionalAndDefaultTogether = ESLintUtils.RuleCreator(getRuleURL)<
 
     const {
       //
-      importDeclarationNodeHandler,
+      importDeclarationListener,
       detectZodSchemaRootNode: isZodSchema,
       collectZodChainMethods,
     } = trackZodSchemaImports();
 
     return {
-      ImportDeclaration: importDeclarationNodeHandler,
+      ImportDeclaration: importDeclarationListener,
 
       CallExpression(node): void {
         if (!isZodSchema(node)) {

@@ -23,13 +23,13 @@ export const requireBrandTypeParameter = ESLintUtils.RuleCreator(getRuleURL)({
   create(context) {
     const {
       //
-      importDeclarationNodeHandler,
+      importDeclarationListener,
       detectZodSchemaRootNode,
       collectZodChainMethods,
     } = trackZodSchemaImports();
 
     return {
-      ImportDeclaration: importDeclarationNodeHandler,
+      ImportDeclaration: importDeclarationListener,
       CallExpression(node): void {
         const zodSchemaMeta = detectZodSchemaRootNode(node);
         if (!zodSchemaMeta) {

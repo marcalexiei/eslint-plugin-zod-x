@@ -39,13 +39,13 @@ export const requireSchemaSuffix = ESLintUtils.RuleCreator(getRuleURL)<
   defaultOptions: [{ suffix: 'Schema' }],
   create(context, [{ suffix }]) {
     const {
-      importDeclarationNodeHandler,
+      importDeclarationListener,
       detectZodSchemaRootNode,
       collectZodChainMethods,
     } = trackZodSchemaImports();
 
     return {
-      ImportDeclaration: importDeclarationNodeHandler,
+      ImportDeclaration: importDeclarationListener,
       VariableDeclarator(node): void {
         const initNode = node.init;
 
