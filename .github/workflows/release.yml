@@ -38,7 +38,7 @@ jobs:
           git config --global user.email '${{ steps.release-helper.outputs.bot-email }}'
 
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
 
