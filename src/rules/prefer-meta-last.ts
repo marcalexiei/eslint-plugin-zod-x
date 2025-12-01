@@ -20,13 +20,13 @@ export const preferMetaLast = ESLintUtils.RuleCreator(getRuleURL)({
   defaultOptions: [],
   create(context) {
     const {
-      importDeclarationNodeHandler,
+      importDeclarationListener,
       detectZodSchemaRootNode,
       collectZodChainMethods,
     } = trackZodSchemaImports();
 
     return {
-      ImportDeclaration: importDeclarationNodeHandler,
+      ImportDeclaration: importDeclarationListener,
 
       CallExpression(node): void {
         // Only interested in calls that don't end with `.meta(...)`

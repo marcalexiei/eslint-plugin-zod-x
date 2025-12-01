@@ -9,6 +9,7 @@ import { noEmptyCustomSchema } from './rules/no-empty-custom-schema.js';
 import { noNumberSchemaWithInt } from './rules/no-number-schema-with-int.js';
 import { noOptionalAndDefaultTogether } from './rules/no-optional-and-default-together.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
+import { noUnknownSchema } from './rules/no-unknown-schema.js';
 import { preferMeta } from './rules/prefer-meta.js';
 import { preferMetaLast } from './rules/prefer-meta-last.js';
 import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
@@ -46,6 +47,7 @@ const eslintPluginZodX = {
     'no-number-schema-with-int': noNumberSchemaWithInt,
     'no-optional-and-default-together': noOptionalAndDefaultTogether,
     'no-throw-in-refine': noThrowInRefine,
+    'no-unknown-schema': noUnknownSchema,
     'prefer-meta': preferMeta,
     'prefer-meta-last': preferMetaLast,
     'prefer-namespace-import': preferNamespaceImport,

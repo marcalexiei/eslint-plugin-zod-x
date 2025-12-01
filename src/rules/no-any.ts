@@ -23,12 +23,12 @@ export const noAny = ESLintUtils.RuleCreator(getRuleURL)({
   create(context) {
     const {
       //
-      importDeclarationNodeHandler,
+      importDeclarationListener,
       detectZodSchemaRootNode,
     } = trackZodSchemaImports();
 
     return {
-      ImportDeclaration: importDeclarationNodeHandler,
+      ImportDeclaration: importDeclarationListener,
       CallExpression(node): void {
         const zodSchemaMeta = detectZodSchemaRootNode(node);
 

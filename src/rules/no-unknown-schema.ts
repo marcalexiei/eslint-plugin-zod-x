@@ -3,17 +3,16 @@ import { ESLintUtils } from '@typescript-eslint/utils';
 import { getRuleURL } from '../meta.js';
 import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
-export const noEmptyCustomSchema = ESLintUtils.RuleCreator(getRuleURL)({
-  name: 'no-empty-custom-schema',
+export const noUnknownSchema = ESLintUtils.RuleCreator(getRuleURL)({
+  name: 'no-unknown-schema',
   meta: {
-    hasSuggestions: false,
     type: 'suggestion',
     docs: {
-      description: 'Disallow usage of `z.custom()` without arguments',
+      description: 'Disallow usage of `z.unknown()` in Zod schemas',
     },
     messages: {
-      noEmptyCustomSchema:
-        'You should provide a validate function within `z.custom()`',
+      noZUnknown:
+        'Using `z.unknown()` is not allowed. Please use a more specific schema.',
     },
     schema: [],
   },
@@ -29,16 +28,11 @@ export const noEmptyCustomSchema = ESLintUtils.RuleCreator(getRuleURL)({
       ImportDeclaration: importDeclarationListener,
       CallExpression(node): void {
         const zodSchemaMeta = detectZodSchemaRootNode(node);
-        if (!zodSchemaMeta) {
-          return;
-        }
-        if (
-          zodSchemaMeta.schemaType === 'custom' &&
-          node.arguments.length === 0
-        ) {
+
+        if (zodSchemaMeta?.schemaType === 'unknown') {
           context.report({
             node,
-            messageId: 'noEmptyCustomSchema',
+            messageId: 'noZUnknown',
           });
         }
       },

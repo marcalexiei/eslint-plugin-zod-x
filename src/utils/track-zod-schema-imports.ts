@@ -15,14 +15,14 @@ interface Result {
    *
    * @example
    * ```ts
-   * const { importDeclarationNodeHandler } = trackZodSchemaImports();
+   * const { importDeclarationListener } = trackZodSchemaImports();
    *
    * return {
-   *   ImportDeclaration: importDeclarationNodeHandler,
+   *   ImportDeclaration: importDeclarationListener,
    * }
    * ```
    */
-  importDeclarationNodeHandler: (node: TSESTree.ImportDeclaration) => void;
+  importDeclarationListener: (node: TSESTree.ImportDeclaration) => void;
 
   /**
    * Check if given node is a zod schema
@@ -90,7 +90,7 @@ export function trackZodSchemaImports(): Result {
 
   const result: Result = {
     // to be inserted into rule.create()
-    importDeclarationNodeHandler(node): void {
+    importDeclarationListener(node): void {
       if (
         node.source.value !== 'zod' &&
         !node.source.value.startsWith('zod/')

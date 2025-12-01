@@ -48,12 +48,12 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
 
     const {
       //
-      importDeclarationNodeHandler,
+      importDeclarationListener,
       detectZodSchemaRootNode,
     } = trackZodSchemaImports();
 
     return {
-      ImportDeclaration: importDeclarationNodeHandler,
+      ImportDeclaration: importDeclarationListener,
       CallExpression(node): void {
         const zodSchema = detectZodSchemaRootNode(node);
         if (!zodSchema) {
