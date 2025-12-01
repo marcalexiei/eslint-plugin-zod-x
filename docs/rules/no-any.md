@@ -67,5 +67,5 @@ However, it's recommended to eventually replace all `z.any()` instances with mor
 
 ## Further Reading
 
-- [Zod Documentation - Types](https://zod.dev/?id=types)
+- [Zod - Unknown schemas](https://zod.dev/api?id=unknown)
 - [TypeScript - any vs unknown](https://www.typescriptlang.org/docs/handbook/2/functions.html#unknown)

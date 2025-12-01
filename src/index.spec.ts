@@ -39,7 +39,7 @@ describe('plugin export', async () => {
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/pull/99
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/pull/102
    */
-  it('all rules should the name matching their documentation file', () => {
+  it('all rules must have a documentation file matching their name', () => {
     for (const [ruleName, rule] of Object.entries(_plugin.rules)) {
       const ruleDocsURL = (rule as TSESLint.RuleModule<string>).meta.docs?.url;
 

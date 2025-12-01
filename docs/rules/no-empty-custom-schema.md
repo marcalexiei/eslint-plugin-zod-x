@@ -38,8 +38,10 @@ z.custom<`${number}px`>((val) => {
 
 ## When Not To Use It
 
-If you have a specific use case where you need to create an empty custom schema that will be configured later, you might want to disable this rule. However, this is generally not recommended as it could lead to validation being accidentally skipped.
+If you have a specific use case where you need to create an empty custom schema that will be configured later, you might want to disable this rule.
+
+However, this is generally not recommended as it could lead to validation being accidentally skipped.
 
 ## Further Reading
 
-- [Zod Custom Schemas Documentation](https://zod.dev/?id=custom-schemas)
+- [Zod - Custom Schemas](https://zod.dev/api?id=custom)

@@ -21,8 +21,11 @@ export const noThrowInRefine = ESLintUtils.RuleCreator(getRuleURL)({
   },
   defaultOptions: [],
   create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode } =
-      trackZodSchemaImports();
+    const {
+      //
+      importDeclarationListener,
+      detectZodSchemaRootNode,
+    } = trackZodSchemaImports();
 
     function checkNode(node: TSESTree.Node | null): void {
       if (!node) {

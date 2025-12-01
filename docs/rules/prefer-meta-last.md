@@ -9,6 +9,7 @@
 ## Rule Details
 
 This rule enforces that `.meta()` calls should always be the last method in a Zod schema chain.
+
 This promotes a consistent and predictable pattern for schema metadata placement.
 
 ## Why?
@@ -56,5 +57,4 @@ If you have a specific need to call methods after `.meta()` or if you're working
 
 ## Further Reading
 
-- [Zod Schema Metadata Documentation](https://zod.dev/?id=metadata)
-- [Zod Schema Methods](https://zod.dev/?id=methods)
+- [Zod - Schema Metadata](https://zod.dev/metadata)

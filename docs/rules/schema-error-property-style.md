@@ -66,4 +66,4 @@ z.custom(() => true, { error: `template string` });
 
 ## Further Reading
 
-- [ESQuery Syntax Documentation](https://github.com/estools/esquery)
+- [ESQuery - Syntax Documentation](https://github.com/estools/esquery)

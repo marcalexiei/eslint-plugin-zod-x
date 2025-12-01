@@ -11,6 +11,13 @@ Zod provides three methods for creating object schemas:
 `object()`, `looseObject()`, and `strictObject()`.
 This rule ensures you use only the allowed methods.
 
+## Why?
+
+- Enforces a single, explicit object semantics so readers and maintainers know whether extra properties are allowed or rejected.
+- Prevents subtle runtime bugs that arise when different parts of a codebase use different object validation behaviors (loose vs strict).
+- Improves API stability by making object schema expectations consistent across modules and releases.
+- Helps enforce team conventions and reduces cognitive load when authoring or refactoring schemas.
+
 ## Options
 
 <!-- begin auto-generated rule options list -->
@@ -96,6 +103,6 @@ If you still want partial enforcement, you use ESLint overrides to scope the rul
 
 ## Further Reading
 
-- [Zod objects](https://zod.dev/api#objects)
-- [Zod `looseObject`](https://zod.dev/api#zlooseobject)
-- [Zod `strictObject`](https://zod.dev/api#zstrictobject)
+- [Zod - objects](https://zod.dev/api#objects)
+- [Zod - `looseObject`](https://zod.dev/api#zlooseobject)
+- [Zod - `strictObject`](https://zod.dev/api#zstrictobject)

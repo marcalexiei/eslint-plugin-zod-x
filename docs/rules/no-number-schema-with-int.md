@@ -32,6 +32,6 @@ If you’re not concerned about using a legacy API, you can disable this rule.
 
 ## Further Reading
 
-- [Zod Documentation - Numbers](https://zod.dev/?id=numbers)
-- [Zod Documentation - Integers](https://zod.dev/?id=integers)
-- [Zod v4 migration - .int() accepts safe integers only](https://zod.dev/v4/changelog?id=int-accepts-safe-integers-only)
+- [Zod - Numbers](https://zod.dev/api?id=numbers)
+- [Zod - Integers](https://zod.dev/api?id=integers)
+- [Zod - v4 migration - .int() accepts safe integers only](https://zod.dev/v4/changelog?id=int-accepts-safe-integers-only)

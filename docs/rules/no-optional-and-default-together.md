@@ -127,5 +127,5 @@ However, this is generally not recommended as it creates redundant and potential
 
 ## Further Reading
 
-- [Zod Default Documentation](https://zod.dev/?id=default)
-- [Zod Optional Documentation](https://zod.dev/?id=optional)
+- [Zod - Defaults](https://zod.dev/api?id=defaults)
+- [Zod - Optionals](https://zod.dev/api?id=optionals)
