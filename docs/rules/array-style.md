@@ -4,6 +4,8 @@
 
 🔧 This rule is automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/latest/user-guide/command-line-interface#--fix).
 
+<!-- end auto-generated rule header -->
+
 ## Rule details
 
 This rule enforces a single, consistent style for defining Zod arrays: either the function style (`z.array(schema)`) or the method style (`schema.array()`).
@@ -15,8 +17,6 @@ It helps keep schemas uniform across a codebase, improves readability, and makes
 - **Consistency**: reduces cognitive load when reading schemas.
 - **Predictability**: codebase-wide conventions make reviews and diffs clearer.
 - **Tooling**: the rule is automatically fixable, allowing batch or editor-driven fixes.
-
-<!-- end auto-generated rule header -->
 
 ## Options
 
