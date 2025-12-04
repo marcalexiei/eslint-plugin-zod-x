@@ -1,5 +1,15 @@
 # eslint-plugin-zod-x
 
+## 1.12.0
+
+### Minor Changes
+
+- [#132](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/132) [`d559140`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/d559140264d6024fcb079d8ad1a55b52f01da65a) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(no-unknown-schema): add new rule
+
+### Patch Changes
+
+- [#133](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/133) [`49c73fe`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/49c73fecd210471016896da23f27e29f3580602e) Thanks [@marcalexiei](https://github.com/marcalexiei)! - docs: ensure consistent structure across rules documentation
+
 ## 1.11.2
 
 ### Patch Changes
