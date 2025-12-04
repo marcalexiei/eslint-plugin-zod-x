@@ -14,7 +14,8 @@ Brand is a TypeScript-only feature that adds nominal typing to your schemas, req
 ## Why?
 
 The `.brand()` method in Zod is used for nominal typing, which is a TypeScript-only feature.\
-Without a type parameter, the brand has no effect and is essentially dead code.\
+Without a type parameter, the brand has no effect and is essentially dead code.
+
 Using `.brand()` without a type parameter doesn't serve any purpose and should either include a type parameter or be removed.
 
 ## Examples
@@ -41,4 +42,4 @@ If you're not using Zod's branding feature for nominal typing, you can disable t
 
 ## Further Reading
 
-- [Zod Branding Types](https://zod.dev/api?id=branded-types)
+- [Zod - Branding Types](https://zod.dev/api?id=branded-types)

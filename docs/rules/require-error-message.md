@@ -103,6 +103,6 @@ If you:
 
 ## Further Reading
 
-- [Zod Refinements](https://zod.dev/api#refine)
-- [Zod Custom Schemas](https://zod.dev/api?id=custom)
-- [Zod Error Handling](https://zod.dev/?id=error-handling)
+- [Zod - Refinements](https://zod.dev/api#refine)
+- [Zod - Custom Schemas](https://zod.dev/api?id=custom)
+- [Zod - Error Handling](https://zod.dev/basics?id=handling-errors)

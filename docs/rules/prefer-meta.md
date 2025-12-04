@@ -69,5 +69,5 @@ If you're maintaining a codebase that needs to support both Zod 3 and newer vers
 
 ## Further Reading
 
-- [Zod meta Documentation](https://zod.dev/metadata#meta)
-- [Zod describe Documentation](https://zod.dev/metadata#describe)
+- [Zod - Schema Metadata](https://zod.dev/metadata)
+- [Zod - Describe](https://zod.dev/metadata#describe)

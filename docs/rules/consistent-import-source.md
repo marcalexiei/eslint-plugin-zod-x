@@ -128,5 +128,5 @@ If you need to:
 
 ## Further Reading
 
-- [Zod Installation Guide](https://zod.dev/?id=installation)
-- [Node.js Package Versioning](https://nodejs.org/docs/latest/api/packages.html#packages_package_entry_points)
+- [Zod - Installation Guide](https://zod.dev/?id=installation)
+- [Node.js - Package Versioning](https://nodejs.org/docs/latest/api/packages.html#packages_package_entry_points)

@@ -135,4 +135,4 @@ const string_to_date = z.codec(z.iso.datetime(), z.date(), {
 
 ## Further Reading
 
-- [TypeScript Naming Conventions](https://typescript-eslint.io/rules/naming-convention)
+- [TypeScript ESLint - Naming convention rule](https://typescript-eslint.io/rules/naming-convention)

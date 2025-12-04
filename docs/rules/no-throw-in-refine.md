@@ -4,7 +4,15 @@
 
 <!-- end auto-generated rule header -->
 
-This ESLint rule detects and prevents **throw statements directly inside Zod `.refine()` callbacks**. It ignores throws in nested functions but ensures the call is a **Zod expression** (starts with `z.`).
+## Rule details
+
+This ESLint rule detects and prevents **throw statements directly inside Zod `.refine()` callbacks**.
+It ignores throws in nested functions but ensures the call is a **Zod expression**.
+
+From the [Refinements](https://zod.dev/api?id=refinements) documentation
+
+> Refinement functions should never throw. Instead they should return a falsy value to signal failure.
+> Thrown errors are not caught by Zod.
 
 ## Examples
 
@@ -34,3 +42,7 @@ z.string().refine((val) => {
   return val.length > 0;
 });
 ```
+
+## Further readings
+
+- [Zod - Refinements](https://zod.dev/api?id=refinements)

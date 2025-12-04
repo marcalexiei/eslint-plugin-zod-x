@@ -98,5 +98,5 @@ const schema = z.strictObject({ foo: z.string() });
 
 ## Further Reading
 
-- [Zod Object Schemas](https://zod.dev/?id=objects)
-- [Strict vs. Strip in Zod](https://zod.dev/?id=strict)
+- [Zod - Object Schemas](https://zod.dev/api?id=objects)
+- [Zod - Strict vs. Strip in Zod](https://zod.dev/api?id=zstrictobject)

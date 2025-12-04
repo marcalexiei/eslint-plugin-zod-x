@@ -6,6 +6,18 @@
 
 <!-- end auto-generated rule header -->
 
+## Rule details
+
+This rule enforces a single, consistent style for defining Zod arrays: either the function style (`z.array(schema)`) or the method style (`schema.array()`).
+
+It helps keep schemas uniform across a codebase, improves readability, and makes automated formatting/fixing predictable.
+
+## Why?
+
+- **Consistency**: reduces cognitive load when reading schemas.
+- **Predictability**: codebase-wide conventions make reviews and diffs clearer.
+- **Tooling**: the rule is automatically fixable, allowing batch or editor-driven fixes.
+
 ## Options
 
 <!-- begin auto-generated rule options list -->
@@ -16,12 +28,12 @@
 
 <!-- end auto-generated rule options list -->
 
-This rule enforces a consistent style for defining arrays in Zod schemas. You can choose between:
+You can choose between:
 
 - **Function style**: `z.array(...)`
 - **Method style**: `.array()`
 
-By default, `function` is used to maintain consistency with TypeScript’s `Array` generic syntax.
+`function` is used as default to maintain consistency with TypeScript’s `Array` generic syntax.
 
 ## Examples
 

@@ -48,10 +48,12 @@ import type * as z from 'zod'; // type imports
 
 ## When Not To Use It
 
-If you prefer using named imports for better IDE auto-imports or have specific build configurations that work better with named imports, you might want to disable this rule. However, using namespace imports is generally recommended for better maintainability and clarity.
+If you prefer using named imports for better IDE auto-imports or have specific build configurations that work better with named imports, you might want to disable this rule.
+
+However, using namespace imports is generally recommended for better maintainability and clarity.
 
 ## Further Reading
 
-- [Zod Installation and Import](https://zod.dev/?id=installation)
-- [TypeScript Handbook - Namespaces](https://www.typescriptlang.org/docs/handbook/namespaces.html)
-- [JavaScript Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
+- [Zod - Installation](https://zod.dev/?id=installation)
+- [TypeScript - Namespaces](https://www.typescriptlang.org/docs/handbook/namespaces.html)
+- [JavaScript - Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
