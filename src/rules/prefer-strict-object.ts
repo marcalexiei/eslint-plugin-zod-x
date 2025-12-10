@@ -19,6 +19,18 @@ export const preferStrictObjet = ESLintUtils.RuleCreator(getRuleURL)<
   name: 'prefer-strict-object',
   meta: {
     type: 'suggestion',
+    deprecated: {
+      replacedBy: [
+        {
+          message:
+            'This rule is deprecated. Use `consistent-object-schema-type` instead',
+          rule: {
+            name: 'consistent-object-schema-type',
+            url: getRuleURL('consistent-object-schema-type'),
+          },
+        },
+      ],
+    },
     docs: {
       description:
         'Enforce usage of `.strictObject()` over `.object()` and/or `.looseObject()`',
