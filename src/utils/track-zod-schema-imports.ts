@@ -3,6 +3,7 @@ import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { detectZodSchemaRootNode } from './detect-zod-schema-root-node.js';
 import type { DetectResult } from './detect-zod-schema-root-node.js';
+import { isZodImportSource } from './is-zod-import-source.js';
 
 interface ZodChainItem {
   name: string;
@@ -91,10 +92,7 @@ export function trackZodSchemaImports(): Result {
   const result: Result = {
     // to be inserted into rule.create()
     importDeclarationListener(node): void {
-      if (
-        node.source.value !== 'zod' &&
-        !node.source.value.startsWith('zod/')
-      ) {
+      if (!isZodImportSource(node.source.value)) {
         return;
       }
 
