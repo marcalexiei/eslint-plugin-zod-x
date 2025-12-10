@@ -1,11 +1,11 @@
 import { RuleTester } from '@typescript-eslint/rule-tester';
 import dedent from 'dedent';
 
-import { noAny } from './no-any.js';
+import { noAnySchema } from './no-any-schema.js';
 
 const ruleTester = new RuleTester();
 
-ruleTester.run('no-any', noAny, {
+ruleTester.run('no-any-schema', noAnySchema, {
   valid: [
     {
       name: 'not triggered with another schema',

@@ -4,8 +4,8 @@ import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 import { getRuleURL } from '../meta.js';
 import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
-export const noAny = ESLintUtils.RuleCreator(getRuleURL)({
-  name: 'no-any',
+export const noAnySchema = ESLintUtils.RuleCreator(getRuleURL)({
+  name: 'no-any-schema',
   meta: {
     hasSuggestions: true,
     type: 'suggestion',
