@@ -44,7 +44,7 @@ body:
     attributes:
       label: 💻 System info
       description: |
-        Output of `npx envinfo --system --npmPackages 'eslint,eslint-plugin-zod-x' --binaries`
+        Output of `npx envinfo --npmPackages 'eslint,eslint-plugin-zod-x' --binaries`
       render: shell
     validations:
       required: true
