@@ -1,5 +1,17 @@
 # eslint-plugin-zod-x
 
+## 1.13.0
+
+### Minor Changes
+
+- [#139](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/139) [`77e7dde`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/77e7dde560233d5df7ea2658b860e465ad8e77b0) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(prefer-namespace-import): add autofix for all import references
+
+- [#137](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/137) [`cae9847`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/cae9847a9e5b441571d715dabf2819ec93ff10d1) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(prefer-strict-object): deprecate rule (use `consistent-object-schema-type`)
+
+### Patch Changes
+
+- [#139](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/139) [`77e7dde`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/77e7dde560233d5df7ea2658b860e465ad8e77b0) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(prefer-namespace-import): handle named imports autofix correctly
+
 ## 1.12.0
 
 ### Minor Changes
