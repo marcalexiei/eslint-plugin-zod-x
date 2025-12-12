@@ -1,6 +1,33 @@
 # Enforce usage of `.strictObject()` over `.object()` and/or `.looseObject()` (`zod-x/prefer-strict-object`)
 
+❌ This rule is deprecated.
+
 <!-- end auto-generated rule header -->
+
+## Deprecation notice
+
+This rule is deprecated. Use `consistent-object-schema-type` instead:
+
+```diff
+  // eslint.config.js
+  import { defineConfig } from 'eslint/config';
+  import eslintPluginZodX from 'eslint-plugin-zod-x';
+
+  export default defineConfig(
+    {
+      plugins: {
+        'zod-x': eslintPluginZodX,
+      },
+      rules: {
+-       'zod-x/prefer-strict-object': 'error',
++       'zod-x/consistent-object-schema-type': [
++         'error',
++         { allow: ['strictObject'] },
++       ],
+      }
+    }
+  );
+```
 
 ## Rule Details
 
