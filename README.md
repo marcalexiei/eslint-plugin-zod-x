@@ -26,28 +26,26 @@
 💼 Configurations enabled in.\
 ✅ Set in the `recommended` configuration.\
 🔧 Automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/user-guide/command-line-interface#--fix).\
-💡 Manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).\
-❌ Deprecated.
+💡 Manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).
 
-| Name                                                                               | Description                                                                                   | 💼  | 🔧  | 💡  | ❌  |
-| :--------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------- | :-- | :-- | :-- | :-- |
-| [array-style](docs/rules/array-style.md)                                           | Enforce consistent Zod array style                                                            | ✅  | 🔧  |     |     |
-| [consistent-import-source](docs/rules/consistent-import-source.md)                 | Enforce consistent source from Zod imports                                                    |     |     | 💡  |     |
-| [consistent-object-schema-type](docs/rules/consistent-object-schema-type.md)       | Enforce consistent usage of Zod schema methods                                                |     |     | 💡  |     |
-| [no-any](docs/rules/no-any.md)                                                     | Disallow usage of `z.any()` in Zod schemas                                                    | ✅  |     | 💡  |     |
-| [no-empty-custom-schema](docs/rules/no-empty-custom-schema.md)                     | Disallow usage of `z.custom()` without arguments                                              | ✅  |     |     |     |
-| [no-number-schema-with-int](docs/rules/no-number-schema-with-int.md)               | Disallow usage of `z.number().int()` as it is considered legacy                               | ✅  | 🔧  |     |     |
-| [no-optional-and-default-together](docs/rules/no-optional-and-default-together.md) | Disallow using both `.optional()` and `.default()` on the same Zod schema                     | ✅  | 🔧  |     |     |
-| [no-throw-in-refine](docs/rules/no-throw-in-refine.md)                             | Disallow throwing errors directly inside Zod refine callbacks                                 | ✅  |     |     |     |
-| [no-unknown-schema](docs/rules/no-unknown-schema.md)                               | Disallow usage of `z.unknown()` in Zod schemas                                                |     |     |     |     |
-| [prefer-meta](docs/rules/prefer-meta.md)                                           | Enforce usage of `.meta()` over `.describe()`                                                 | ✅  | 🔧  |     |     |
-| [prefer-meta-last](docs/rules/prefer-meta-last.md)                                 | Enforce `.meta()` as last method                                                              | ✅  | 🔧  |     |     |
-| [prefer-namespace-import](docs/rules/prefer-namespace-import.md)                   | Enforce importing zod as a namespace import (`import * as z from 'zod'`)                      | ✅  | 🔧  |     |     |
-| [prefer-strict-object](docs/rules/prefer-strict-object.md)                         | Enforce usage of `.strictObject()` over `.object()` and/or `.looseObject()`                   |     |     |     | ❌  |
-| [require-brand-type-parameter](docs/rules/require-brand-type-parameter.md)         | Require type parameter on `.brand()` functions                                                | ✅  |     | 💡  |     |
-| [require-error-message](docs/rules/require-error-message.md)                       | Enforce that custom refinements include an error message                                      | ✅  | 🔧  |     |     |
-| [require-schema-suffix](docs/rules/require-schema-suffix.md)                       | Require schema suffix when declaring a Zod schema                                             | ✅  |     |     |     |
-| [schema-error-property-style](docs/rules/schema-error-property-style.md)           | Enforce consistent style for error messages in Zod schema validation (using ESQuery patterns) |     |     |     |     |
+| Name                                                                               | Description                                                                                   | 💼  | 🔧  | 💡  |
+| :--------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------- | :-- | :-- | :-- |
+| [array-style](docs/rules/array-style.md)                                           | Enforce consistent Zod array style                                                            | ✅  | 🔧  |     |
+| [consistent-import-source](docs/rules/consistent-import-source.md)                 | Enforce consistent source from Zod imports                                                    |     |     | 💡  |
+| [consistent-object-schema-type](docs/rules/consistent-object-schema-type.md)       | Enforce consistent usage of Zod schema methods                                                |     |     | 💡  |
+| [no-any](docs/rules/no-any.md)                                                     | Disallow usage of `z.any()` in Zod schemas                                                    | ✅  |     | 💡  |
+| [no-empty-custom-schema](docs/rules/no-empty-custom-schema.md)                     | Disallow usage of `z.custom()` without arguments                                              | ✅  |     |     |
+| [no-number-schema-with-int](docs/rules/no-number-schema-with-int.md)               | Disallow usage of `z.number().int()` as it is considered legacy                               | ✅  | 🔧  |     |
+| [no-optional-and-default-together](docs/rules/no-optional-and-default-together.md) | Disallow using both `.optional()` and `.default()` on the same Zod schema                     | ✅  | 🔧  |     |
+| [no-throw-in-refine](docs/rules/no-throw-in-refine.md)                             | Disallow throwing errors directly inside Zod refine callbacks                                 | ✅  |     |     |
+| [no-unknown-schema](docs/rules/no-unknown-schema.md)                               | Disallow usage of `z.unknown()` in Zod schemas                                                |     |     |     |
+| [prefer-meta](docs/rules/prefer-meta.md)                                           | Enforce usage of `.meta()` over `.describe()`                                                 | ✅  | 🔧  |     |
+| [prefer-meta-last](docs/rules/prefer-meta-last.md)                                 | Enforce `.meta()` as last method                                                              | ✅  | 🔧  |     |
+| [prefer-namespace-import](docs/rules/prefer-namespace-import.md)                   | Enforce importing zod as a namespace import (`import * as z from 'zod'`)                      | ✅  | 🔧  |     |
+| [require-brand-type-parameter](docs/rules/require-brand-type-parameter.md)         | Require type parameter on `.brand()` functions                                                | ✅  |     | 💡  |
+| [require-error-message](docs/rules/require-error-message.md)                       | Enforce that custom refinements include an error message                                      | ✅  | 🔧  |     |
+| [require-schema-suffix](docs/rules/require-schema-suffix.md)                       | Require schema suffix when declaring a Zod schema                                             | ✅  |     |     |
+| [schema-error-property-style](docs/rules/schema-error-property-style.md)           | Enforce consistent style for error messages in Zod schema validation (using ESQuery patterns) |     |     |     |
 
 <!-- end auto-generated rules list -->
 
