@@ -1,5 +1,11 @@
 # eslint-plugin-zod-x
 
+## 1.13.2
+
+### Patch Changes
+
+- [#149](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/149) [`2479a93`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/2479a932a79f32ea541c32587b2df939dc9e6e1c) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(array-style): handle chain methods with `style: ‘method’`
+
 ## 1.13.1
 
 ### Patch Changes
