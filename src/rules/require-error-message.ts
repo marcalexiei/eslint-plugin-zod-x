@@ -90,7 +90,7 @@ export const requireErrorMessage = ESLintUtils.RuleCreator(getRuleURL)({
             context.report({
               messageId: 'removeMessage',
               node: messagePropertyNode,
-              fix: (fixer) => {
+              fix(fixer) {
                 const { sourceCode } = context;
                 const nextToken = sourceCode.getTokenAfter(messagePropertyNode);
                 let [, end] = messagePropertyNode.range;
@@ -110,8 +110,12 @@ export const requireErrorMessage = ESLintUtils.RuleCreator(getRuleURL)({
             context.report({
               messageId: 'preferError',
               node: params,
-              fix: (fixer) =>
-                fixer.replaceTextRange(messagePropertyNode.key.range, 'error'),
+              fix(fixer) {
+                return fixer.replaceTextRange(
+                  messagePropertyNode.key.range,
+                  'error',
+                );
+              },
             });
             return;
           }
