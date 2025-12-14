@@ -75,13 +75,14 @@ export const consistentImportSource = ESLintUtils.RuleCreator(getRuleURL)<
           >((it) => ({
             messageId: 'replaceSource',
             data: { valid: it, invalid: sourceValue },
-            fix: (fixer): TSESLint.RuleFix =>
-              fixer.replaceText(
+            fix(fixer): TSESLint.RuleFix {
+              return fixer.replaceText(
                 node.source,
                 // Replacing using the raw value
                 // to keep quote style consistent with the user code
                 node.source.raw.replace(sourceValue, it),
-              ),
+              );
+            },
           })),
         });
       },

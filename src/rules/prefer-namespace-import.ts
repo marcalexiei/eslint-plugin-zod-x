@@ -203,7 +203,9 @@ export const preferNamespaceImport = ESLintUtils.RuleCreator(getRuleURL)({
             context.report({
               node: extraImport,
               messageId: 'removeDuplicate',
-              fix: (fixer) => fixer.removeRange(extraImport.range),
+              fix(fixer) {
+                return fixer.removeRange(extraImport.range);
+              },
             });
           }
         }

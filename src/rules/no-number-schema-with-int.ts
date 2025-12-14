@@ -79,7 +79,7 @@ export const noNumberSchemaWithInt = ESLintUtils.RuleCreator(getRuleURL)({
         context.report({
           node,
           messageId: 'removeNumber',
-          fix: (fixer) => {
+          fix(fixer) {
             const numberNode = numberMethod.node;
             const intNode = intMethod.node;
 

@@ -70,7 +70,7 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
               context.report({
                 node,
                 messageId: 'useMethod',
-                fix: (fixer) => {
+                fix(fixer) {
                   // extract inner schema
                   const argText = sourceCode.getText(node.arguments[0]);
                   return fixer.replaceText(node, `${argText}.array()`);
@@ -97,7 +97,7 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
             context.report({
               node,
               messageId: 'useFunction',
-              fix: (fixer) => {
+              fix(fixer) {
                 const objText = sourceCode.getText(callee.object);
                 return fixer.replaceText(node, `z.array(${objText})`);
               },

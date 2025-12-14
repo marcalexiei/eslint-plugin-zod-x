@@ -1,5 +1,5 @@
 import { ESLintUtils } from '@typescript-eslint/utils';
-import type { TSESTree, TSESLint } from '@typescript-eslint/utils';
+import type { TSESTree } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
 import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
@@ -106,7 +106,7 @@ export const noOptionalAndDefaultTogether = ESLintUtils.RuleCreator(getRuleURL)<
           node: reportNode,
           messageId: 'noOptionalAndDefaultTogetherRemoveMethod',
           data: { method: methodToRemoveName },
-          fix: (fixer): TSESLint.RuleFix => {
+          fix(fixer) {
             // Determine which method to remove
             const nodeToRemove =
               preferredMethod === 'default'

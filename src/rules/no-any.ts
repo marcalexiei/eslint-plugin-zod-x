@@ -50,11 +50,11 @@ export const noAny = ESLintUtils.RuleCreator(getRuleURL)({
         if (callee.type === AST_NODE_TYPES.MemberExpression) {
           const [{ node: schemaMethod }] = collectZodChainMethods(node);
 
-          const innerCallee = schemaMethod.callee;
+          const schemaMethodCallee = schemaMethod.callee;
 
           if (
-            innerCallee.type === AST_NODE_TYPES.MemberExpression &&
-            innerCallee.property.type === AST_NODE_TYPES.Identifier
+            schemaMethodCallee.type === AST_NODE_TYPES.MemberExpression &&
+            schemaMethodCallee.property.type === AST_NODE_TYPES.Identifier
           ) {
             context.report({
               node,
@@ -63,7 +63,10 @@ export const noAny = ESLintUtils.RuleCreator(getRuleURL)({
                 {
                   messageId: 'useUnknown',
                   fix(fixer): TSESLint.RuleFix {
-                    return fixer.replaceText(innerCallee.property, 'unknown');
+                    return fixer.replaceText(
+                      schemaMethodCallee.property,
+                      'unknown',
+                    );
                   },
                 },
               ],

@@ -78,7 +78,7 @@ export const preferMetaLast = ESLintUtils.RuleCreator(getRuleURL)({
         context.report({
           node: metaCallCallee.property,
           messageId: 'metaNotLast',
-          fix: (fixer) => {
+          fix(fixer) {
             const source = context.sourceCode;
 
             // "z.string().meta({...})"
