@@ -1,5 +1,11 @@
 # eslint-plugin-zod-x
 
+## 1.13.1
+
+### Patch Changes
+
+- [#144](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/144) [`4463fca`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/4463fca7000425cd197534a814a345e6c0d511df) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(no-any): handle chained method when creating fixer
+
 ## 1.13.0
 
 ### Minor Changes
