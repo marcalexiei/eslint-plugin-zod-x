@@ -135,6 +135,24 @@ ruleTester.run('array-style (method)', arrayStyle, {
       `,
     },
     {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/148
+      name: 'works with nested schema with chained methods',
+      code: dedent`
+        import * as z from 'zod';
+        const Schema = z.object({
+          items: z.array(z.string()).optional(),
+        });
+      `,
+      options: [{ style: 'method' }],
+      errors: [{ messageId: 'useMethod' }],
+      output: dedent`
+        import * as z from 'zod';
+        const Schema = z.object({
+          items: z.string().array().optional(),
+        });
+      `,
+    },
+    {
       name: 'named with method',
       code: dedent`
         import { array, string } from 'zod';

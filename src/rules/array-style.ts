@@ -47,9 +47,9 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
     const { sourceCode } = context;
 
     const {
-      //
       importDeclarationListener,
       detectZodSchemaRootNode,
+      collectZodChainMethods,
     } = trackZodSchemaImports();
 
     return {
@@ -71,9 +71,21 @@ export const arrayStyle = ESLintUtils.RuleCreator(getRuleURL)<
                 node,
                 messageId: 'useMethod',
                 fix(fixer) {
-                  // extract inner schema
-                  const argText = sourceCode.getText(node.arguments[0]);
-                  return fixer.replaceText(node, `${argText}.array()`);
+                  // extract inner schema from the call chain (handles chained calls like `.optional()`)
+                  const chain = collectZodChainMethods(node);
+                  const arrayCall = chain.find((c) => c.name === 'array');
+                  if (!arrayCall) {
+                    return null;
+                  }
+                  const arg = arrayCall.node.arguments.at(0);
+                  if (!arg) {
+                    return null;
+                  }
+                  const argText = sourceCode.getText(arg);
+                  return fixer.replaceText(
+                    arrayCall.node,
+                    `${argText}.array()`,
+                  );
                 },
               });
               return;
