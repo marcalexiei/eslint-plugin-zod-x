@@ -8,13 +8,14 @@ const ruleTester = new RuleTester();
 ruleTester.run('no-any', noAny, {
   valid: [
     {
-      name: 'with another zod schema',
+      name: 'not triggered with another schema',
       code: dedent`
         import * as z from 'zod';
         const schema = z.string();
       `,
     },
     {
+      name: 'nested schema declaration',
       code: dedent`
         import * as z from 'zod';
         const schema = z.object({ name: z.string() });
@@ -70,6 +71,27 @@ ruleTester.run('no-any', noAny, {
               output: dedent`
                 import * as z from 'zod';
                 const schema = z.object({ prop: z.unknown() });
+              `,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      // https://github.com/marcalexiei/eslint-plugin-zod-x/issues/143
+      code: dedent`
+        import * as z from 'zod';
+        export const aSchema = z.any().refine((value) => value)
+      `,
+      errors: [
+        {
+          messageId: 'noZAny',
+          suggestions: [
+            {
+              messageId: 'useUnknown',
+              output: dedent`
+                import * as z from 'zod';
+                export const aSchema = z.unknown().refine((value) => value)
               `,
             },
           ],
