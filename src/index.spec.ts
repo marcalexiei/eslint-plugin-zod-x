@@ -2,8 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describe, it, expect, expectTypeOf, assert } from 'vitest';
 import type { TSESLint } from '@typescript-eslint/utils';
+import { assert, describe, expect, expectTypeOf, it } from 'vitest';
 
 import plugin from './index.js';
 

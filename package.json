@@ -59,7 +59,7 @@
   "packageManager": "pnpm@10.23.0+sha512.21c4e5698002ade97e4efe8b8b4a89a8de3c85a37919f957e7a0f30f38fbc5bbdd05980ffe29179b2fb6e6e691242e098d945d1601772cad0fef5fb6411e2a4b",
   "prettier": "@marcalexiei/prettier-config",
   "dependencies": {
-    "@typescript-eslint/utils": "^8.48.0",
+    "@typescript-eslint/utils": "^8.50.0",
     "esquery": "^1.6.0"
   },
   "peerDependencies": {
@@ -74,21 +74,21 @@
   "devDependencies": {
     "@changesets/changelog-github": "0.5.2",
     "@changesets/cli": "2.29.8",
-    "@marcalexiei/eslint-config": "4.2.0",
+    "@marcalexiei/eslint-config": "5.0.0",
     "@marcalexiei/prettier-config": "1.1.4",
     "@types/esquery": "1.5.4",
     "@types/node": "24.10.1",
-    "@typescript-eslint/rule-tester": "8.48.0",
-    "@vitest/eslint-plugin": "1.5.1",
+    "@typescript-eslint/rule-tester": "8.50.0",
+    "@vitest/eslint-plugin": "1.5.4",
     "dedent": "1.7.0",
-    "eslint": "9.39.1",
+    "eslint": "9.39.2",
     "eslint-doc-generator": "2.3.0",
     "eslint-plugin-eslint-plugin": "7.2.0",
     "eslint-plugin-n": "17.23.1",
     "knip": "5.71.0",
     "prettier": "3.7.3",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.48.0",
+    "typescript-eslint": "8.50.0",
     "vitest": "4.0.14",
     "zshy": "0.6.0"
   }

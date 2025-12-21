@@ -1,5 +1,5 @@
-import dedent from 'dedent';
 import { RuleTester } from '@typescript-eslint/rule-tester';
+import dedent from 'dedent';
 
 import { noAny } from './no-any.js';
 

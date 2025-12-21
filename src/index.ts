@@ -10,14 +10,14 @@ import { noNumberSchemaWithInt } from './rules/no-number-schema-with-int.js';
 import { noOptionalAndDefaultTogether } from './rules/no-optional-and-default-together.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
 import { noUnknownSchema } from './rules/no-unknown-schema.js';
-import { preferMeta } from './rules/prefer-meta.js';
 import { preferMetaLast } from './rules/prefer-meta-last.js';
+import { preferMeta } from './rules/prefer-meta.js';
 import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
 import { preferStrictObjet } from './rules/prefer-strict-object.js';
+import { requireBrandTypeParameter } from './rules/require-brand-type-parameter.js';
 import { requireErrorMessage } from './rules/require-error-message.js';
 import { requireSchemaSuffix } from './rules/require-schema-suffix.js';
 import { schemaErrorPropertyStyle } from './rules/schema-error-property-style.js';
-import { requireBrandTypeParameter } from './rules/require-brand-type-parameter.js';
 
 interface CompatibleConfig {
   name?: string;
