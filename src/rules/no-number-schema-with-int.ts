@@ -2,8 +2,8 @@ import type { TSESTree } from '@typescript-eslint/utils';
 import { ESLintUtils } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
-import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 import { getOutermostCall } from '../utils/get-outermost-call.js';
+import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
 
 export const noNumberSchemaWithInt = ESLintUtils.RuleCreator(getRuleURL)({
   name: 'no-number-schema-with-int',

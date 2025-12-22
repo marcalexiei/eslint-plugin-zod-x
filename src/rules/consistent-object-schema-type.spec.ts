@@ -1,5 +1,5 @@
-import dedent from 'dedent';
 import { RuleTester } from '@typescript-eslint/rule-tester';
+import dedent from 'dedent';
 
 import { consistentObjectSchemaType } from './consistent-object-schema-type.js';
 

@@ -2,9 +2,9 @@ import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { getRuleURL } from '../meta.js';
+import { getOutermostCall } from '../utils/get-outermost-call.js';
 import { isZodExpressionEndingWithMethod } from '../utils/is-zod-expression.js';
 import { trackZodSchemaImports } from '../utils/track-zod-schema-imports.js';
-import { getOutermostCall } from '../utils/get-outermost-call.js';
 
 export const preferMetaLast = ESLintUtils.RuleCreator(getRuleURL)({
   name: 'prefer-meta-last',
