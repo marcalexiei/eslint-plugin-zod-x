@@ -4,7 +4,7 @@ import { PLUGIN_NAME, PLUGIN_VERSION } from './meta.js';
 import { arrayStyle } from './rules/array-style.js';
 import { consistentImportSource } from './rules/consistent-import-source.js';
 import { consistentObjectSchemaType } from './rules/consistent-object-schema-type.js';
-import { noAny } from './rules/no-any.js';
+import { noAnySchema } from './rules/no-any-schema.js';
 import { noEmptyCustomSchema } from './rules/no-empty-custom-schema.js';
 import { noNumberSchemaWithInt } from './rules/no-number-schema-with-int.js';
 import { noOptionalAndDefaultTogether } from './rules/no-optional-and-default-together.js';
@@ -41,7 +41,7 @@ const eslintPluginZodX = {
     'array-style': arrayStyle,
     'consistent-import-source': consistentImportSource,
     'consistent-object-schema-type': consistentObjectSchemaType,
-    'no-any': noAny,
+    'no-any-schema': noAnySchema,
     'no-empty-custom-schema': noEmptyCustomSchema,
     'no-number-schema-with-int': noNumberSchemaWithInt,
     'no-optional-and-default-together': noOptionalAndDefaultTogether,
@@ -67,7 +67,7 @@ const recommendedConfig = {
   },
   rules: {
     'zod-x/array-style': 'error',
-    'zod-x/no-any': 'error',
+    'zod-x/no-any-schema': 'error',
     'zod-x/no-empty-custom-schema': 'error',
     'zod-x/no-number-schema-with-int': 'error',
     'zod-x/no-optional-and-default-together': 'error',
