@@ -1,5 +1,60 @@
 # eslint-plugin-zod-x
 
+## 2.0.0
+
+### Major Changes
+
+- [#154](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/154) [`8e72b23`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/8e72b23e8534deca30314f985a3877ea4e167b95) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat!: rename `no-any` to `no-any-schema`
+
+  The `no-any` rule has been renamed to `no-any-schema` to align with the naming convention used by other rules such as `no-unknown-schema` and `consistent-object-schema-type`.
+
+  If you are using the `recommend` configuration, no changes are required.
+
+  For manual configurations, update your rule key as shown below:
+
+  ```diff
+    // eslint.config.js
+    import { defineConfig } from 'eslint/config';
+    import eslintPluginZodX from 'eslint-plugin-zod-x';
+
+    export default defineConfig(
+      {
+        plugins: {
+          'zod-x': eslintPluginZodX,
+        },
+        rules: {
+  -       'zod-x/no-any': 'error',
+  +       'zod-x/no-any-schema': 'error',
+        }
+      }
+    );
+  ```
+
+- [#153](https://github.com/marcalexiei/eslint-plugin-zod-x/pull/153) [`a1a7612`](https://github.com/marcalexiei/eslint-plugin-zod-x/commit/a1a7612986d912f0f6058d60629c53f4f9771e05) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(prefer-strict-object)!: remove rule
+
+  Use `consistent-object-schema-type` instead:
+
+  ```diff
+    // eslint.config.js
+    import { defineConfig } from 'eslint/config';
+    import eslintPluginZodX from 'eslint-plugin-zod-x';
+
+    export default defineConfig(
+      {
+        plugins: {
+          'zod-x': eslintPluginZodX,
+        },
+        rules: {
+  -       'zod-x/prefer-strict-object': 'error',
+  +       'zod-x/consistent-object-schema-type': [
+  +         'error',
+  +         { allow: ['strictObject'] },
+  +       ],
+        }
+      }
+    );
+  ```
+
 ## 1.13.2
 
 ### Patch Changes
