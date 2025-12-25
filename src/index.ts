@@ -13,7 +13,6 @@ import { noUnknownSchema } from './rules/no-unknown-schema.js';
 import { preferMetaLast } from './rules/prefer-meta-last.js';
 import { preferMeta } from './rules/prefer-meta.js';
 import { preferNamespaceImport } from './rules/prefer-namespace-import.js';
-import { preferStrictObjet } from './rules/prefer-strict-object.js';
 import { requireBrandTypeParameter } from './rules/require-brand-type-parameter.js';
 import { requireErrorMessage } from './rules/require-error-message.js';
 import { requireSchemaSuffix } from './rules/require-schema-suffix.js';
@@ -51,7 +50,6 @@ const eslintPluginZodX = {
     'prefer-meta': preferMeta,
     'prefer-meta-last': preferMetaLast,
     'prefer-namespace-import': preferNamespaceImport,
-    'prefer-strict-object': preferStrictObjet,
     'require-brand-type-parameter': requireBrandTypeParameter,
     'require-error-message': requireErrorMessage,
     'require-schema-suffix': requireSchemaSuffix,
