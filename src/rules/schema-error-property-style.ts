@@ -27,12 +27,12 @@ export const schemaErrorPropertyStyle = ESLintUtils.RuleCreator(getRuleURL)<
         type: 'object',
         properties: {
           selector: {
-            description: 'A ESQuery string to match the required pattern',
+            description: 'An ESQuery string to match the required pattern',
             type: 'string',
           },
           example: {
             description:
-              'Example code to help user understands the required pattern',
+              'Example code to help the user understand the required pattern',
             type: 'string',
           },
         },
