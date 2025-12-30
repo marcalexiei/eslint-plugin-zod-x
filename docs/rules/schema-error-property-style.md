@@ -6,10 +6,10 @@
 
 <!-- begin auto-generated rule options list -->
 
-| Name       | Description                                                | Type   |
-| :--------- | :--------------------------------------------------------- | :----- |
-| `example`  | Example code to help user understands the required pattern | String |
-| `selector` | A ESQuery string to match the required pattern             | String |
+| Name       | Description                                                   | Type   |
+| :--------- | :------------------------------------------------------------ | :----- |
+| `example`  | Example code to help the user understand the required pattern | String |
+| `selector` | An ESQuery string to match the required pattern               | String |
 
 <!-- end auto-generated rule options list -->
 
