@@ -47,12 +47,12 @@
     "lint:js": "eslint .",
     "lint:js:fix": "eslint . --fix",
     "lint:docs": "eslint-doc-generator --check",
+    "lint:docs:update": "pnpm run build && eslint-doc-generator",
     "lint:knip": "knip",
     "format": "prettier . --check",
     "format:fix": "prettier . --write",
     "test": "vitest",
     "test:dev": "vitest --typecheck=false",
-    "update:eslint-docs": "pnpm run build && eslint-doc-generator",
     "release": "pnpm run build && changeset publish",
     "check-all": "pnpm run \"/^(lint|format|typecheck|build)$/\" && pnpm run test --run"
   },
