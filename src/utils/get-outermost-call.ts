@@ -10,8 +10,7 @@ export function getOutermostCall(
   let current: TSESTree.Node = node;
 
   while (
-    current.parent &&
-    current.parent.type === AST_NODE_TYPES.MemberExpression &&
+    current.parent?.type === AST_NODE_TYPES.MemberExpression &&
     current.parent.object === current &&
     current.parent.parent.type === AST_NODE_TYPES.CallExpression
   ) {

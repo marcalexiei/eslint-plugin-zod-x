@@ -50,8 +50,7 @@ export const requireSchemaSuffix = ESLintUtils.RuleCreator(getRuleURL)<
         const initNode = node.init;
 
         if (
-          !initNode ||
-          initNode.type !== AST_NODE_TYPES.CallExpression ||
+          initNode?.type !== AST_NODE_TYPES.CallExpression ||
           !detectZodSchemaRootNode(initNode)
         ) {
           return;
