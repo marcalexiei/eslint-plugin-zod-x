@@ -29,7 +29,7 @@ importers:
         version: 5.0.0(@vitest/eslint-plugin@1.5.4(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)(vitest@4.0.14(@types/node@24.10.1)(jiti@2.6.1)))(eslint-import-resolver-typescript@4.4.4(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1)))(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))(typescript-eslint@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))
       '@marcalexiei/prettier-config':
         specifier: 1.1.4
-        version: 1.1.4(prettier@3.7.3)
+        version: 1.1.4(prettier@3.7.4)
       '@types/esquery':
         specifier: 1.5.4
         version: 1.5.4
@@ -50,7 +50,7 @@ importers:
         version: 9.39.2(jiti@2.6.1)
       eslint-doc-generator:
         specifier: 3.0.0
-        version: 3.0.0(eslint@9.39.2(jiti@2.6.1))(prettier@3.7.3)(typescript@5.9.3)
+        version: 3.0.0(eslint@9.39.2(jiti@2.6.1))(prettier@3.7.4)(typescript@5.9.3)
       eslint-plugin-eslint-plugin:
         specifier: 7.2.0
         version: 7.2.0(eslint@9.39.2(jiti@2.6.1))
@@ -61,8 +61,8 @@ importers:
         specifier: 5.71.0
         version: 5.71.0(@types/node@24.10.1)(typescript@5.9.3)
       prettier:
-        specifier: 3.7.3
-        version: 3.7.3
+        specifier: 3.7.4
+        version: 3.7.4
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -1615,8 +1615,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  prettier@3.7.3:
-    resolution: {integrity: sha512-QgODejq9K3OzoBbuyobZlUhznP5SKwPqp+6Q6xw6o8gnhr4O85L2U915iM2IDcfF2NPXVaM9zlo9tdwipnYwzg==}
+  prettier@3.7.4:
+    resolution: {integrity: sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -2312,9 +2312,9 @@ snapshots:
     optionalDependencies:
       '@vitest/eslint-plugin': 1.5.4(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)(vitest@4.0.14(@types/node@24.10.1)(jiti@2.6.1))
 
-  '@marcalexiei/prettier-config@1.1.4(prettier@3.7.3)':
+  '@marcalexiei/prettier-config@1.1.4(prettier@3.7.4)':
     dependencies:
-      prettier: 3.7.3
+      prettier: 3.7.4
 
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
@@ -2905,7 +2905,7 @@ snapshots:
       eslint: 9.39.2(jiti@2.6.1)
       semver: 7.7.3
 
-  eslint-doc-generator@3.0.0(eslint@9.39.2(jiti@2.6.1))(prettier@3.7.3)(typescript@5.9.3):
+  eslint-doc-generator@3.0.0(eslint@9.39.2(jiti@2.6.1))(prettier@3.7.4)(typescript@5.9.3):
     dependencies:
       '@typescript-eslint/utils': 8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
       ajv: 8.17.1
@@ -2922,7 +2922,7 @@ snapshots:
       markdown-table: 3.0.4
       type-fest: 5.3.1
     optionalDependencies:
-      prettier: 3.7.3
+      prettier: 3.7.4
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -3439,7 +3439,7 @@ snapshots:
 
   prettier@2.8.8: {}
 
-  prettier@3.7.3: {}
+  prettier@3.7.4: {}
 
   pretty-format@30.2.0:
     dependencies:
