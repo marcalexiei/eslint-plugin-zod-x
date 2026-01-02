@@ -1,4 +1,6 @@
-# Disallow usage of `z.unknown()` in Zod schemas (`zod-x/no-unknown-schema`)
+# zod-x/no-unknown-schema
+
+📝 Disallow usage of `z.unknown()` in Zod schemas.
 
 <!-- end auto-generated rule header -->
 
