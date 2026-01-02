@@ -1,8 +1,8 @@
 # zod-x/require-schema-suffix
 
-💼 This rule is enabled in the ✅ `recommended` config.
-
 📝 Require schema suffix when declaring a Zod schema.
+
+💼 This rule is enabled in the ✅ `recommended` config.
 
 <!-- end auto-generated rule header -->
 

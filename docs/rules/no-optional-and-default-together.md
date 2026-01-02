@@ -1,10 +1,10 @@
 # zod-x/no-optional-and-default-together
 
+📝 Disallow using both `.optional()` and `.default()` on the same Zod schema.
+
 💼 This rule is enabled in the ✅ `recommended` config.
 
 🔧 This rule is automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/latest/user-guide/command-line-interface#--fix).
-
-📝 Disallow using both `.optional()` and `.default()` on the same Zod schema.
 
 <!-- end auto-generated rule header -->
 
