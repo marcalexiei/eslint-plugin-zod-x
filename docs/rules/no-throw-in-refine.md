@@ -1,6 +1,8 @@
-# Disallow throwing errors directly inside Zod refine callbacks (`zod-x/no-throw-in-refine`)
+# zod-x/no-throw-in-refine
 
 💼 This rule is enabled in the ✅ `recommended` config.
+
+📝 Disallow throwing errors directly inside Zod refine callbacks.
 
 <!-- end auto-generated rule header -->
 

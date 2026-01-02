@@ -1,4 +1,6 @@
-# Enforce consistent style for error messages in Zod schema validation (using ESQuery patterns) (`zod-x/schema-error-property-style`)
+# zod-x/schema-error-property-style
+
+📝 Enforce consistent style for error messages in Zod schema validation (using ESQuery patterns).
 
 <!-- end auto-generated rule header -->
 

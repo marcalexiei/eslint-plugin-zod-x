@@ -1,8 +1,10 @@
-# Enforce consistent Zod array style (`zod-x/array-style`)
+# zod-x/array-style
 
 💼 This rule is enabled in the ✅ `recommended` config.
 
 🔧 This rule is automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/latest/user-guide/command-line-interface#--fix).
+
+📝 Enforce consistent Zod array style.
 
 <!-- end auto-generated rule header -->
 

@@ -1,6 +1,8 @@
-# Disallow usage of `z.custom()` without arguments (`zod-x/no-empty-custom-schema`)
+# zod-x/no-empty-custom-schema
 
 💼 This rule is enabled in the ✅ `recommended` config.
+
+📝 Disallow usage of `z.custom()` without arguments.
 
 <!-- end auto-generated rule header -->
 

@@ -1,6 +1,8 @@
-# Enforce consistent usage of Zod schema methods (`zod-x/consistent-object-schema-type`)
+# zod-x/consistent-object-schema-type
 
 💡 This rule is manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).
+
+📝 Enforce consistent usage of Zod schema methods.
 
 <!-- end auto-generated rule header -->
 
