@@ -1,3 +1,5 @@
+minimumReleaseAge: 1440
+trustPolicy: no-downgrade
 onlyBuiltDependencies:
   - esbuild
   - unrs-resolver
