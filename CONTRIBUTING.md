@@ -60,7 +60,7 @@ pnpm run lint:docs
 To _update_ generated rule docs from the source code:
 
 ```shell
-pnpm run lint:docs:update
+pnpm run build:docs
 ```
 
 (This command runs a build first, so you don't need to run `pnpm run build` manually.)
@@ -69,7 +69,7 @@ pnpm run lint:docs:update
 
 ## Rule documentation
 
-If you change a rule's behavior, update its documentation in the `docs/rules/` folder and run `pnpm run lint:docs:update` to regenerate the docs.
+If you change a rule's behavior, update its documentation in the `docs/rules/` folder and run `pnpm run build:docs` to regenerate the docs.
 
 ---
 
@@ -88,7 +88,7 @@ Please ensure your commit messages are clear and follow the repository conventio
 - Fork the repository and create a branch with a descriptive name.
 - Open a pull request against `main` and include a short description of the changes and the reasoning.
 - Run `pnpm run check-all`.
-- If your change affects docs, include the updated docs or run `pnpm run lint:docs:update` and include the generated files.
+- If your change affects docs, include the updated docs or run `pnpm run build:docs` and include the generated files.
 
 ---
 

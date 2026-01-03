@@ -1,10 +1,10 @@
 # zod-x/no-number-schema-with-int
 
+📝 Disallow usage of `z.number().int()` as it is considered legacy.
+
 💼 This rule is enabled in the ✅ `recommended` config.
 
 🔧 This rule is automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/latest/user-guide/command-line-interface#--fix).
-
-📝 Disallow usage of `z.number().int()` as it is considered legacy.
 
 <!-- end auto-generated rule header -->
 

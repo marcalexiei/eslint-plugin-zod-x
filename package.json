@@ -43,11 +43,11 @@
   },
   "scripts": {
     "build": "zshy",
+    "build:docs": "pnpm run build && eslint-doc-generator",
     "lint": "pnpm run lint:js && pnpm run lint:docs && pnpm run lint:knip",
     "lint:js": "eslint .",
     "lint:js:fix": "eslint . --fix",
     "lint:docs": "eslint-doc-generator --check",
-    "lint:docs:update": "pnpm run build && eslint-doc-generator",
     "lint:knip": "knip",
     "format": "prettier . --check",
     "format:fix": "prettier . --write",
@@ -56,7 +56,7 @@
     "release": "pnpm run build && changeset publish",
     "check-all": "pnpm run \"/^(lint|format|typecheck|build)$/\" && pnpm run test --run"
   },
-  "packageManager": "pnpm@10.23.0+sha512.21c4e5698002ade97e4efe8b8b4a89a8de3c85a37919f957e7a0f30f38fbc5bbdd05980ffe29179b2fb6e6e691242e098d945d1601772cad0fef5fb6411e2a4b",
+  "packageManager": "pnpm@10.27.0+sha512.72d699da16b1179c14ba9e64dc71c9a40988cbdc65c264cb0e489db7de917f20dcf4d64d8723625f2969ba52d4b7e2a1170682d9ac2a5dcaeaab732b7e16f04a",
   "prettier": "@marcalexiei/prettier-config",
   "dependencies": {
     "@typescript-eslint/utils": "^8.50.0",
@@ -82,7 +82,7 @@
     "@vitest/eslint-plugin": "1.6.4",
     "dedent": "1.7.1",
     "eslint": "9.39.2",
-    "eslint-doc-generator": "3.0.0",
+    "eslint-doc-generator": "3.0.2",
     "eslint-plugin-eslint-plugin": "7.2.0",
     "eslint-plugin-n": "17.23.1",
     "knip": "5.79.0",
