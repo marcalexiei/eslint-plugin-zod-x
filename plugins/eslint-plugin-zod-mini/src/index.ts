@@ -9,6 +9,7 @@ import { consistentSchemaVarName } from './rules/consistent-schema-var-name.js';
 import { noAnySchema } from './rules/no-any-schema.js';
 import { noEmptyCustomSchema } from './rules/no-empty-custom-schema.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
+import { noTransformInRecordKey } from './rules/no-transform-in-record-key.js';
 import { noUnknownSchema } from './rules/no-unknown-schema.js';
 import { preferEnumOverLiteralUnion } from './rules/prefer-enum-over-literal-union.js';
 import { preferMeta } from './rules/prefer-meta.js';
@@ -43,6 +44,7 @@ const eslintPluginZodMini = {
     'no-any-schema': noAnySchema,
     'no-empty-custom-schema': noEmptyCustomSchema,
     'no-throw-in-refine': noThrowInRefine,
+    'no-transform-in-record-key': noTransformInRecordKey,
     'no-unknown-schema': noUnknownSchema,
     'prefer-enum-over-literal-union': preferEnumOverLiteralUnion,
     'prefer-meta': preferMeta,

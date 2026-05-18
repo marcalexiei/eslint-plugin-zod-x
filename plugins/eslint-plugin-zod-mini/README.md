@@ -31,22 +31,23 @@ Find out more about [Oxlint's `jsPLugins`](https://oxc.rs/docs/guide/usage/linte
 🔧 Automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/user-guide/command-line-interface#--fix).\
 💡 Manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).
 
-| Name                                                                                     | Description                                                                                        | 💼  | 🔧  | 💡  |
-| :--------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------- | :-- | :-- | :-- |
-| [consistent-import](docs/rules/consistent-import.md)                                     | Enforce a consistent import style for Zod Mini                                                     | ✅  | 🔧  |     |
-| [consistent-import-source](docs/rules/consistent-import-source.md)                       | Enforce consistent source from Zod Mini imports                                                    |     |     | 💡  |
-| [consistent-object-schema-type](docs/rules/consistent-object-schema-type.md)             | Enforce consistent usage of Zod Mini schema methods                                                |     |     | 💡  |
-| [consistent-schema-output-type-style](docs/rules/consistent-schema-output-type-style.md) | Enforce consistent use of z.infer or z.output for schema type inference                            |     | 🔧  |     |
-| [consistent-schema-var-name](docs/rules/consistent-schema-var-name.md)                   | Enforce a consistent naming convention for Zod Mini schema variables                               | ✅  |     |     |
-| [no-any-schema](docs/rules/no-any-schema.md)                                             | Disallow usage of `z.any()` in Zod Mini schemas                                                    | ✅  |     | 💡  |
-| [no-empty-custom-schema](docs/rules/no-empty-custom-schema.md)                           | Disallow usage of `z.custom()` without arguments                                                   | ✅  |     |     |
-| [no-throw-in-refine](docs/rules/no-throw-in-refine.md)                                   | Disallow throwing errors directly inside Zod Mini refine callbacks                                 | ✅  |     |     |
-| [no-unknown-schema](docs/rules/no-unknown-schema.md)                                     | Disallow usage of `z.unknown()` in Zod Mini schemas                                                |     |     |     |
-| [prefer-enum-over-literal-union](docs/rules/prefer-enum-over-literal-union.md)           | Prefer `z.enum()` over `z.union()` when all members are string literals.                           | ✅  | 🔧  |     |
-| [prefer-meta](docs/rules/prefer-meta.md)                                                 | Enforce usage of `z.meta()` over `z.describe()`                                                    | ✅  | 🔧  |     |
-| [require-brand-type-parameter](docs/rules/require-brand-type-parameter.md)               | Require type parameter on `.brand()` functions                                                     | ✅  |     | 💡  |
-| [require-error-message](docs/rules/require-error-message.md)                             | Enforce that custom refinements include an error message                                           | ✅  | 🔧  |     |
-| [schema-error-property-style](docs/rules/schema-error-property-style.md)                 | Enforce consistent style for error messages in Zod Mini schema validation (using ESQuery patterns) |     |     |     |
+| Name                                                                                     | Description                                                                                                              | 💼  | 🔧  | 💡  |
+| :--------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------- | :-- | :-- | :-- |
+| [consistent-import](docs/rules/consistent-import.md)                                     | Enforce a consistent import style for Zod Mini                                                                           | ✅  | 🔧  |     |
+| [consistent-import-source](docs/rules/consistent-import-source.md)                       | Enforce consistent source from Zod Mini imports                                                                          |     |     | 💡  |
+| [consistent-object-schema-type](docs/rules/consistent-object-schema-type.md)             | Enforce consistent usage of Zod Mini schema methods                                                                      |     |     | 💡  |
+| [consistent-schema-output-type-style](docs/rules/consistent-schema-output-type-style.md) | Enforce consistent use of z.infer or z.output for schema type inference                                                  |     | 🔧  |     |
+| [consistent-schema-var-name](docs/rules/consistent-schema-var-name.md)                   | Enforce a consistent naming convention for Zod Mini schema variables                                                     | ✅  |     |     |
+| [no-any-schema](docs/rules/no-any-schema.md)                                             | Disallow usage of `z.any()` in Zod Mini schemas                                                                          | ✅  |     | 💡  |
+| [no-empty-custom-schema](docs/rules/no-empty-custom-schema.md)                           | Disallow usage of `z.custom()` without arguments                                                                         | ✅  |     |     |
+| [no-throw-in-refine](docs/rules/no-throw-in-refine.md)                                   | Disallow throwing errors directly inside Zod Mini refine callbacks                                                       | ✅  |     |     |
+| [no-transform-in-record-key](docs/rules/no-transform-in-record-key.md)                   | Disallow transforms in z.record() key schemas, which can cause silent key mutations and data loss through key collisions |     |     |     |
+| [no-unknown-schema](docs/rules/no-unknown-schema.md)                                     | Disallow usage of `z.unknown()` in Zod Mini schemas                                                                      |     |     |     |
+| [prefer-enum-over-literal-union](docs/rules/prefer-enum-over-literal-union.md)           | Prefer `z.enum()` over `z.union()` when all members are string literals.                                                 | ✅  | 🔧  |     |
+| [prefer-meta](docs/rules/prefer-meta.md)                                                 | Enforce usage of `z.meta()` over `z.describe()`                                                                          | ✅  | 🔧  |     |
+| [require-brand-type-parameter](docs/rules/require-brand-type-parameter.md)               | Require type parameter on `.brand()` functions                                                                           | ✅  |     | 💡  |
+| [require-error-message](docs/rules/require-error-message.md)                             | Enforce that custom refinements include an error message                                                                 | ✅  | 🔧  |     |
+| [schema-error-property-style](docs/rules/schema-error-property-style.md)                 | Enforce consistent style for error messages in Zod Mini schema validation (using ESQuery patterns)                       |     |     |     |
 
 <!-- end auto-generated rules list -->
 
