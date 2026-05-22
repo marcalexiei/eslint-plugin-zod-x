@@ -1,5 +1,5 @@
 ---
-'eslint-plugin-zod': minor
+'eslint-plugin-zod': patch
 ---
 
-flag `normalize` and `overwrite` in record keys for `no-transform-in-record-key` rule
+fix(no-transform-in-record-key): add `normalize` and `overwrite` methods
