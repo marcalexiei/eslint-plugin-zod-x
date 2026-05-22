@@ -12,22 +12,24 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   test:
     name: Test on Node ${{ matrix.node }} with ESLint ${{ matrix.eslint }}
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         node:
           - 20
           - 22
           - 24
-          - 25
+          - 26
         eslint:
           - 9
           - 10
@@ -37,7 +39,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@6735bb9dd019900ebc16ce34e13c118b3917d1f7 # v1.2.0
+        uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@63a1804e7a5772e24ecda9c009453bb8b1cada27 # v1.3.1
         with:
           node-version: ${{ matrix.node }}
 
@@ -52,12 +54,15 @@ jobs:
     name: Code checks
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@6735bb9dd019900ebc16ce34e13c118b3917d1f7 # v1.2.0
+        uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@63a1804e7a5772e24ecda9c009453bb8b1cada27 # v1.3.1
 
       - name: Build
         run: pnpm run build

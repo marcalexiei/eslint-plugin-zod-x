@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Setup release helper
         id: release-helper
-        uses: marcalexiei/github-actions/.github/actions/setup-github-app-user-bot@6735bb9dd019900ebc16ce34e13c118b3917d1f7 # v1.2.0
+        uses: marcalexiei/github-actions/.github/actions/setup-github-app-user-bot@63a1804e7a5772e24ecda9c009453bb8b1cada27 # v1.3.1
         with:
           app-id: ${{ vars.RELEASE_HELPER_APP_ID }}
           private-key: ${{ secrets.RELEASE_HELPER_PRIVATE_KEY }}
@@ -46,7 +46,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@6735bb9dd019900ebc16ce34e13c118b3917d1f7 # v1.2.0
+        uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@63a1804e7a5772e24ecda9c009453bb8b1cada27 # v1.3.1
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
