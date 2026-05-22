@@ -8,7 +8,7 @@
 
 This ESLint rule detects **transforms in `z.record()` key schemas** and prevents them.
 
-Using transforms (like `.trim()`, `.toLowerCase()`, `.toUpperCase()`, or `.transform()`) on the key schema in `z.record()` causes silent key mutation and data loss through key collisions.
+Using transforms (like `.trim()`, `.normalize()`, `.toLowerCase()`, `.toUpperCase()`, `.overwrite()`, or `.transform()`) on the key schema in `z.record()` causes silent key mutation and data loss through key collisions.
 
 ### The Problem
 
@@ -51,6 +51,15 @@ const config = z.record(z.string().toUpperCase(), z.number());
 // Chained transforms on the key
 const config = z.record(z.string().trim().toLowerCase(), z.unknown());
 
+// .normalize() mutates the parsed key value
+const config = z.record(z.string().normalize(), z.unknown());
+
+// .overwrite() still rewrites the parsed key, even if the inferred type stays the same
+const config = z.record(
+  z.string().overwrite((value) => value.trim()),
+  z.unknown(),
+);
+
 // .transform() is never allowed on keys
 const config = z.record(
   z.string().transform((v) => v.trim()),
@@ -72,6 +81,13 @@ const config = z.record(z.enum(['a', 'b', 'c']), z.number());
 
 // Transform on the *value* schema is fine — values aren't used as keys
 const config = z.record(z.string(), z.string().trim());
+
+// Same for normalize()/overwrite() on values
+const config = z.record(z.string(), z.string().normalize());
+const config = z.record(
+  z.string(),
+  z.string().overwrite((value) => value.trim()),
+);
 ```
 
 ## When Not To Use It

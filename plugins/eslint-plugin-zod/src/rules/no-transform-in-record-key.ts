@@ -9,7 +9,15 @@ const { trackZodSchemaImports } = createZodSchemaImportTrack(zodImportScope);
 /**
  * Methods that mutate/transform the value and should not be used in z.record() key schemas
  */
-const TRANSFORM_METHODS = ['transform', 'map', 'trim', 'toLowerCase', 'toUpperCase'];
+const TRANSFORM_METHODS = [
+  'transform',
+  'map',
+  'trim',
+  'toLowerCase',
+  'toUpperCase',
+  'normalize',
+  'overwrite',
+];
 
 export const noTransformInRecordKey = createZodPluginRule({
   name: 'no-transform-in-record-key',

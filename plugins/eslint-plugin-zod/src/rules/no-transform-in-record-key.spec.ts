@@ -57,6 +57,20 @@ ruleTester.run(noTransformInRecordKey.name, noTransformInRecordKey, {
       `,
     },
     {
+      name: 'normalize on value schema (not key) is fine',
+      code: dedent`
+        import * as z from 'zod';
+        const config = z.record(z.string(), z.string().normalize());
+      `,
+    },
+    {
+      name: 'overwrite on value schema (not key) is fine',
+      code: dedent`
+        import * as z from 'zod';
+        const config = z.record(z.string(), z.string().overwrite((value) => value.trim()));
+      `,
+    },
+    {
       name: 'not zod.record',
       code: 'const config = someOtherLib.record(z.string().trim(), z.unknown());',
     },
@@ -145,6 +159,22 @@ ruleTester.run(noTransformInRecordKey.name, noTransformInRecordKey, {
       errors: [{ messageId: 'noTransformInRecordKey' }],
     },
     {
+      name: 'normalize on key schema',
+      code: dedent`
+        import * as z from 'zod';
+        const config = z.record(z.string().normalize(), z.unknown());
+      `,
+      errors: [{ messageId: 'noTransformInRecordKey' }],
+    },
+    {
+      name: 'overwrite on key schema',
+      code: dedent`
+        import * as z from 'zod';
+        const config = z.record(z.string().overwrite((value) => value.trim()), z.unknown());
+      `,
+      errors: [{ messageId: 'noTransformInRecordKey' }],
+    },
+    {
       name: 'chained transforms on key schema',
       code: dedent`
         import * as z from 'zod';
@@ -201,6 +231,14 @@ ruleTester.run(noTransformInRecordKey.name, noTransformInRecordKey, {
       errors: [{ messageId: 'noTransformInRecordKey' }],
     },
     {
+      name: 'named import with normalize',
+      code: dedent`
+        import { record, string } from 'zod';
+        const config = record(string().normalize(), string());
+      `,
+      errors: [{ messageId: 'noTransformInRecordKey' }],
+    },
+    {
       name: 'named z import with trim',
       code: dedent`
         import { z } from 'zod';
@@ -221,6 +259,14 @@ ruleTester.run(noTransformInRecordKey.name, noTransformInRecordKey, {
       code: dedent`
         import { z } from 'zod';
         const config = z.record(z.string().trim().toUpperCase(), z.unknown());
+      `,
+      errors: [{ messageId: 'noTransformInRecordKey' }],
+    },
+    {
+      name: 'named z import with overwrite',
+      code: dedent`
+        import { z } from 'zod';
+        const config = z.record(z.string().overwrite((value) => value.trim()), z.unknown());
       `,
       errors: [{ messageId: 'noTransformInRecordKey' }],
     },
