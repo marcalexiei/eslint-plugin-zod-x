@@ -1,15 +1,8 @@
-import { createZodSchemaImportTrack, zodMiniImportScope } from '@eslint-zod/utils';
-import type { TSESTree } from '@typescript-eslint/utils';
+import { ZOD_MUTATING_CHECK_NAMES, zodMiniImportScope } from '@eslint-zod/utils';
+import { buildNoTransformInRecordKeyCreate } from '@eslint-zod/utils/rule-builders/no-transform-in-record-key';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { createZodMiniPluginRule } from '../utils/create-plugin-rule.js';
-
-const { trackZodSchemaImports } = createZodSchemaImportTrack(zodMiniImportScope);
-
-/**
- * Methods that mutate/transform the value and should not be used in z.record() key schemas
- */
-const TRANSFORM_CHECKS = new Set(['normalize', 'overwrite', 'toLowerCase', 'toUpperCase', 'trim']);
 
 export const noTransformInRecordKey = createZodMiniPluginRule({
   name: 'no-transform-in-record-key',
@@ -26,20 +19,13 @@ export const noTransformInRecordKey = createZodMiniPluginRule({
     schema: [],
   },
   defaultOptions: [],
-  create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
-
-    // In Zod Mini, key mutations are passed as standalone checks into .check(...),
-    // so scan each check argument and return the first mutating one we find.
-    function getTransformCheck(
-      schema: TSESTree.Expression | TSESTree.SpreadElement,
-    ): TSESTree.CallExpression | null {
-      if (schema.type !== AST_NODE_TYPES.CallExpression) {
+  create: buildNoTransformInRecordKeyCreate(zodMiniImportScope, {
+    findTransformNode(keySchema, { detectZodSchemaRootNode, collectZodChainMethods }) {
+      if (keySchema.type !== AST_NODE_TYPES.CallExpression) {
         return null;
       }
 
-      for (const method of collectZodChainMethods(schema)) {
+      for (const method of collectZodChainMethods(keySchema)) {
         if (method.name !== 'check') {
           continue;
         }
@@ -51,44 +37,13 @@ export const noTransformInRecordKey = createZodMiniPluginRule({
 
           const zodCheck = detectZodSchemaRootNode(argument);
 
-          if (zodCheck && TRANSFORM_CHECKS.has(zodCheck.schemaType)) {
+          if (zodCheck && ZOD_MUTATING_CHECK_NAMES.includes(zodCheck.schemaType)) {
             return argument;
           }
         }
       }
 
       return null;
-    }
-
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        // Only care about z.record() calls
-        if (zodSchemaMeta?.schemaType !== 'record') {
-          return;
-        }
-
-        // Get the first argument, which is the key schema
-        const keySchemaArg = node.arguments.at(0);
-
-        // Skip if there's no key schema
-        if (!keySchemaArg) {
-          return;
-        }
-
-        const transformCheck = getTransformCheck(keySchemaArg);
-
-        if (!transformCheck) {
-          return;
-        }
-
-        context.report({
-          node: transformCheck,
-          messageId: 'noTransformInRecordKey',
-        });
-      },
-    };
-  },
+    },
+  }),
 });

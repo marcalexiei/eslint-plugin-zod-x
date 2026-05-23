@@ -40,7 +40,7 @@ Each plugin is scoped to its own import source via `ZodImportAllowedSource` (`'z
 - `@eslint-zod/utils` (`packages/utils/src/`) — AST parsing, import tracking, traversal, and fixer helpers
 - `@eslint-zod/utils/rule-builders/<rule-name>` (`packages/utils/src/rule-builders/`) — one export per shared rule builder; the file name matches the rule name (e.g. `consistent-import.ts` → `@eslint-zod/utils/rule-builders/consistent-import`)
 
-Available rule builder exports: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-unknown-schema`, `prefer-enum-over-literal-union`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
+Available rule builder exports: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-transform-in-record-key`, `no-unknown-schema`, `prefer-enum-over-literal-union`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
 
 `IMPORT_SYNTAXES` and `ImportSyntax` are exported from `@eslint-zod/utils/rule-builders/consistent-import` (not from the root).
 
@@ -51,6 +51,7 @@ AST helpers exported from `@eslint-zod/utils`:
 - `buildZodChainRemoveMethodFix` / `buildZodChainReplacementFix` — fixer helpers
 - `zodImportScope` / `zodMiniImportScope` — pre-built `ZodImportScope` instances; use `scope.isAllowed(source)` to check whether a source belongs to the plugin's scope
 - `ZOD_NON_SCHEMA_PRODUCING_METHODS` — array of method names that do not return a schema (parse, codec, error formatters)
+- `ZOD_MUTATING_CHECK_NAMES` — array of Zod check names that mutate the validated value (`trim`, `toLowerCase`, `toUpperCase`, `normalize`, `overwrite`); used in `zod` as chained methods and in `zod-mini` as standalone `.check(...)` arguments
 
 Rule metadata (name, `meta`, `defaultOptions`) lives entirely per-plugin. When a rule's `create` logic is identical across plugins and differs only by import scope, extract a `build*Create(scope)` factory into `packages/utils/src/rule-builders/<rule-name>.ts`, add it to the `package.json` exports map, and import it in each plugin from `@eslint-zod/utils/rule-builders/<rule-name>`.
 

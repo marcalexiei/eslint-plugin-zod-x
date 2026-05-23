@@ -1,6 +1,21 @@
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 import type { TSESTree } from '@typescript-eslint/utils';
 
+/**
+ * Walks up the AST from a Zod call expression and returns `true` when an
+ * ancestor call expression invokes a method named `schemaName` and the supplied
+ * `condition` predicate returns `true` for it.
+ *
+ * Useful for asking questions like *"is this `.min(1)` chain used inside a
+ * `z.record(...)` call as its first argument?"* without having to write the
+ * ancestor traversal in every rule.
+ *
+ * Returns `false` if no matching ancestor is reached before the root.
+ *
+ * @param outermostNode - Starting call expression (typically the result of {@link detectZodSchemaRootNode})
+ * @param options.schemaName - Name of the ancestor method to look for (e.g. `'record'`)
+ * @param options.condition - Predicate evaluated on the matching ancestor call expression
+ */
 export function findParentSchemaMatchingCondition(
   outermostNode: TSESTree.CallExpression,
   options: {

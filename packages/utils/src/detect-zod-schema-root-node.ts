@@ -228,11 +228,16 @@ export function isZodNumberSchemaCallExpression(
 // }
 
 /**
- * The final exported function.
+ * Finds the outermost Zod call expression in a chain and returns metadata about it
+ * (declaration style, factory name, methods, AST node). Includes calls in argument
+ * position (e.g. inside `.check(...)`), so a standalone check call is treated as the
+ * root of its own expression.
  *
- * node: CallExpression node given by ESLint visitor
- * zodNamespaces: e.g. new Set(['z'])
- * zodNamedImports: e.g. new Set(['number','string','array',...])
+ * Returns `null` if the node is not a Zod schema call or not the outermost call in its chain.
+ *
+ * @param node - The AST node to analyze (typically a `CallExpression` from an ESLint visitor)
+ * @param zodNamespaces - Local names of `z` namespace imports (e.g. `new Set(['z'])`)
+ * @param zodNamedImports - Map of local name → original Zod export name (e.g. `'string' -> 'string'`)
  */
 export function detectZodSchemaRootNode(
   node: TSESTree.Node,

@@ -72,6 +72,11 @@
       "import": "./dist/rule-builders/no-throw-in-refine.mjs",
       "require": "./dist/rule-builders/no-throw-in-refine.cjs"
     },
+    "./rule-builders/no-transform-in-record-key": {
+      "@eslint-zod/source": "./src/rule-builders/no-transform-in-record-key.ts",
+      "import": "./dist/rule-builders/no-transform-in-record-key.mjs",
+      "require": "./dist/rule-builders/no-transform-in-record-key.cjs"
+    },
     "./rule-builders/no-unknown-schema": {
       "@eslint-zod/source": "./src/rule-builders/no-unknown-schema.ts",
       "import": "./dist/rule-builders/no-unknown-schema.mjs",

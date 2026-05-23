@@ -28,29 +28,24 @@ Shared AST utilities for
 
 ## API
 
-### `createZodSchemaImportTrack()`
+Every export carries JSDoc with usage notes — refer to the linked source files (or hover in your editor) for the full description and examples. This README only lists what's available.
 
-Tracks namespace and named imports from a Zod import source. Returns an object with `isZodNamespace`, `getNamedImportOriginal`, `collectZodChainMethods`, and listener hooks to wire into a rule's visitor.
+### Root exports — `@eslint-zod/utils`
 
-### `detectZodSchemaRootNode()`
+AST parsing, import tracking, traversal, and fixer helpers.
 
-Finds the outermost Zod call expression in a chain, including calls in argument position (e.g. inside `.check()`).
+- `createZodSchemaImportTrack(scope)` — per-rule factory for tracking namespace and named imports
+- `detectZodSchemaRootNode(node, namespaces, named)` — find the outermost Zod call in a chain
+- `isZodNumberSchemaCallExpression(node, namespaces, named)` — detect `z.number()…` chains
+- `findParentSchemaMatchingCondition(node, options)` — search up the AST for a matching ancestor schema call
+- `buildZodChainRemoveMethodFix(opts)` / `buildZodChainReplacementFix(opts)` — fixer helpers
+- `ZodImportScope` (class) and the pre-built instances `zodImportScope`, `zodMiniImportScope`, `zodCoreImportScope`
+- `ZOD_MUTATING_CHECK_NAMES` — array of Zod check names that mutate the validated value
+- `ZOD_NON_SCHEMA_PRODUCING_METHODS` — array of Zod method names that do not return a schema
 
-### `isZodNumberSchemaCallExpression()`
+### Shared rule builders — `@eslint-zod/utils/rule-builders/<rule-name>`
 
-Returns `true` if a call expression is a Zod number schema call (`z.number()` or equivalent).
-
-### `findParentSchemaMatchingCondition()`
-
-Walks up the AST from a call expression and returns the first ancestor Zod schema node that satisfies the provided predicate.
-
-### `buildZodChainRemoveMethodFix` / `buildZodChainReplacementFix`
-
-Fixer helpers for removing or replacing a method in a Zod chain.
-
-### Shared rule builders
-
-These helpers return ESLint `create` functions parameterised by import scope so plugins can keep local rule metadata while reusing runtime logic.
+Each rule shared between `eslint-plugin-zod` and `eslint-plugin-zod-mini` exposes its `create(...)` factory from a dedicated subpath. Plugins keep rule metadata local and reuse the runtime logic.
 
 - `buildConsistentImportCreate(scope)`
 - `buildConsistentImportSourceCreate(scope)`
@@ -60,29 +55,11 @@ These helpers return ESLint `create` functions parameterised by import scope so 
 - `buildNoAnySchemaCreate(scope)`
 - `buildNoEmptyCustomSchemaCreate(scope)`
 - `buildNoThrowInRefineCreate(scope)`
+- `buildNoTransformInRecordKeyCreate(scope, options)`
 - `buildNoUnknownSchemaCreate(scope)`
 - `buildPreferEnumOverLiteralUnionCreate(scope)`
 - `buildRequireBrandTypeParameterCreate(scope)`
 - `buildRequireErrorMessageCreate(scope)`
 - `buildSchemaErrorPropertyStyleCreate(scope)`
 
-### `zodImportScope` / `zodMiniImportScope`
-
-Class and pre-built instances that define the set of recognised import sources for each plugin scope.
-
-- `zodImportScope.sources` → `['zod', 'zod/v4', 'zod/v3']`
-- `zodMiniImportScope.sources` → `['zod/mini', 'zod/v4-mini']`
-- `isAllowed(source)` — returns `true` if the source belongs to the scope
-
-### `ZOD_NON_SCHEMA_PRODUCING_METHODS`
-
-Array of Zod method names that do not return a schema (parse methods, codec helpers, error formatters). Useful for filtering out terminal calls when traversing a chain.
-
-### Import syntax helpers
-
-Utilities used by `consistent-import` rules to inspect and rewrite import declarations.
-
-- `IMPORT_SYNTAXES` — `['namespace', 'named']` constant tuple
-- `isGroupFirstImportKindValidForSyntax()` — checks whether the first import in a group matches the expected syntax and `import type` rules
-- `shouldIdentifierBeRenamed()` — returns `true` if an identifier node should be renamed (skips specifier nodes and already-qualified members)
-- `getNamespaceAliasNameFrom()` — extracts the most significant local name from an import clause for use as a namespace alias
+The `consistent-import` builder additionally re-exports the import-syntax helpers used by its fixer: `IMPORT_SYNTAXES`, `ImportSyntax`, `isGroupFirstImportKindValidForSyntax`, `shouldIdentifierBeRenamed`, `getNamespaceAliasNameFrom`.

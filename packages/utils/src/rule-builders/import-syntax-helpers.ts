@@ -1,6 +1,11 @@
 import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
+/**
+ * Supported import syntaxes for the `consistent-import` rule:
+ * - `'namespace'` → `import * as z from 'zod'` / `import z from 'zod'`
+ * - `'named'` → `import { z } from 'zod'`
+ */
 export const IMPORT_SYNTAXES = ['namespace', 'named'] as const;
 export type ImportSyntax = (typeof IMPORT_SYNTAXES)[number];
 
@@ -63,6 +68,12 @@ export function isGroupFirstImportKindValidForSyntax(
   return true;
 }
 
+/**
+ * Returns `true` if an identifier node should be renamed by a `consistent-import`
+ * fixer. Skips specifier nodes themselves and identifiers already qualified
+ * through a different namespace (e.g. the `z` in `z.array`, when the rename
+ * target is not `z`).
+ */
 export function shouldIdentifierBeRenamed(node: TSESTree.Identifier): boolean {
   // Skip import specifier nodes themselves
   if (node.parent.type === AST_NODE_TYPES.ImportSpecifier) {
