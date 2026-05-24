@@ -1,5 +1,18 @@
 # eslint-plugin-zod
 
+## 4.5.2
+
+### Patch Changes
+
+- [#323](https://github.com/marcalexiei/eslint-zod/pull/323) [`0544a19`](https://github.com/marcalexiei/eslint-zod/commit/0544a197af5859b8a48615e49ff09bf6bcaaf884) Thanks [@marcalexiei](https://github.com/marcalexiei)! - refactor(no-transform-in-record-key): use `@eslint-zod/utils/rule-builders/no-transform-in-record-key`
+
+- [#318](https://github.com/marcalexiei/eslint-zod/pull/318) [`b084557`](https://github.com/marcalexiei/eslint-zod/commit/b08455769d81682e32feae0cc3306e62d5b3c549) Thanks [@nimaebra](https://github.com/nimaebra)! - refactor(no-throw-in-refine): use `@eslint-zod/utils/rule-builders/no-throw-in-refine`
+
+- [#321](https://github.com/marcalexiei/eslint-zod/pull/321) [`15578f4`](https://github.com/marcalexiei/eslint-zod/commit/15578f4873b5271cd4d27cef80faef451915797b) Thanks [@nimaebra](https://github.com/nimaebra)! - fix(no-transform-in-record-key): add `normalize` and `overwrite` methods
+
+- Updated dependencies [[`b084557`](https://github.com/marcalexiei/eslint-zod/commit/b08455769d81682e32feae0cc3306e62d5b3c549), [`0544a19`](https://github.com/marcalexiei/eslint-zod/commit/0544a197af5859b8a48615e49ff09bf6bcaaf884)]:
+  - @eslint-zod/utils@2.1.0
+
 ## 4.5.1
 
 ### Patch Changes

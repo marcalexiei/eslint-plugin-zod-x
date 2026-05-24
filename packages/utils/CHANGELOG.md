@@ -1,5 +1,15 @@
 # @eslint-zod/utils
 
+## 2.1.0
+
+### Minor Changes
+
+- [#318](https://github.com/marcalexiei/eslint-zod/pull/318) [`b084557`](https://github.com/marcalexiei/eslint-zod/commit/b08455769d81682e32feae0cc3306e62d5b3c549) Thanks [@nimaebra](https://github.com/nimaebra)! - feat: add `no-throw-in-refine` rule builder
+
+- [#323](https://github.com/marcalexiei/eslint-zod/pull/323) [`0544a19`](https://github.com/marcalexiei/eslint-zod/commit/0544a197af5859b8a48615e49ff09bf6bcaaf884) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(rule-builders): add `no-transform-in-record-key`
+
+  The shared list of mutating Zod check names is also now exposed as `ZOD_MUTATING_CHECK_NAMES`.
+
 ## 2.0.0
 
 ### Major Changes

@@ -1,5 +1,23 @@
 # eslint-plugin-zod-mini
 
+## 1.2.0
+
+### Minor Changes
+
+- [#320](https://github.com/marcalexiei/eslint-zod/pull/320) [`97d8c7c`](https://github.com/marcalexiei/eslint-zod/commit/97d8c7ca00ba48f55eba9b5ddd63da950cb127ef) Thanks [@nimaebra](https://github.com/nimaebra)! - feat: add `no-transform-in-record-key` rule
+
+- [#318](https://github.com/marcalexiei/eslint-zod/pull/318) [`b084557`](https://github.com/marcalexiei/eslint-zod/commit/b08455769d81682e32feae0cc3306e62d5b3c549) Thanks [@nimaebra](https://github.com/nimaebra)! - feat(rule-builders): add `no-throw-in-refine`
+
+  The `no-throw-in-refine` create logic has been extracted into `@eslint-zod/utils` so both
+  `eslint-plugin-zod` and `eslint-plugin-zod-mini` use the same shared implementation.
+
+### Patch Changes
+
+- [#323](https://github.com/marcalexiei/eslint-zod/pull/323) [`0544a19`](https://github.com/marcalexiei/eslint-zod/commit/0544a197af5859b8a48615e49ff09bf6bcaaf884) Thanks [@marcalexiei](https://github.com/marcalexiei)! - refactor(no-transform-in-record-key): use `@eslint-zod/utils/rule-builders/no-transform-in-record-key`
+
+- Updated dependencies [[`b084557`](https://github.com/marcalexiei/eslint-zod/commit/b08455769d81682e32feae0cc3306e62d5b3c549), [`0544a19`](https://github.com/marcalexiei/eslint-zod/commit/0544a197af5859b8a48615e49ff09bf6bcaaf884)]:
+  - @eslint-zod/utils@2.1.0
+
 ## 1.1.1
 
 ### Patch Changes
