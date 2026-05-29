@@ -1,5 +1,13 @@
 # @eslint-zod/utils
 
+## 2.1.1
+
+### Patch Changes
+
+- [#325](https://github.com/marcalexiei/eslint-zod/pull/325) [`6faef20`](https://github.com/marcalexiei/eslint-zod/commit/6faef206f23c703bc2a06d8378f04fe660268a07) Thanks [@toto6038](https://github.com/toto6038)! - fix(consistent-schema-var-name): refine prefix/suffix handling
+
+  accept a bare token matching either affix case-insensitively when only one side is configured, and use the configured affix casing in rename suggestions
+
 ## 2.1.0
 
 ### Minor Changes
