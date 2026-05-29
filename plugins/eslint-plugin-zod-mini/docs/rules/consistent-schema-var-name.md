@@ -11,6 +11,8 @@
 This rule enforces a consistent naming convention for Zod Mini schema variables by requiring them to start with a specified prefix and/or end with a specified suffix.
 The default behavior (suffix `'Schema'`) is equivalent to the deprecated `zod-mini/require-schema-suffix` rule.
 
+If only `before` or `after` is configured, a variable name equal to that token is also allowed, ignoring case.
+
 The rule ignores:
 
 - Variables that store parsed values (e.g., `.parse()`, `.safeParse()`)
@@ -82,6 +84,7 @@ const address = z.object({ street: z.string() });
 ```ts
 import * as z from 'zod/mini';
 
+const schema = z.string();
 const userSchema = z.string();
 const addressSchema = z.object({ street: z.string() });
 

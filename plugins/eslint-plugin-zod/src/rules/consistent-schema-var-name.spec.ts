@@ -15,6 +15,15 @@ ruleTester.run(consistentSchemaVarName.name, consistentSchemaVarName, {
       `,
     },
     {
+      name: 'valid suffix only (default suffix)',
+      code: dedent`
+        import * as z from 'zod';
+        const schema = z.string();
+        const Schema = z.string();
+        const SCHEMA = z.string();
+      `,
+    },
+    {
       name: 'valid usage with multiple declarations',
       code: dedent`
         import * as z from 'zod';
@@ -42,6 +51,16 @@ ruleTester.run(consistentSchemaVarName.name, consistentSchemaVarName, {
         const myVar = z.string()
       `,
       options: [{ after: 'Var' }],
+    },
+    {
+      name: 'custom suffix bare token (case-insensitive)',
+      code: dedent`
+        import * as z from 'zod';
+        const bar = z.string();
+        const Bar = z.string();
+        const BAR = z.string();
+      `,
+      options: [{ after: 'Bar' }],
     },
     {
       name: 'ignores non-zod',
@@ -151,6 +170,16 @@ ruleTester.run(consistentSchemaVarName.name, consistentSchemaVarName, {
         const $user = z.string();
       `,
       options: [{ before: '$', after: '' }],
+    },
+    {
+      name: 'valid prefix only (case-insensitive)',
+      code: dedent`
+        import * as z from 'zod';
+        const foo = z.string();
+        const Foo = z.string();
+        const FOO = z.string();
+      `,
+      options: [{ before: 'foo', after: '' }],
     },
     {
       name: 'valid with both before and after',
@@ -291,6 +320,26 @@ ruleTester.run(consistentSchemaVarName.name, consistentSchemaVarName, {
           data: { expected: '$user' },
         },
       ],
+      output: null,
+    },
+    {
+      name: 'missing prefix with default suffix',
+      code: dedent`
+        import * as z from 'zod';
+        const schema = z.string();
+      `,
+      options: [{ before: '$', after: 'Schema' }],
+      errors: [{ messageId: 'invalidName', data: { expected: '$Schema' } }],
+      output: null,
+    },
+    {
+      name: 'missing suffix with bare prefix token',
+      code: dedent`
+        import * as z from 'zod';
+        const foo = z.string();
+      `,
+      options: [{ before: 'Foo', after: 'Schema' }],
+      errors: [{ messageId: 'invalidName', data: { expected: 'FooSchema' } }],
       output: null,
     },
     {
