@@ -6,6 +6,8 @@ updates:
     schedule:
       interval: 'monthly'
     open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
 
   - package-ecosystem: 'npm'
     directory: '/'
@@ -44,3 +46,5 @@ updates:
           - 'typescript-eslint'
           - 'vitest'
           - 'zshy'
+    cooldown:
+      default-days: 7

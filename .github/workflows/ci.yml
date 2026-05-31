@@ -37,6 +37,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Install Dependencies
         uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@63a1804e7a5772e24ecda9c009453bb8b1cada27 # v1.3.1
@@ -45,7 +47,9 @@ jobs:
 
       - name: Install ESLint (if needed)
         if: ${{ matrix.eslint != 10 }}
-        run: pnpm -r --include-workspace-root install eslint@${{ matrix.eslint }} --save-dev
+        env:
+          ESLINT_VERSION: ${{ matrix.eslint }}
+        run: pnpm -r --include-workspace-root install "eslint@$ESLINT_VERSION" --save-dev
 
       - name: Run test
         run: pnpm run test
@@ -60,6 +64,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Install Dependencies
         uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@63a1804e7a5772e24ecda9c009453bb8b1cada27 # v1.3.1

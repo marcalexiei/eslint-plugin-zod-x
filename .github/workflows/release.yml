@@ -1,7 +1,10 @@
 name: Release
 
+# workflow_run is restricted to the main branch and guarded at the job level
+# with `github.event.workflow_run.head_repository.full_name == github.repository`
+# to prevent fork PRs from triggering the release job.
 on:
-  workflow_run:
+  workflow_run: # zizmor: ignore[dangerous-triggers]
     workflows:
       - CI
     types:
@@ -9,7 +12,9 @@ on:
     branches:
       - main
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions: {}
 
@@ -19,13 +24,16 @@ env:
 jobs:
   release:
     name: Release
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    environment: release-npm
+
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository }}
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write
-      pull-requests: write
-      id-token: write # Required for OIDC (Trusted publishing)
+      contents: write # required to push release commits and tags
+      pull-requests: write # required to create and update release PRs
+      id-token: write # required for npm OIDC trusted publishing
 
     steps:
       - name: Setup release helper
@@ -36,9 +44,12 @@ jobs:
           private-key: ${{ secrets.RELEASE_HELPER_PRIVATE_KEY }}
 
       - name: Configure git user for GitHub App
+        env:
+          BOT_NAME: ${{ steps.release-helper.outputs.bot-name }}
+          BOT_EMAIL: ${{ steps.release-helper.outputs.bot-email }}
         run: |
-          git config --global user.name '${{ steps.release-helper.outputs.bot-name }}'
-          git config --global user.email '${{ steps.release-helper.outputs.bot-email }}'
+          git config --global user.name "$BOT_NAME"
+          git config --global user.email "$BOT_EMAIL"
 
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
