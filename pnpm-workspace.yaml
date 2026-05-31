@@ -9,17 +9,17 @@ catalogs:
 
   dev:
     # typescript-eslint ecosystem (keep versions aligned)
-    '@typescript-eslint/rule-tester': '8.59.3'
-    typescript-eslint: '8.59.3'
+    '@typescript-eslint/rule-tester': '8.60.0'
+    typescript-eslint: '8.60.0'
 
     # build & test toolchain
-    tsdown: '0.22.0'
-    vitest: '4.1.6'
+    tsdown: '0.22.1'
+    vitest: '4.1.7'
 
     # plugin dev utilities
     '@marcalexiei/prettier-config': '2.0.0'
     dedent: '1.7.2'
-    eslint-doc-generator: '3.3.2'
+    eslint-doc-generator: '3.6.0'
     prettier: '3.8.3'
 
 allowBuilds:

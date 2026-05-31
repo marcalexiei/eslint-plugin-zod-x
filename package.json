@@ -28,20 +28,21 @@
     "@marcalexiei/eslint-config": "7.0.0",
     "@marcalexiei/prettier-config": "catalog:dev",
     "@types/node": "25.8.0",
-    "@vitest/eslint-plugin": "1.6.17",
-    "eslint": "10.4.0",
+    "@vitest/eslint-plugin": "1.6.18",
+    "eslint": "10.4.1",
     "eslint-import-resolver-typescript": "4.4.4",
     "eslint-plugin-eslint-plugin": "7.3.3",
     "eslint-plugin-import-x": "4.16.2",
     "eslint-plugin-n": "18.0.1",
-    "knip": "6.13.1",
+    "knip": "6.14.2",
     "prettier": "3.8.3",
     "typescript": "6.0.3",
-    "typescript-eslint": "catalog:dev"
+    "typescript-eslint": "catalog:dev",
+    "vitest": "catalog:dev"
   },
   "prettier": "@marcalexiei/prettier-config",
   "engines": {
     "node": "^20 || ^22 || >=24"
   },
-  "packageManager": "pnpm@11.1.2+sha512.415a1cc25974731e75455c1468371be74c5aa5fb7621b50d4056d222451609f11412f23fd602e6169f1e060466641f798597e1be961a10688836a67b16569499"
+  "packageManager": "pnpm@11.5.0+sha512.dbfcc4f81cf48597afd4bc391ffdf12c11f1a9fb83a395bfa6b0a2d9cc2fd8ffebafdb1ccbd529632153f793904c2615b7f09fe1a345473fd1c35845172a8eb1"
 }
