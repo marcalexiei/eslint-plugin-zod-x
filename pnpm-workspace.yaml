@@ -9,7 +9,7 @@ catalogs:
 
   dev:
     # typescript-eslint ecosystem (keep versions aligned)
-    '@typescript-eslint/rule-tester': '8.59.3'
+    '@typescript-eslint/rule-tester': '8.59.4'
     typescript-eslint: '8.59.3'
 
     # build & test toolchain
