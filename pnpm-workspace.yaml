@@ -14,7 +14,7 @@ catalogs:
 
     # build & test toolchain
     tsdown: '0.22.0'
-    vitest: '4.1.6'
+    vitest: '4.1.7'
 
     # plugin dev utilities
     '@marcalexiei/prettier-config': '2.0.0'
