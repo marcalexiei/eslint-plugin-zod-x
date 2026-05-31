@@ -57,6 +57,11 @@
       "import": "./dist/rule-builders/consistent-schema-var-name.mjs",
       "require": "./dist/rule-builders/consistent-schema-var-name.cjs"
     },
+    "./rule-builders/no-duplicate-schema-methods": {
+      "@eslint-zod/source": "./src/rule-builders/no-duplicate-schema-methods.ts",
+      "import": "./dist/rule-builders/no-duplicate-schema-methods.mjs",
+      "require": "./dist/rule-builders/no-duplicate-schema-methods.cjs"
+    },
     "./rule-builders/no-any-schema": {
       "@eslint-zod/source": "./src/rule-builders/no-any-schema.ts",
       "import": "./dist/rule-builders/no-any-schema.mjs",

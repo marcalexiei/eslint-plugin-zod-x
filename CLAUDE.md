@@ -40,7 +40,7 @@ Each plugin is scoped to its own import source via `ZodImportAllowedSource` (`'z
 - `@eslint-zod/utils` (`packages/utils/src/`) — AST parsing, import tracking, traversal, and fixer helpers
 - `@eslint-zod/utils/rule-builders/<rule-name>` (`packages/utils/src/rule-builders/`) — one export per shared rule builder; the file name matches the rule name (e.g. `consistent-import.ts` → `@eslint-zod/utils/rule-builders/consistent-import`)
 
-Available rule builder exports: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-transform-in-record-key`, `no-unknown-schema`, `prefer-enum-over-literal-union`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
+Available rule builder exports: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-duplicate-schema-methods`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-transform-in-record-key`, `no-unknown-schema`, `prefer-enum-over-literal-union`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
 
 `IMPORT_SYNTAXES` and `ImportSyntax` are exported from `@eslint-zod/utils/rule-builders/consistent-import` (not from the root).
 
@@ -99,7 +99,7 @@ Several rules exist in both `eslint-plugin-zod` and `eslint-plugin-zod-mini` wit
 - **Docs** (`docs/rules/<rule-name>.md`): mirror structure and content, but adapt all code examples to the correct import source (`zod` vs `zod/mini`) and API style (chained methods vs standalone `$ZodCheck` functions passed to `.check()`).
 - **Specs** (`src/rules/<rule-name>.spec.ts`): mirror the test cases, but again adapt import sources and API. Valid/invalid cases should cover the same scenarios in both plugins.
 
-Rules that exist in both plugins: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-unknown-schema`, `prefer-enum-over-literal-union`, `prefer-meta`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
+Rules that exist in both plugins: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-duplicate-schema-methods`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-unknown-schema`, `prefer-enum-over-literal-union`, `prefer-meta`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
 
 ## Quality expectations
 
@@ -109,6 +109,31 @@ Every change must be properly tested and documented:
 - Update rule docs (`docs/rules/*.md`) when rule behavior changes; run `pnpm build:docs` from the plugin directory afterward
 - Update package READMEs when public API changes
 - Update this file when architecture, utilities, or conventions change
+- Add a changeset for every user-facing change (see **Changesets** below)
+
+## Changesets
+
+This repo uses [Changesets](https://github.com/changesets/changesets) for versioning. Every feature, fix, or breaking change that affects a published package requires a changeset file.
+
+**Create a changeset** by adding a file to `.changeset/<adjective-noun-verb>.md` (three hyphenated random words, e.g. `noble-shoes-swim.md`):
+
+```md
+---
+'<package-name>': minor
+---
+
+<summary of the change>
+```
+
+**Bump type:**
+
+- `major` — breaking change (removes or renames a public API, changes rule behavior incompatibly)
+- `minor` — new feature (new rule, new export, new option)
+- `patch` — bug fix or non-breaking improvement
+
+**One changeset per package:** write a separate changeset file for each affected package rather than listing several packages in one file. This lets each entry describe the change in terms specific to that package (e.g. the exact methods a plugin targets, or the new export name in `@eslint-zod/utils`). A new rule shared across both plugins therefore needs three changesets: one for `eslint-plugin-zod`, one for `eslint-plugin-zod-mini`, and one for `@eslint-zod/utils` (when a rule builder export is added).
+
+**Summary style:** match the existing changelog entries — use a conventional-commits prefix (`feat:`, `fix:`, `refactor:`) and a concise description. Add a blank line and a second paragraph for extra context when needed. Tailor the detail to the package: a plugin changeset should name the specific methods/behavior it targets, while the `@eslint-zod/utils` changeset should describe the new builder/export.
 
 ## Adding a new rule
 
@@ -117,6 +142,7 @@ Every change must be properly tested and documented:
 3. If it belongs in the `recommended` config, add it there too.
 4. Run `pnpm build:docs` from the plugin directory — this creates the rule doc stub and updates the README table.
 5. Fill in the doc at `docs/rules/<rule-name>.md`.
+6. Add one changeset (`.changeset/<adjective-noun-verb>.md`) per affected package with bump type `minor` — one for each plugin and one for `@eslint-zod/utils` if a rule builder export was added.
 
 ## Docs generation
 
