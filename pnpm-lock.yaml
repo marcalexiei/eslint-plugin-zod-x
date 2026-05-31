@@ -21,8 +21,8 @@ catalogs:
       specifier: 1.7.2
       version: 1.7.2
     eslint-doc-generator:
-      specifier: 3.3.2
-      version: 3.3.2
+      specifier: 3.6.0
+      version: 3.6.0
     prettier:
       specifier: 3.8.3
       version: 3.8.3
@@ -134,7 +134,7 @@ importers:
         version: 1.7.2
       eslint-doc-generator:
         specifier: catalog:dev
-        version: 3.3.2(eslint@10.4.0)(prettier@3.8.3)(typescript@6.0.3)
+        version: 3.6.0(eslint@10.4.0)(prettier@3.8.3)(typescript@6.0.3)
       prettier:
         specifier: catalog:dev
         version: 3.8.3
@@ -174,7 +174,7 @@ importers:
         version: 1.7.2
       eslint-doc-generator:
         specifier: catalog:dev
-        version: 3.3.2(eslint@10.4.0)(prettier@3.8.3)(typescript@6.0.3)
+        version: 3.6.0(eslint@10.4.0)(prettier@3.8.3)(typescript@6.0.3)
       prettier:
         specifier: catalog:dev
         version: 3.8.3
@@ -214,7 +214,7 @@ importers:
         version: 1.7.2
       eslint-doc-generator:
         specifier: catalog:dev
-        version: 3.3.2(eslint@10.4.0)(prettier@3.8.3)(typescript@6.0.3)
+        version: 3.6.0(eslint@10.4.0)(prettier@3.8.3)(typescript@6.0.3)
       prettier:
         specifier: catalog:dev
         version: 3.8.3
@@ -1537,8 +1537,8 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-doc-generator@3.3.2:
-    resolution: {integrity: sha512-GhfcqCD28zzV/J5ppvcR4EwTMy3TOPymd8c6HNBeMe78lFw8pXf2GnNdq6bs3pxjmrkRoxPnNUSnlBlY7gN4Ow==}
+  eslint-doc-generator@3.6.0:
+    resolution: {integrity: sha512-3g0FxxIBNMiCsTXm5rhCBNAcdFMriwXSHbAsRXt/VID5cWHQf+ySMlICNHoJdTXuzu2ARgq/vu4jR7NzQt8qGw==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
     hasBin: true
     peerDependencies:
@@ -3652,7 +3652,7 @@ snapshots:
       eslint: 10.4.0(jiti@2.7.0)
       semver: 7.8.0
 
-  eslint-doc-generator@3.3.2(eslint@10.4.0)(prettier@3.8.3)(typescript@6.0.3):
+  eslint-doc-generator@3.6.0(eslint@10.4.0)(prettier@3.8.3)(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/utils': 8.59.3(eslint@10.4.0)(typescript@6.0.3)
       ajv: 8.18.0

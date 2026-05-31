@@ -19,7 +19,7 @@ catalogs:
     # plugin dev utilities
     '@marcalexiei/prettier-config': '2.0.0'
     dedent: '1.7.2'
-    eslint-doc-generator: '3.3.2'
+    eslint-doc-generator: '3.6.0'
     prettier: '3.8.3'
 
 allowBuilds:
