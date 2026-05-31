@@ -18,7 +18,7 @@
     "lint:knip": "knip",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "test": "pnpm -r test",
+    "test": "vitest run",
     "release": "pnpm run build && changeset publish",
     "check-all": "pnpm run format && pnpm run build && pnpm run lint && pnpm run test && pnpm run typecheck"
   },
