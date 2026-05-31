@@ -10,6 +10,7 @@ export default defineConfig({
     },
   },
   test: {
+    name: 'zod',
     setupFiles: ['./tests/setup.ts'],
   },
 });
