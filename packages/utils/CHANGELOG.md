@@ -1,5 +1,14 @@
 # @eslint-zod/utils
 
+## 2.2.0
+
+### Minor Changes
+
+- [#339](https://github.com/marcalexiei/eslint-zod/pull/339) [`d183319`](https://github.com/marcalexiei/eslint-zod/commit/d1833192088a28d9db1595d6bc90d02c29cb1ba5) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `no-duplicate-schema-methods` rule builder
+
+  Exposes `buildNoDuplicateSchemaMethodsCreate(scope, excludedMethods)` from `@eslint-zod/utils/rule-builders/no-duplicate-schema-methods`.
+  The builder reports a method called more than once in a single schema chain, skipping any method name passed in `excludedMethods`.
+
 ## 2.1.2
 
 ### Patch Changes

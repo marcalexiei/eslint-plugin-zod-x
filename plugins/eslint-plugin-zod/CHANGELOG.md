@@ -1,5 +1,27 @@
 # eslint-plugin-zod
 
+## 4.6.0
+
+### Minor Changes
+
+- [#339](https://github.com/marcalexiei/eslint-zod/pull/339) [`d183319`](https://github.com/marcalexiei/eslint-zod/commit/d1833192088a28d9db1595d6bc90d02c29cb1ba5) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `no-duplicate-schema-methods` rule
+
+  Disallows calling the same schema method more than once in a single chain.\
+  Methods that are valid to repeat are excluded from the check:
+  - `and`
+  - `check`
+  - `or`
+  - `pipe`
+  - `refine`
+  - `register`
+  - `superRefine`
+  - `transform`
+
+### Patch Changes
+
+- Updated dependencies [[`d183319`](https://github.com/marcalexiei/eslint-zod/commit/d1833192088a28d9db1595d6bc90d02c29cb1ba5)]:
+  - @eslint-zod/utils@2.2.0
+
 ## 4.5.4
 
 ### Patch Changes
