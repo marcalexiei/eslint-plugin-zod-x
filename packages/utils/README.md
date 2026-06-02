@@ -53,6 +53,8 @@ Each rule shared between `eslint-plugin-zod` and `eslint-plugin-zod-mini` expose
 - `buildConsistentSchemaOutputTypeStyleCreate(scope)`
 - `buildConsistentSchemaVarNameCreate(scope)`
 - `buildNoAnySchemaCreate(scope)`
+- `buildNoCoerceBooleanCreate(scope)`
+- `buildNoDuplicateSchemaMethodsCreate(scope)`
 - `buildNoEmptyCustomSchemaCreate(scope)`
 - `buildNoThrowInRefineCreate(scope)`
 - `buildNoTransformInRecordKeyCreate(scope, options)`

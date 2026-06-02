@@ -7,6 +7,7 @@ import { consistentObjectSchemaType } from './rules/consistent-object-schema-typ
 import { consistentSchemaOutputTypeStyle } from './rules/consistent-schema-output-type-style.js';
 import { consistentSchemaVarName } from './rules/consistent-schema-var-name.js';
 import { noAnySchema } from './rules/no-any-schema.js';
+import { noCoerceBoolean } from './rules/no-coerce-boolean.js';
 import { noDuplicateSchemaMethods } from './rules/no-duplicate-schema-methods.js';
 import { noEmptyCustomSchema } from './rules/no-empty-custom-schema.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
@@ -43,6 +44,7 @@ const eslintPluginZodMini = {
     'consistent-schema-output-type-style': consistentSchemaOutputTypeStyle,
     'consistent-schema-var-name': consistentSchemaVarName,
     'no-any-schema': noAnySchema,
+    'no-coerce-boolean': noCoerceBoolean,
     'no-duplicate-schema-methods': noDuplicateSchemaMethods,
     'no-empty-custom-schema': noEmptyCustomSchema,
     'no-throw-in-refine': noThrowInRefine,
@@ -70,6 +72,7 @@ const recommendedConfig = {
     'zod-mini/consistent-import': 'error',
     'zod-mini/consistent-schema-var-name': 'error',
     'zod-mini/no-any-schema': 'error',
+    'zod-mini/no-coerce-boolean': 'error',
     'zod-mini/no-duplicate-schema-methods': 'error',
     'zod-mini/no-empty-custom-schema': 'error',
     'zod-mini/no-throw-in-refine': 'error',
