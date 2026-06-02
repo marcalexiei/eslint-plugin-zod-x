@@ -41,7 +41,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@63a1804e7a5772e24ecda9c009453bb8b1cada27 # v1.3.1
+        uses: marcalexiei/github-actions/setup-node-and-pnpm@35654007fc916287603cd114516a3d1295f62689 # v2.0.0
         with:
           node-version: ${{ matrix.node }}
 
@@ -68,7 +68,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@63a1804e7a5772e24ecda9c009453bb8b1cada27 # v1.3.1
+        uses: marcalexiei/github-actions/setup-node-and-pnpm@35654007fc916287603cd114516a3d1295f62689 # v2.0.0
 
       - name: Build
         run: pnpm run build
