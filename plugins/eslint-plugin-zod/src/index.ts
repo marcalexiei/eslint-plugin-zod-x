@@ -8,6 +8,7 @@ import { consistentObjectSchemaType } from './rules/consistent-object-schema-typ
 import { consistentSchemaOutputTypeStyle } from './rules/consistent-schema-output-type-style.js';
 import { consistentSchemaVarName } from './rules/consistent-schema-var-name.js';
 import { noAnySchema } from './rules/no-any-schema.js';
+import { noCoerceBoolean } from './rules/no-coerce-boolean.js';
 import { noDuplicateSchemaMethods } from './rules/no-duplicate-schema-methods.js';
 import { noEmptyCustomSchema } from './rules/no-empty-custom-schema.js';
 import { noNativeEnum } from './rules/no-native-enum.js';
@@ -63,6 +64,7 @@ const eslintPluginZod = {
     'consistent-schema-var-name': consistentSchemaVarName,
     'consistent-schema-output-type-style': consistentSchemaOutputTypeStyle,
     'no-any-schema': noAnySchema,
+    'no-coerce-boolean': noCoerceBoolean,
     'no-duplicate-schema-methods': noDuplicateSchemaMethods,
     'no-empty-custom-schema': noEmptyCustomSchema,
     'no-native-enum': noNativeEnum,
@@ -109,6 +111,7 @@ const recommendedConfig = {
     'zod/consistent-import': 'error',
     'zod/consistent-schema-var-name': 'error',
     'zod/no-any-schema': 'error',
+    'zod/no-coerce-boolean': 'error',
     'zod/no-duplicate-schema-methods': 'error',
     'zod/no-empty-custom-schema': 'error',
     'zod/no-native-enum': 'error',

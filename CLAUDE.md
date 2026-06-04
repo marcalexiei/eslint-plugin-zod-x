@@ -40,7 +40,7 @@ Each plugin is scoped to its own import source via `ZodImportAllowedSource` (`'z
 - `@eslint-zod/utils` (`packages/utils/src/`) — AST parsing, import tracking, traversal, and fixer helpers
 - `@eslint-zod/utils/rule-builders/<rule-name>` (`packages/utils/src/rule-builders/`) — one export per shared rule builder; the file name matches the rule name (e.g. `consistent-import.ts` → `@eslint-zod/utils/rule-builders/consistent-import`)
 
-Available rule builder exports: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-duplicate-schema-methods`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-transform-in-record-key`, `no-unknown-schema`, `prefer-enum-over-literal-union`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
+Available rule builder exports: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-coerce-boolean`, `no-duplicate-schema-methods`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-transform-in-record-key`, `no-unknown-schema`, `prefer-enum-over-literal-union`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
 
 `IMPORT_SYNTAXES` and `ImportSyntax` are exported from `@eslint-zod/utils/rule-builders/consistent-import` (not from the root).
 
@@ -99,7 +99,7 @@ Several rules exist in both `eslint-plugin-zod` and `eslint-plugin-zod-mini` wit
 - **Docs** (`docs/rules/<rule-name>.md`): mirror structure and content, but adapt all code examples to the correct import source (`zod` vs `zod/mini`) and API style (chained methods vs standalone `$ZodCheck` functions passed to `.check()`).
 - **Specs** (`src/rules/<rule-name>.spec.ts`): mirror the test cases, but again adapt import sources and API. Valid/invalid cases should cover the same scenarios in both plugins.
 
-Rules that exist in both plugins: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-duplicate-schema-methods`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-unknown-schema`, `prefer-enum-over-literal-union`, `prefer-meta`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
+Rules that exist in both plugins: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-coerce-boolean`, `no-duplicate-schema-methods`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-unknown-schema`, `prefer-enum-over-literal-union`, `prefer-meta`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
 
 ## Quality expectations
 

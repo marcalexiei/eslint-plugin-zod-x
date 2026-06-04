@@ -67,6 +67,11 @@
       "import": "./dist/rule-builders/no-any-schema.mjs",
       "require": "./dist/rule-builders/no-any-schema.cjs"
     },
+    "./rule-builders/no-coerce-boolean": {
+      "@eslint-zod/source": "./src/rule-builders/no-coerce-boolean.ts",
+      "import": "./dist/rule-builders/no-coerce-boolean.mjs",
+      "require": "./dist/rule-builders/no-coerce-boolean.cjs"
+    },
     "./rule-builders/no-empty-custom-schema": {
       "@eslint-zod/source": "./src/rule-builders/no-empty-custom-schema.ts",
       "import": "./dist/rule-builders/no-empty-custom-schema.mjs",
