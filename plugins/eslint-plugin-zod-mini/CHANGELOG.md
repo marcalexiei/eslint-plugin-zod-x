@@ -1,5 +1,19 @@
 # eslint-plugin-zod-mini
 
+## 1.4.0
+
+### Minor Changes
+
+- [#342](https://github.com/marcalexiei/eslint-zod/pull/342) [`de44e4c`](https://github.com/marcalexiei/eslint-zod/commit/de44e4cefcc64d8aae394081d777a90d3f4f283d) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `no-coerce-boolean` rule
+
+  Disallow `z.coerce.boolean()`, which relies on `Boolean()` and treats any non-empty string (including `"false"`) as `true`.\
+  The rule offers a suggestion to replace it with `z.stringbool()`.
+
+### Patch Changes
+
+- Updated dependencies [[`de44e4c`](https://github.com/marcalexiei/eslint-zod/commit/de44e4cefcc64d8aae394081d777a90d3f4f283d)]:
+  - @eslint-zod/utils@2.3.0
+
 ## 1.3.0
 
 ### Minor Changes
