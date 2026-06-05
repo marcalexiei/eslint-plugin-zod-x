@@ -10,7 +10,7 @@
 
 This rule disallows calling the same Zod schema method more than once within a single method chain. Duplicate calls are almost always a mistake — they are either redundant (e.g. calling `.trim()` twice) or create conflicting constraints (e.g. setting `.min()` twice with different values).
 
-Methods that are designed to be chained multiple times, such as `.or()` and `.and()`, are excluded from this check.
+Methods that are designed to be chained multiple times, such as `.or()`, `.and()`, and `.array()`, are excluded from this check.
 
 ## Examples
 
@@ -40,6 +40,9 @@ const bSchema = z.string().min(1).max(10);
 
 // .or() and .and() are excluded — chaining them is intentional
 const cSchema = z.string().or(z.number()).or(z.boolean());
+
+// .array() can be chained to create nested arrays
+const dSchema = z.string().nonempty().array().array();
 ```
 
 ## When Not To Use It

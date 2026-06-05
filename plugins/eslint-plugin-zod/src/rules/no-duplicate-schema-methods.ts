@@ -8,6 +8,7 @@ import { createZodPluginRule } from '../utils/create-plugin-rule.js';
  * called more than once in a single schema chain in the `zod` (full) API.
  *
  * - `and` / `or` — each call adds an intersection / union branch
+ * - `array` — each call wraps the previous schema in another array layer
  * - `check` — each call registers additional `$ZodCheck` validators
  * - `pipe` — each call pipes the output through another schema
  * - `refine` / `superRefine` — each call adds an independent refinement
@@ -16,6 +17,7 @@ import { createZodPluginRule } from '../utils/create-plugin-rule.js';
  */
 const EXCLUDED_METHODS = [
   'and',
+  'array',
   'check',
   'or',
   'pipe',
