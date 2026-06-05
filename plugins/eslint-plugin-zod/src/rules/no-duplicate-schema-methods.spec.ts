@@ -78,6 +78,13 @@ ruleTester.run(noDuplicateSchemaMethods.name, noDuplicateSchemaMethods, {
       `,
     },
     {
+      name: 'namespace - array called multiple times for nested arrays (excluded)',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().nonempty().array().array();
+      `,
+    },
+    {
       name: 'namespace - register called multiple times (excluded)',
       code: dedent`
         import * as z from 'zod';
