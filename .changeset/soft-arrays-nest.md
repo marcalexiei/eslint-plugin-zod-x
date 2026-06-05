@@ -2,6 +2,6 @@
 'eslint-plugin-zod': patch
 ---
 
-fix: allow chained array methods in no-duplicate-schema-methods
+fix(no-duplicate-schema-methods): allow chaining of array methods
 
-The `no-duplicate-schema-methods` rule now treats repeated `.array()` calls as valid nested array schema construction.
+Repeated `.array()` calls are now recognized as valid nested array schemas instead of being flagged as duplicate schema method usage.
