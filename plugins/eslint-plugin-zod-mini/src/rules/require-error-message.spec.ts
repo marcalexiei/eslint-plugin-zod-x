@@ -165,3 +165,93 @@ ruleTester.run(`${requireErrorMessage.name} (custom)`, requireErrorMessage, {
     },
   ],
 });
+
+ruleTester.run(`${requireErrorMessage.name} (object)`, requireErrorMessage, {
+  valid: [
+    {
+      name: 'string error message in zod object',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.object({
+          name: z.string("error msg") 
+        });
+      `,
+    },
+    {
+      name: 'object with error property in zod object',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.object({
+          name: z.string().check(z.refine(() => true, { error: "error msg" }))
+        });
+      `,
+    },
+    {
+      name: 'refine on zod object with object error property',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.object({
+          foo: z.string()
+        }).check(z.refine(() => true, { error: "error msg" }));
+      `,
+    },
+    {
+      name: 'refine on zod object with string error message',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.object({
+          foo: z.string()
+        }).check(z.refine(() => true, "error msg"));
+      `,
+    },
+  ],
+  invalid: [
+    {
+      name: 'object with message property in zod object',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.object({
+          name: z.string().check(z.refine(() => true, { message: "error msg" }))
+        });
+      `,
+      errors: [{ messageId: 'preferError' }],
+      output: dedent`
+        import * as z from 'zod/mini';
+        z.object({
+          name: z.string().check(z.refine(() => true, { error: "error msg" }))
+        });`,
+    },
+    {
+      name: 'refine on zod object with object message property',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.object({
+          foo: z.string()
+        }).check(z.refine(() => true, { message: "error msg" }));
+      `,
+      errors: [{ messageId: 'preferError' }],
+      output: dedent`
+        import * as z from 'zod/mini';
+        z.object({
+          foo: z.string()
+        }).check(z.refine(() => true, { error: "error msg" }));
+      `,
+    },
+    {
+      name: 'remove message property in zod object when error property is present',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.object({
+          foo: z.string().check(z.refine(() => true, { message: "hello", error: "hello" }))
+        });
+      `,
+      errors: [{ messageId: 'removeMessage' }],
+      output: dedent`
+      import * as z from 'zod/mini';
+      z.object({
+        foo: z.string().check(z.refine(() => true, {  error: "hello" }))
+      });
+      `,
+    },
+  ],
+});
