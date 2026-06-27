@@ -5,22 +5,22 @@ packages:
 catalogs:
   deps:
     # typescript-eslint ecosystem (keep versions aligned)
-    '@typescript-eslint/utils': '^8.57.0'
+    '@typescript-eslint/utils': '^8.62.0'
 
   dev:
     # typescript-eslint ecosystem (keep versions aligned)
-    '@typescript-eslint/rule-tester': '8.60.0'
-    typescript-eslint: '8.60.0'
+    '@typescript-eslint/rule-tester': '8.62.0'
+    typescript-eslint: '8.62.0'
 
     # build & test toolchain
-    tsdown: '0.22.1'
-    vitest: '4.1.7'
+    tsdown: '0.22.3'
+    vitest: '4.1.9'
 
     # plugin dev utilities
     '@marcalexiei/prettier-config': '2.0.0'
     dedent: '1.7.2'
     eslint-doc-generator: '3.6.0'
-    prettier: '3.8.3'
+    prettier: '3.8.4'
 
 allowBuilds:
   unrs-resolver: true
