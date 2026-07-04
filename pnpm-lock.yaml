@@ -24,8 +24,8 @@ catalogs:
       specifier: 3.6.0
       version: 3.6.0
     prettier:
-      specifier: 3.8.4
-      version: 3.8.4
+      specifier: 3.9.0
+      version: 3.9.0
     tsdown:
       specifier: 0.22.3
       version: 0.22.3
@@ -128,7 +128,7 @@ importers:
     devDependencies:
       '@marcalexiei/prettier-config':
         specifier: catalog:dev
-        version: 2.0.0(prettier@3.8.4)
+        version: 2.0.0(prettier@3.9.0)
       '@typescript-eslint/rule-tester':
         specifier: catalog:dev
         version: 8.62.0(eslint@10.5.0)(typescript@6.0.3)
@@ -137,10 +137,10 @@ importers:
         version: 1.7.2
       eslint-doc-generator:
         specifier: catalog:dev
-        version: 3.6.0(eslint@10.5.0)(prettier@3.8.4)(typescript@6.0.3)
+        version: 3.6.0(eslint@10.5.0)(prettier@3.9.0)(typescript@6.0.3)
       prettier:
         specifier: catalog:dev
-        version: 3.8.4
+        version: 3.9.0
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -168,7 +168,7 @@ importers:
     devDependencies:
       '@marcalexiei/prettier-config':
         specifier: catalog:dev
-        version: 2.0.0(prettier@3.8.4)
+        version: 2.0.0(prettier@3.9.0)
       '@typescript-eslint/rule-tester':
         specifier: catalog:dev
         version: 8.62.0(eslint@10.5.0)(typescript@6.0.3)
@@ -177,10 +177,10 @@ importers:
         version: 1.7.2
       eslint-doc-generator:
         specifier: catalog:dev
-        version: 3.6.0(eslint@10.5.0)(prettier@3.8.4)(typescript@6.0.3)
+        version: 3.6.0(eslint@10.5.0)(prettier@3.9.0)(typescript@6.0.3)
       prettier:
         specifier: catalog:dev
-        version: 3.8.4
+        version: 3.9.0
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -208,7 +208,7 @@ importers:
     devDependencies:
       '@marcalexiei/prettier-config':
         specifier: catalog:dev
-        version: 2.0.0(prettier@3.8.4)
+        version: 2.0.0(prettier@3.9.0)
       '@typescript-eslint/rule-tester':
         specifier: catalog:dev
         version: 8.62.0(eslint@10.5.0)(typescript@6.0.3)
@@ -217,10 +217,10 @@ importers:
         version: 1.7.2
       eslint-doc-generator:
         specifier: catalog:dev
-        version: 3.6.0(eslint@10.5.0)(prettier@3.8.4)(typescript@6.0.3)
+        version: 3.6.0(eslint@10.5.0)(prettier@3.9.0)(typescript@6.0.3)
       prettier:
         specifier: catalog:dev
-        version: 3.8.4
+        version: 3.9.0
       tsdown:
         specifier: catalog:dev
         version: 0.22.3(oxc-resolver@11.21.3)(typescript@6.0.3)
@@ -2067,6 +2067,11 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
+  prettier@3.9.0:
+    resolution: {integrity: sha512-LjIqSIC5VYLzs9WedVmJ2ljNAGnU+DteIClbahu4L/DBeWjZ6iT/k1lAYyu9JUh+1xINxWadaPw/Pl63y/agAw==}
+    engines: {node: '>=14'}
+    hasBin: true
+
   pretty-format@30.4.1:
     resolution: {integrity: sha512-K6KiKMHTL4jjX4u3Kir2EW07nRfcqVTXIImx50wbjHQTcZPgg+gjVeNTIT3l3L1Rd4UefxfogquC9J37SoFyyw==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
@@ -2807,6 +2812,10 @@ snapshots:
     dependencies:
       prettier: 3.8.4
 
+  '@marcalexiei/prettier-config@2.0.0(prettier@3.9.0)':
+    dependencies:
+      prettier: 3.9.0
+
   '@napi-rs/wasm-runtime@1.1.6(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
     dependencies:
       '@emnapi/core': 1.10.0
@@ -3527,7 +3536,7 @@ snapshots:
       eslint: 10.5.0(jiti@2.7.0)
       semver: 7.8.5
 
-  eslint-doc-generator@3.6.0(eslint@10.5.0)(prettier@3.8.4)(typescript@6.0.3):
+  eslint-doc-generator@3.6.0(eslint@10.5.0)(prettier@3.9.0)(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/utils': 8.62.0(eslint@10.5.0)(typescript@6.0.3)
       ajv: 8.20.0
@@ -3546,7 +3555,7 @@ snapshots:
       table: 6.9.0
       type-fest: 5.7.0
     optionalDependencies:
-      prettier: 3.8.4
+      prettier: 3.9.0
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -4158,6 +4167,8 @@ snapshots:
   prettier@2.8.8: {}
 
   prettier@3.8.4: {}
+
+  prettier@3.9.0: {}
 
   pretty-format@30.4.1:
     dependencies:
