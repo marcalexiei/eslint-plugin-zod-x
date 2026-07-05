@@ -45,14 +45,14 @@ describe('recommended config', () => {
   it('has correct shape', () => {
     const recommendedConfig = plugin.configs.recommended;
     expect(recommendedConfig).toBeTypeOf('object');
-    expect(recommendedConfig.name).toBe('eslint-plugin-zod/recommended');
-    expect(recommendedConfig.plugins).toHaveProperty('zod');
+    expect(recommendedConfig.name).toBe('eslint-plugin-zod-core/recommended');
+    expect(recommendedConfig.plugins).toHaveProperty('zod-core');
     expect(recommendedConfig.rules).toBeTypeOf('object');
   });
 
   it('only references registered, non-deprecated rules', () => {
     for (const { configRuleName, rule } of getRecommendedRuleEntries(plugin)) {
-      expect(configRuleName).toMatch(/^zod\//);
+      expect(configRuleName).toMatch(/^zod-core\//);
       expect(rule, `rule \`${configRuleName}\` is not registered in the plugin`).toBeDefined();
       expect(
         rule?.meta.deprecated ?? false,

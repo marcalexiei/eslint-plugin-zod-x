@@ -10,8 +10,11 @@ pnpm monorepo containing three ESLint plugins and a shared utilities package for
 | `eslint-plugin-zod-mini` | `plugins/eslint-plugin-zod-mini/` | yes       |
 | `eslint-plugin-zod-core` | `plugins/eslint-plugin-zod-core/` | yes       |
 | `@eslint-zod/utils`      | `packages/utils/`                 | yes       |
+| `@eslint-zod/test-utils` | `packages/test-utils/`            | no        |
 
 `eslint-plugin-zod-core` targets `zod/v4/core` (the low-level package used by library authors). It is intentionally small — most schema-authoring rules do not apply to it.
+
+`@eslint-zod/test-utils` is a private workspace package with data helpers for the plugins' `index.spec.ts` consistency specs (rule/doc file listings, config entries). Helpers return data only — all `describe`/`it` blocks and `expect` assertions stay in each plugin's own spec. It is consumed source-only via the `@eslint-zod/source` condition and never built or published; changes to it need no changeset.
 
 `@eslint-zod/utils` is a dependency of each plugin — consumers do not need to install it directly.
 
