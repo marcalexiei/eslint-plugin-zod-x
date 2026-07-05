@@ -48,6 +48,7 @@
     "@typescript-eslint/utils": "catalog:deps"
   },
   "devDependencies": {
+    "@eslint-zod/test-utils": "workspace:*",
     "@marcalexiei/prettier-config": "catalog:dev",
     "@typescript-eslint/rule-tester": "catalog:dev",
     "dedent": "catalog:dev",

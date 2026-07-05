@@ -1,18 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
-  "exclude": ["dist"],
+  "exclude": ["dist/**"],
   "compilerOptions": {
     "composite": true,
     "noEmit": false,
     "outDir": "dist/ts",
     "emitDeclarationOnly": true
-  },
-  "references": [
-    {
-      "path": "../../packages/test-utils"
-    },
-    {
-      "path": "../../packages/utils"
-    }
-  ]
+  }
 }

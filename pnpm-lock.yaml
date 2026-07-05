@@ -89,6 +89,12 @@ importers:
         specifier: catalog:dev
         version: 4.1.9(@types/node@24.13.2)(vite@8.1.0)
 
+  packages/test-utils:
+    dependencies:
+      '@typescript-eslint/utils':
+        specifier: catalog:deps
+        version: 8.62.1(eslint@10.6.0)(typescript@6.0.3)
+
   packages/utils:
     dependencies:
       '@typescript-eslint/utils':
@@ -126,6 +132,9 @@ importers:
         specifier: ^4
         version: 4.4.3
     devDependencies:
+      '@eslint-zod/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
       '@marcalexiei/prettier-config':
         specifier: catalog:dev
         version: 2.0.0(prettier@3.9.4)
@@ -166,6 +175,9 @@ importers:
         specifier: ^4
         version: 4.4.3
     devDependencies:
+      '@eslint-zod/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
       '@marcalexiei/prettier-config':
         specifier: catalog:dev
         version: 2.0.0(prettier@3.9.4)
@@ -206,6 +218,9 @@ importers:
         specifier: ^4
         version: 4.4.3
     devDependencies:
+      '@eslint-zod/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
       '@marcalexiei/prettier-config':
         specifier: catalog:dev
         version: 2.0.0(prettier@3.9.4)

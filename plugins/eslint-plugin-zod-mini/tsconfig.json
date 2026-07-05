@@ -7,5 +7,12 @@
     "outDir": "dist/ts",
     "emitDeclarationOnly": true
   },
-  "references": [{ "path": "../../packages/utils" }]
+  "references": [
+    {
+      "path": "../../packages/test-utils"
+    },
+    {
+      "path": "../../packages/utils"
+    }
+  ]
 }
