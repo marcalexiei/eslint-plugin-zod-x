@@ -121,7 +121,6 @@ const recommendedConfig = {
     'zod/no-number-schema-with-is-int': 'error',
     'zod/no-number-schema-with-safe': 'error',
     'zod/no-number-schema-with-step': 'error',
-    'zod/no-string-schema-with-uuid': 'error',
     'zod/no-optional-and-default-together': 'error',
     'zod/no-promise-schema': 'error',
     'zod/no-schema-with-is-nullable': 'error',
