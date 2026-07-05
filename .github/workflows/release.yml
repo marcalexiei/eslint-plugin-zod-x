@@ -75,4 +75,4 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
-      - run: echo 'CI failed. Release won't be executed'
+      - run: echo "CI failed. Release will not run"
