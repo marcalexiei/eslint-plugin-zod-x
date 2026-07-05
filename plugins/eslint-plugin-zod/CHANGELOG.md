@@ -1,5 +1,14 @@
 # eslint-plugin-zod
 
+## 4.7.1
+
+### Patch Changes
+
+- [#357](https://github.com/marcalexiei/eslint-zod/pull/357) [`101b1ae`](https://github.com/marcalexiei/eslint-zod/commit/101b1ae988b6bbd2bfba873ba1074386dff0dc7c) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: remove deprecated `no-string-schema-with-uuid` rule from the `recommended` config
+
+  The rule is deprecated and superseded by `prefer-top-level-string-formats`, which is also enabled in `recommended`.
+  With both rules enabled `z.string().uuid()` produced duplicate reports.
+
 ## 4.7.0
 
 ### Minor Changes
