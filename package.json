@@ -27,7 +27,7 @@
     "@changesets/cli": "2.31.0",
     "@marcalexiei/eslint-config": "7.0.0",
     "@marcalexiei/prettier-config": "catalog:dev",
-    "@types/node": "24.13.2",
+    "@types/node": "26.0.1",
     "@vitest/eslint-plugin": "1.6.20",
     "eslint": "10.6.0",
     "eslint-import-resolver-typescript": "4.4.5",
