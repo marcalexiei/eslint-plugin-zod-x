@@ -2,13 +2,16 @@
 
 ## Repository overview
 
-pnpm monorepo containing two ESLint plugins and a shared utilities package for [Zod](https://zod.dev) v4.
+pnpm monorepo containing three ESLint plugins and a shared utilities package for [Zod](https://zod.dev) v4.
 
 | Package                  | Directory                         | Published |
 | ------------------------ | --------------------------------- | --------- |
 | `eslint-plugin-zod`      | `plugins/eslint-plugin-zod/`      | yes       |
 | `eslint-plugin-zod-mini` | `plugins/eslint-plugin-zod-mini/` | yes       |
+| `eslint-plugin-zod-core` | `plugins/eslint-plugin-zod-core/` | yes       |
 | `@eslint-zod/utils`      | `packages/utils/`                 | yes       |
+
+`eslint-plugin-zod-core` targets `zod/v4/core` (the low-level package used by library authors). It is intentionally small — most schema-authoring rules do not apply to it.
 
 `@eslint-zod/utils` is a dependency of each plugin — consumers do not need to install it directly.
 
@@ -31,7 +34,13 @@ pnpm lint:docs      # check rule docs are up to date
 
 ### Import source scoping
 
-Each plugin is scoped to its own import source via `ZodImportAllowedSource` (`'zod'` or `'zod-mini'`). This type lives in `packages/utils/src/zod-import-scope.ts` alongside the `ZodImportScope` class and the two pre-built instances `zodImportScope` and `zodMiniImportScope`. There is no `'all'` union — rules in `eslint-plugin-zod` never fire on `zod/mini` imports and vice versa. Each rule guards itself with `scope.isAllowed(sourceValue)` at the top of its visitor.
+Each plugin is scoped to its own import sources via the `ZodImportScope` class in `packages/utils/src/zod-import-scope.ts`, which also exports three pre-built instances:
+
+- `zodImportScope` (`eslint-plugin-zod`) — `'zod'`, `'zod/v4'`, `'zod/v3'`
+- `zodMiniImportScope` (`eslint-plugin-zod-mini`) — `'zod/mini'`, `'zod/v4-mini'`
+- `zodCoreImportScope` (`eslint-plugin-zod-core`) — `'zod/v4/core'`
+
+There is no 'all' scope — rules in `eslint-plugin-zod` never fire on `zod/mini` imports and vice versa. Each rule guards itself with `scope.isAllowed(sourceValue)` at the top of its visitor.
 
 ### Shared utilities (`@eslint-zod/utils`)
 
@@ -49,7 +58,7 @@ AST helpers exported from `@eslint-zod/utils`:
 - `createZodSchemaImportTrack()` — tracks namespace and named imports; returns an object with `isZodNamespace`, `getNamedImportOriginal`, `collectZodChainMethods`, and listener hooks
 - `detectZodSchemaRootNode()` — finds the outermost Zod call expression in a chain
 - `buildZodChainRemoveMethodFix` / `buildZodChainReplacementFix` — fixer helpers
-- `zodImportScope` / `zodMiniImportScope` — pre-built `ZodImportScope` instances; use `scope.isAllowed(source)` to check whether a source belongs to the plugin's scope
+- `zodImportScope` / `zodMiniImportScope` / `zodCoreImportScope` — pre-built `ZodImportScope` instances; use `scope.isAllowed(source)` to check whether a source belongs to the plugin's scope
 - `ZOD_NON_SCHEMA_PRODUCING_METHODS` — array of method names that do not return a schema (parse, codec, error formatters)
 - `ZOD_MUTATING_CHECK_NAMES` — array of Zod check names that mutate the validated value (`trim`, `toLowerCase`, `toUpperCase`, `normalize`, `overwrite`); used in `zod` as chained methods and in `zod-mini` as standalone `.check(...)` arguments
 
@@ -100,6 +109,8 @@ Several rules exist in both `eslint-plugin-zod` and `eslint-plugin-zod-mini` wit
 - **Specs** (`src/rules/<rule-name>.spec.ts`): mirror the test cases, but again adapt import sources and API. Valid/invalid cases should cover the same scenarios in both plugins.
 
 Rules that exist in both plugins: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-coerce-boolean`, `no-duplicate-schema-methods`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-unknown-schema`, `prefer-enum-over-literal-union`, `prefer-meta`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
+
+`eslint-plugin-zod-core` additionally shares `consistent-import` and `consistent-schema-output-type-style` (built from the same rule builders with `zodCoreImportScope`). When updating either of those rules, keep the core counterpart's docs and specs in sync too, adapting examples to `zod/v4/core` imports.
 
 ## Quality expectations
 
