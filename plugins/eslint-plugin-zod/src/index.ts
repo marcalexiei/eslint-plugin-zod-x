@@ -34,6 +34,7 @@ import { preferStrictObject } from './rules/prefer-strict-object.js';
 import { preferStringSchemaWithTrim } from './rules/prefer-string-schema-with-trim.js';
 import { preferTopLevelStringFormats } from './rules/prefer-top-level-string-formats.js';
 import { preferTrimBeforeStringLengthChecks } from './rules/prefer-trim-before-string-length-checks.js';
+import { preferTupleOverArrayLength } from './rules/prefer-tuple-over-array-length.js';
 import { requireBrandTypeParameter } from './rules/require-brand-type-parameter.js';
 import { requireErrorMessage } from './rules/require-error-message.js';
 import { schemaErrorPropertyStyle } from './rules/schema-error-property-style.js';
@@ -90,6 +91,7 @@ const eslintPluginZod = {
     'prefer-top-level-string-formats': preferTopLevelStringFormats,
     'prefer-string-schema-with-trim': preferStringSchemaWithTrim,
     'prefer-trim-before-string-length-checks': preferTrimBeforeStringLengthChecks,
+    'prefer-tuple-over-array-length': preferTupleOverArrayLength,
     'require-brand-type-parameter': requireBrandTypeParameter,
     'require-error-message': requireErrorMessage,
     'schema-error-property-style': schemaErrorPropertyStyle,

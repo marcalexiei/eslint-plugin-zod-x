@@ -15,6 +15,7 @@ import { noTransformInRecordKey } from './rules/no-transform-in-record-key.js';
 import { noUnknownSchema } from './rules/no-unknown-schema.js';
 import { preferEnumOverLiteralUnion } from './rules/prefer-enum-over-literal-union.js';
 import { preferMeta } from './rules/prefer-meta.js';
+import { preferTupleOverArrayLength } from './rules/prefer-tuple-over-array-length.js';
 import { requireBrandTypeParameter } from './rules/require-brand-type-parameter.js';
 import { requireErrorMessage } from './rules/require-error-message.js';
 import { schemaErrorPropertyStyle } from './rules/schema-error-property-style.js';
@@ -52,6 +53,7 @@ const eslintPluginZodMini = {
     'no-unknown-schema': noUnknownSchema,
     'prefer-enum-over-literal-union': preferEnumOverLiteralUnion,
     'prefer-meta': preferMeta,
+    'prefer-tuple-over-array-length': preferTupleOverArrayLength,
     'require-brand-type-parameter': requireBrandTypeParameter,
     'require-error-message': requireErrorMessage,
     'schema-error-property-style': schemaErrorPropertyStyle,
