@@ -109,13 +109,28 @@ ruleTester.run(preferTupleOverArrayLength.name, preferTupleOverArrayLength, {
       `,
     },
     {
-      name: 'min() is report-only (no autofix)',
+      name: 'min() autofixes to a rest tuple',
       code: dedent`
         import * as z from 'zod';
         z.array(z.string()).min(2)
       `,
       errors: [{ messageId: 'preferTuple' }],
-      output: null,
+      output: dedent`
+        import * as z from 'zod';
+        z.tuple([z.string(), z.string()], z.string())
+      `,
+    },
+    {
+      name: 'min(1) autofixes to a single-element rest tuple',
+      code: dedent`
+        import * as z from 'zod';
+        z.array(z.string()).min(1)
+      `,
+      errors: [{ messageId: 'preferTuple' }],
+      output: dedent`
+        import * as z from 'zod';
+        z.tuple([z.string()], z.string())
+      `,
     },
     {
       name: 'max() is report-only (no autofix)',
@@ -127,11 +142,51 @@ ruleTester.run(preferTupleOverArrayLength.name, preferTupleOverArrayLength, {
       output: null,
     },
     {
+      name: 'equal min()/max() bounds autofix to a fixed tuple',
+      code: dedent`
+        import * as z from 'zod';
+        z.array(z.string()).min(2).max(2)
+      `,
+      errors: [{ messageId: 'preferTuple' }],
+      output: dedent`
+        import * as z from 'zod';
+        z.tuple([z.string(), z.string()])
+      `,
+    },
+    {
+      name: 'unequal min()/max() bounds is report-only (no tuple equivalent)',
+      code: dedent`
+        import * as z from 'zod';
+        z.array(z.string()).min(2).max(5)
+      `,
+      errors: [{ messageId: 'preferTuple' }],
+      output: null,
+    },
+    {
       name: 'non-literal length is report-only (no autofix)',
       code: dedent`
         import * as z from 'zod';
         const n = 2;
         z.array(z.string()).length(n)
+      `,
+      errors: [{ messageId: 'preferTuple' }],
+      output: null,
+    },
+    {
+      name: 'non-literal min is report-only (no autofix)',
+      code: dedent`
+        import * as z from 'zod';
+        const n = 2;
+        z.array(z.string()).min(n)
+      `,
+      errors: [{ messageId: 'preferTuple' }],
+      output: null,
+    },
+    {
+      name: 'non-integer literal length is report-only (no autofix)',
+      code: dedent`
+        import * as z from 'zod';
+        z.array(z.string()).length(2.5)
       `,
       errors: [{ messageId: 'preferTuple' }],
       output: null,

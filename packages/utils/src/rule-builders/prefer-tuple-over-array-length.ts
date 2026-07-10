@@ -21,17 +21,19 @@ export interface FoundLengthConstraint {
   kind: LengthConstraintKind;
 
   /**
-   * For `kind: 'length'`, the AST node of the count argument (e.g. the `2` in
-   * `.length(2)`); the builder validates it is a non-negative integer literal
-   * before autofixing. `null` for `min`/`max` (report-only, no autofix).
+   * For `kind: 'length'` and `kind: 'min'`, the AST node of the count argument
+   * (e.g. the `2` in `.length(2)`); the builder validates it is a non-negative
+   * integer literal before autofixing. `null` for `max` (report-only).
    */
   countArgument: TSESTree.Node | null;
 
   /**
-   * Removes the length constraint from the chain as part of the autofix, or
-   * returns `null` to signal it cannot be removed safely (report-only).
+   * Removes the length constraint(s) from the chain as part of the autofix, and
+   * returns the fixes to apply (e.g. removing both `min` and `max` for an
+   * equal-bounds constraint). Returns `null` to signal the constraint cannot be
+   * removed safely (report-only).
    */
-  buildRemoveFix: (fixer: TSESLint.RuleFixer) => TSESLint.RuleFix | null;
+  buildRemoveFix: (fixer: TSESLint.RuleFixer) => Array<TSESLint.RuleFix> | null;
 }
 
 export interface PreferTupleOverArrayLengthOptions {
@@ -49,7 +51,7 @@ export interface PreferTupleOverArrayLengthOptions {
 }
 
 /** Reads a non-negative integer literal, or `null` when the node isn't one. */
-function readIntegerLiteralValue(node: TSESTree.Node | null): number | null {
+export function readIntegerLiteralValue(node: TSESTree.Node | null): number | null {
   if (node?.type !== AST_NODE_TYPES.Literal) {
     return null;
   }
@@ -103,9 +105,9 @@ export function buildPreferTupleOverArrayLengthCreate(
           node,
           messageId: 'preferTuple',
           fix(fixer) {
-            // Only a fixed-length constraint maps 1:1 to a tuple; `min`/`max`
-            // are report-only.
-            if (constraint.kind !== 'length') {
+            // `max` has no behavior-preserving tuple form; report-only.
+            // `length` maps to a fixed-length tuple, `min` to a rest tuple.
+            if (constraint.kind === 'max') {
               return null;
             }
 
@@ -142,18 +144,22 @@ export function buildPreferTupleOverArrayLengthCreate(
               return null;
             }
 
-            const removeFix = constraint.buildRemoveFix(fixer);
-            if (!removeFix) {
+            const removeFixes = constraint.buildRemoveFix(fixer);
+            if (removeFixes === null) {
               return null;
             }
 
             const elementText = context.sourceCode.getText(element);
-            const tupleElements = Array.from({ length: count }, () => elementText).join(', ');
+            const items = Array.from({ length: count }, () => elementText).join(', ');
+            // `min(n)` → a rest tuple `z.tuple([el × n], el)` (at least n items);
+            // `length(n)` → a fixed tuple `z.tuple([el × n])`.
+            const tupleArguments =
+              constraint.kind === 'min' ? `[${items}], ${elementText}` : `[${items}]`;
 
             return [
               fixer.replaceText(arrayCallee.property, 'tuple'),
-              fixer.replaceText(element, `[${tupleElements}]`),
-              removeFix,
+              fixer.replaceText(element, tupleArguments),
+              ...removeFixes,
             ];
           },
         });

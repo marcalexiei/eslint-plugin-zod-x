@@ -61,26 +61,38 @@ z.array(z.string());
 
 ## Autofix Behavior
 
-Only the fixed-length `.check(z.length(n))` form is autofixed, because it maps 1:1 to a tuple. The rule repeats the element schema `n` times and drops the length check:
+- `.check(z.length(n))` maps to a fixed-length tuple.
+- `.check(z.minLength(n))` maps to a [rest tuple](https://zod.dev/api?id=tuples) — `n` fixed elements plus a rest element, i.e. "at least `n`".
+- `z.minLength(n)` + `z.maxLength(n)` with **equal** literal bounds is exactly `z.length(n)`, so it also maps to a fixed-length tuple (whether the two checks are in one `.check()` or across several).
 
 ```ts
 // Before
 z.array(z.string()).check(z.length(2));
+// After
+z.tuple([z.string(), z.string()]);
 
+// Before
+z.array(z.string()).check(z.minLength(2));
+// After
+z.tuple([z.string(), z.string()], z.string());
+
+// Before
+z.array(z.string()).check(z.minLength(2), z.maxLength(2));
 // After
 z.tuple([z.string(), z.string()]);
 ```
 
 ### Limitations
 
-`z.minLength()` and `z.maxLength()` are reported but **not** autofixed — there is no single behavior-preserving tuple equivalent for an open-ended bound.
+`z.maxLength()` on its own is reported but **not** autofixed — an upper bound has no single behavior-preserving tuple equivalent.
 
 Autofix is also **not applied** when:
 
 - The count is not a non-negative integer literal (e.g. `.check(z.length(n))`)
+- The array carries more than one length check that does not reduce to a single length (e.g. `.check(z.minLength(2), z.maxLength(5))`), since the leftover check has no tuple equivalent
+- A length check shares a `.check()` with unrelated checks (e.g. `.check(z.minLength(1), z.refine(fn))`), since removing it would orphan the sibling
 - The array is referenced via named imports (e.g. `import { array } from 'zod/mini'`), since the fix would need to add a `tuple` import
 - The `z.array()` call does not have exactly one element-schema argument
-- The `z.length()` check is passed alongside other checks (e.g. `.check(z.minLength(1), z.length(2))`)
 
 In these cases the rule still reports but leaves the code unchanged.
 
