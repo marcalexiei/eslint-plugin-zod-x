@@ -28,7 +28,7 @@ Using `.brand()` without a type parameter doesn't serve any purpose and should e
 import * as z from 'zod/mini';
 
 z.string().brand();
-z.string().check(z.min(1), z.max(10)).brand();
+z.string().check(z.minLength(1), z.maxLength(10)).brand();
 ```
 
 ### ✅ Valid
@@ -37,9 +37,9 @@ z.string().check(z.min(1), z.max(10)).brand();
 import * as z from 'zod/mini';
 
 z.string().brand<'myBrand'>();
-z.string().check(z.min(1)).brand<'aaa'>();
+z.string().check(z.minLength(1)).brand<'aaa'>();
 z.string().brand<`${string}Id`>();
-z.string().check(z.min(1), z.max(10)).brand<'email'>();
+z.string().check(z.minLength(1), z.maxLength(10)).brand<'email'>();
 ```
 
 ## When Not To Use It

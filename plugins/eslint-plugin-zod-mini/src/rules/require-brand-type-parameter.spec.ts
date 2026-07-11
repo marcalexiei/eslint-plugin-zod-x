@@ -46,7 +46,7 @@ ruleTester.run(requireBrandTypeParameter.name, requireBrandTypeParameter, {
       name: 'complex chain',
       code: dedent`
         import * as z from 'zod/mini'
-        z.string().check(z.min(1), z.max(10)).brand<"email">();
+        z.string().check(z.minLength(1), z.maxLength(10)).brand<"email">();
       `,
     },
   ],
@@ -140,7 +140,7 @@ ruleTester.run(requireBrandTypeParameter.name, requireBrandTypeParameter, {
       name: 'complex chain without type parameter',
       code: dedent`
         import * as z from 'zod/mini';
-        z.string().check(z.min(1)).brand()
+        z.string().check(z.minLength(1)).brand()
       `,
       errors: [
         {
@@ -150,7 +150,7 @@ ruleTester.run(requireBrandTypeParameter.name, requireBrandTypeParameter, {
               messageId: 'removeBrandFunction',
               output: dedent`
                 import * as z from 'zod/mini';
-                z.string().check(z.min(1))
+                z.string().check(z.minLength(1))
               `,
             },
           ],
