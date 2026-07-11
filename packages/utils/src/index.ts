@@ -1,5 +1,11 @@
 export { buildZodChainRemoveMethodFix } from './build-zod-chain-remove-method-fix.js';
 export { buildZodChainReplacementFix } from './build-zod-chain-replacement-fix.js';
+export { buildZodConstraintsRemoveFix } from './build-zod-constraints-remove-fix.js';
+export type {
+  ZodChainedConstraint,
+  ZodCheckArgumentConstraint,
+  ZodSchemaConstraint,
+} from './collect-zod-schema-constraints.js';
 export { isZodNumberSchemaCallExpression } from './detect-zod-schema-root-node.js';
 export { findParentSchemaMatchingCondition } from './find-parent-schema-matching-condition.js';
 export { zodImportScope, zodMiniImportScope, zodCoreImportScope } from './zod-import-scope.js';

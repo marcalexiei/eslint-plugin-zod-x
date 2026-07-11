@@ -1,6 +1,8 @@
 import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
+import { collectZodSchemaConstraints } from './collect-zod-schema-constraints.js';
+import type { ZodSchemaConstraint } from './collect-zod-schema-constraints.js';
 import {
   detectZodSchemaRootNode,
   isZodNumberSchemaCallExpression,
@@ -63,6 +65,15 @@ export interface ZodSchemaImportTracker {
    * Returns an empty array if the expression isn't a zod chain.
    */
   collectZodChainMethods: (node: TSESTree.CallExpression) => Array<ZodChainItem>;
+
+  /**
+   * Flattens a zod call chain into the constraints applied to the schema,
+   * seen uniformly across API styles: chained methods (`z.string().min(2)`,
+   * `zod`) become `chained` constraints, recognized zod calls among
+   * `.check(...)` arguments (`z.string().check(z.minLength(2))`, `zod/mini`)
+   * become `check-argument` constraints.
+   */
+  collectZodSchemaConstraints: (node: TSESTree.CallExpression) => Array<ZodSchemaConstraint>;
 
   /**
    * True if `node` is a `z.number()…` (or `number()…`) zod call chain, including inner
@@ -166,6 +177,13 @@ function trackZodSchemaImports(importScope: ZodImportScope): ZodSchemaImportTrac
 
     collectZodChainMethods,
 
+    collectZodSchemaConstraints: (node) =>
+      collectZodSchemaConstraints({
+        methods: collectZodChainMethods(node),
+        detectZodSchemaRootNode: (argument) =>
+          detectZodSchemaRootNode(argument, zodNamespaces, zodNamedImports),
+      }),
+
     isZodNumberSchemaCallExpression: (node) =>
       isZodNumberSchemaCallExpression(node, zodNamespaces, zodNamedImports),
   };
@@ -185,6 +203,7 @@ function trackZodSchemaImports(importScope: ZodImportScope): ZodSchemaImportTrac
  * - `getNamedImportOriginal(localName)` / `getNamedImportLocal(originalName)` — alias lookups
  * - `detectZodSchemaRootNode(node)` — see {@link detectZodSchemaRootNode}
  * - `collectZodChainMethods(node)` — walks a chain and returns `{ name, node }` items
+ * - `collectZodSchemaConstraints(node)` — see {@link collectZodSchemaConstraints}
  * - `isZodNumberSchemaCallExpression(node)` — see {@link isZodNumberSchemaCallExpression}
  *
  * @example
