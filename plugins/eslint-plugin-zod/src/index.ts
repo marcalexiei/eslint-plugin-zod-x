@@ -26,6 +26,7 @@ import { noStringSchemaWithUuid } from './rules/no-string-schema-with-uuid.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
 import { noTransformInRecordKey } from './rules/no-transform-in-record-key.js';
 import { noUnknownSchema } from './rules/no-unknown-schema.js';
+import { noUnnecessaryReadonly } from './rules/no-unnecessary-readonly.js';
 import { preferEnumOverLiteralUnion } from './rules/prefer-enum-over-literal-union.js';
 import { preferLooseObject } from './rules/prefer-loose-object.js';
 import { preferMetaLast } from './rules/prefer-meta-last.js';
@@ -83,6 +84,7 @@ const eslintPluginZod = {
     'no-throw-in-refine': noThrowInRefine,
     'no-transform-in-record-key': noTransformInRecordKey,
     'no-unknown-schema': noUnknownSchema,
+    'no-unnecessary-readonly': noUnnecessaryReadonly,
     'prefer-enum-over-literal-union': preferEnumOverLiteralUnion,
     'prefer-loose-object': preferLooseObject,
     'prefer-meta': preferMeta,

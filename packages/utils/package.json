@@ -92,6 +92,11 @@
       "import": "./dist/rule-builders/no-unknown-schema.mjs",
       "require": "./dist/rule-builders/no-unknown-schema.cjs"
     },
+    "./rule-builders/no-unnecessary-readonly": {
+      "@eslint-zod/source": "./src/rule-builders/no-unnecessary-readonly.ts",
+      "import": "./dist/rule-builders/no-unnecessary-readonly.mjs",
+      "require": "./dist/rule-builders/no-unnecessary-readonly.cjs"
+    },
     "./rule-builders/prefer-enum-over-literal-union": {
       "@eslint-zod/source": "./src/rule-builders/prefer-enum-over-literal-union.ts",
       "import": "./dist/rule-builders/prefer-enum-over-literal-union.mjs",
