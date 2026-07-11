@@ -19,20 +19,7 @@ interface DetectData {
   node: TSESTree.CallExpression;
 }
 
-/**
- * Return type: includes outer schema info and any inner schema infos extracted
- * from arguments (useful for array(string()), union([a(), b()]) etc).
- */
-export type DetectResult =
-  | (DetectData & {
-      // innerSchemas: Array<{
-      //   schemaDecl: 'namespace' | 'named';
-      //   schemaType: string;
-      //   methods: Array<string>;
-      //   node: TSESTree.CallExpression;
-      // }>;
-    })
-  | null;
+export type DetectResult = DetectData | null;
 
 /**
  * Helper: extract static property names (Identifier | Literal | simple template literal)
@@ -180,53 +167,6 @@ export function isZodNumberSchemaCallExpression(
   return parsed !== null && parsed.schemaType === 'number';
 }
 
-/** Examine an expression (argument) for zod schema CallExpressions.
- * Supports:
- *  - direct CallExpression (string(), z.string(), etc)
- *  - ArrayExpression where elements may be CallExpressions (e.g. union([a(), b()]))
- *
- * Returns list of parsed inner schema infos (may be empty).
- */
-// function extractInnerSchemasFromExpression(
-//   expr: TSESTree.Expression,
-//   zodNamespaces: Set<string>,
-//   zodNamedImports: Set<string>,
-// ): Array<DetectData> {
-//   const found: Array<DetectData> = [];
-
-//   if (expr.type === AST_NODE_TYPES.CallExpression) {
-//     const parsed = parseZodCallExpression(expr, zodNamespaces, zodNamedImports);
-//     if (parsed) {
-//       found.push(parsed);
-//     }
-//     return found;
-//   }
-
-//   if (expr.type === AST_NODE_TYPES.ArrayExpression) {
-//     for (const el of expr.elements) {
-//       if (!el) {
-//         continue;
-//       }
-//       if (el.type === AST_NODE_TYPES.CallExpression) {
-//         const parsed = parseZodCallExpression(
-//           el,
-//           zodNamespaces,
-//           zodNamedImports,
-//         );
-//         if (parsed) {
-//           found.push(parsed);
-//         }
-//       }
-//       // nested arrays or nested structures are intentionally not deeply recursed beyond array elements;
-//       // add more recursion if needed for your codebase.
-//     }
-//     return found;
-//   }
-
-//   // If it's an Identifier, MemberExpression, or other, there's nothing to extract here.
-//   return found;
-// }
-
 /**
  * Finds the outermost Zod call expression in a chain and returns metadata about it
  * (declaration style, factory name, methods, AST node). Includes calls in argument
@@ -260,32 +200,10 @@ export function detectZodSchemaRootNode(
     return null;
   }
 
-  // Extract inner schema(s) from the arguments (if any)
-  // const innerSchemas: Array<DetectResult> = [];
-
-  // for (const arg of call.arguments) {
-  //   if (arg.type === AST_NODE_TYPES.SpreadElement) {
-  //     // skip spread for now; cannot safely reason
-  //     continue;
-  //   }
-  //   // Only expressions are supported here
-  //   if (arg.type === AST_NODE_TYPES.Expression) {
-  //     const inner = extractInnerSchemasFromExpression(
-  //       arg,
-  //       zodNamespaces,
-  //       zodNamedImports,
-  //     );
-  //     for (const i of inner) {
-  //       innerSchemas.push(i);
-  //     }
-  //   }
-  // }
-
   return {
     schemaDecl: outer.schemaDecl,
     schemaType: outer.schemaType,
     methods: outer.methods,
     node: call,
-    // innerSchemas,
   };
 }

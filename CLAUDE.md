@@ -58,14 +58,18 @@ Available rule builder exports: `consistent-import`, `consistent-import-source`,
 
 AST helpers exported from `@eslint-zod/utils`:
 
-- `createZodSchemaImportTrack()` — tracks namespace and named imports; returns an object with `isZodNamespace`, `getNamedImportOriginal`, `collectZodChainMethods`, and listener hooks
+- `createZodSchemaImportTrack()` — tracks namespace and named imports; returns an object with `isZodNamespace`, `getNamedImportOriginal`, `collectZodChainMethods`, `collectZodSchemaConstraints`, and listener hooks
 - `detectZodSchemaRootNode()` — finds the outermost Zod call expression in a chain
+- `collectZodSchemaConstraints()` (tracker method) — flattens a schema chain into a normalized list of constraints (`ZodSchemaConstraint`), covering both API styles: chained methods (`.min(2)`, `zod`) become `origin: 'chained'` items and recognized zod calls among `.check(...)` arguments (`z.minLength(2)`, `zod/mini`) become `origin: 'check-argument'` items. **This is the standard way to navigate a schema's checks in rules shared between plugins** — detection differs per API style, but rule logic written against the constraint list works unchanged in `zod` and `zod-mini`. Names are not canonicalized (chained `.min()` means `gte` on numbers but `minLength` on strings), so each rule maps spellings to its own vocabulary with a small table (see the `prefer-tuple-over-array-length` rule builder).
 - `buildZodChainRemoveMethodFix` / `buildZodChainReplacementFix` — fixer helpers
+- `buildZodConstraintsRemoveFix` — removes a set of `ZodSchemaConstraint`s from a chain, whatever their origin: chained constraints are removed as methods; check-argument constraints remove the whole containing `.check(...)`, but only when every argument of that call is targeted (never orphans an unrelated check). Returns `null` when removal is unsafe, so callers report without fixing.
 - `zodImportScope` / `zodMiniImportScope` / `zodCoreImportScope` — pre-built `ZodImportScope` instances; use `scope.isAllowed(source)` to check whether a source belongs to the plugin's scope
 - `ZOD_NON_SCHEMA_PRODUCING_METHODS` — array of method names that do not return a schema (parse, codec, error formatters)
 - `ZOD_MUTATING_CHECK_NAMES` — array of Zod check names that mutate the validated value (`trim`, `toLowerCase`, `toUpperCase`, `normalize`, `overwrite`); used in `zod` as chained methods and in `zod-mini` as standalone `.check(...)` arguments
 
 Rule metadata (name, `meta`, `defaultOptions`) lives entirely per-plugin. When a rule's `create` logic is identical across plugins and differs only by import scope, extract a `build*Create(scope)` factory into `packages/utils/src/rule-builders/<rule-name>.ts`, add it to the `package.json` exports map, and import it in each plugin from `@eslint-zod/utils/rule-builders/<rule-name>`.
+
+When part of a shared rule's behavior is genuinely plugin-specific (i.e. it cannot be expressed through the shared constraint list), the rule builder defines the contract: it exports the options interface / function signature from the builder module, and each plugin implements that interface with its own behavior — plugins never fork or duplicate the shared logic itself. Prefer eliminating the custom part first (e.g. `prefer-tuple-over-array-length` used a `findLengthConstraint` strategy until `collectZodSchemaConstraints` made it unnecessary); reach for an exported contract only when a real per-plugin difference remains.
 
 ### TypeScript resolution
 
@@ -98,7 +102,7 @@ z.string().check(z.meta({ description: 'desc' }));
 
 Methods that ARE chained in `zod/mini`: `check()`, `brand()`, `parse()`, `safeParse()`, `parseAsync()`, `safeParseAsync()`.
 
-**`zod/mini` has no `z.min`/`z.max`.** The chained `.min()`/`.max()` are full-`zod` only; `zod/mini`'s standalone checks are type-specific (`z.minLength`/`z.maxLength` for strings & arrays, `z.gte`/`z.lte` for numbers, `z.minSize`/`z.maxSize` for sets & maps). Never write `z.min(...)`/`z.max(...)` inside a `.check(...)`.
+**Never mix the two styles.** Chained validation methods belong to `zod`; standalone `$ZodCheck` calls inside `.check(...)` belong to `zod/mini` (`zod`'s own `.check()` accepts only refinement callbacks, and `zod/mini`'s checks are type-specific: `z.minLength`/`z.maxLength` for strings & arrays, `z.gte`/`z.lte` for numbers, `z.minSize`/`z.maxSize` for sets & maps — there is no `z.min`/`z.max`). Invalid code such as `z.string().check(z.minLength(1))` (`zod`), `z.array(x).min(2).check(z.maxLength(2))` (mixed), or `z.string().check(z.min(2))` (`zod/mini`) must never appear in specs, docs, changesets, or examples. Shared utilities may handle both constraint origins so one rule builder serves both plugins, but each plugin's specs and docs exercise only its own style.
 
 ### Consequence for rule authoring
 

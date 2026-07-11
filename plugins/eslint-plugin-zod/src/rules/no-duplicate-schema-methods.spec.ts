@@ -74,7 +74,7 @@ ruleTester.run(noDuplicateSchemaMethods.name, noDuplicateSchemaMethods, {
       name: 'namespace - check called multiple times (excluded)',
       code: dedent`
         import * as z from 'zod';
-        z.string().check(z.minLength(1)).check(z.maxLength(10));
+        z.string().check((ctx) => {}).check((ctx) => {});
       `,
     },
     {

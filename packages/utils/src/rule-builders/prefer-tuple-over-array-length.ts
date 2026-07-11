@@ -1,57 +1,38 @@
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
+import { buildZodConstraintsRemoveFix } from '../build-zod-constraints-remove-fix.js';
+import type { ZodSchemaConstraint } from '../collect-zod-schema-constraints.js';
 import { createZodSchemaImportTrack } from '../track-zod-schema-imports.js';
-import type { ZodSchemaImportTracker } from '../track-zod-schema-imports.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
 type MessageIds = 'preferTuple';
 
 /** The kind of length constraint applied to a `z.array(...)` schema. */
-export type LengthConstraintKind = 'length' | 'min' | 'max';
+type LengthConstraintKind = 'length' | 'min' | 'max';
 
-/** Subset of the import tracker passed to {@link PreferTupleOverArrayLengthOptions.findLengthConstraint}. */
-export type FindLengthConstraintHelpers = Pick<
-  ZodSchemaImportTracker,
-  'detectZodSchemaRootNode' | 'collectZodChainMethods'
->;
+/**
+ * Length-constraint spellings across both API styles: chained methods
+ * (`.length()` / `.min()` / `.max()`, `zod`) and standalone checks passed to
+ * `.check(...)` (`z.length()` / `z.minLength()` / `z.maxLength()`, `zod/mini`).
+ */
+const LENGTH_CONSTRAINT_KINDS = new Map<string, LengthConstraintKind>([
+  ['length', 'length'],
+  ['min', 'min'],
+  ['max', 'max'],
+  ['minLength', 'min'],
+  ['maxLength', 'max'],
+]);
 
-export interface FoundLengthConstraint {
-  /** Which kind of length constraint was found on the array schema. */
+interface LengthCandidate {
   kind: LengthConstraintKind;
-
-  /**
-   * For `kind: 'length'` and `kind: 'min'`, the AST node of the count argument
-   * (e.g. the `2` in `.length(2)`); the builder validates it is a non-negative
-   * integer literal before autofixing. `null` for `max` (report-only).
-   */
+  constraint: ZodSchemaConstraint;
+  /** The AST node of the count argument (e.g. the `2` in `.length(2)`). */
   countArgument: TSESTree.Node | null;
-
-  /**
-   * Removes the length constraint(s) from the chain as part of the autofix, and
-   * returns the fixes to apply (e.g. removing both `min` and `max` for an
-   * equal-bounds constraint). Returns `null` to signal the constraint cannot be
-   * removed safely (report-only).
-   */
-  buildRemoveFix: (fixer: TSESLint.RuleFixer) => Array<TSESLint.RuleFix> | null;
-}
-
-export interface PreferTupleOverArrayLengthOptions {
-  /**
-   * Strategy that inspects an array schema chain and returns the length
-   * constraint to flag (or `null` if none is present). Plugins use this to
-   * encode the API-specific way they express length constraints: chained
-   * `.length()`/`.min()`/`.max()` for `eslint-plugin-zod`, standalone
-   * `.check(z.length()/z.minLength()/z.maxLength())` for `eslint-plugin-zod-mini`.
-   */
-  findLengthConstraint: (
-    schemaRootNode: TSESTree.CallExpression,
-    helpers: FindLengthConstraintHelpers,
-  ) => FoundLengthConstraint | null;
 }
 
 /** Reads a non-negative integer literal, or `null` when the node isn't one. */
-export function readIntegerLiteralValue(node: TSESTree.Node | null): number | null {
+function readIntegerLiteralValue(node: TSESTree.Node | null): number | null {
   if (node?.type !== AST_NODE_TYPES.Literal) {
     return null;
   }
@@ -67,21 +48,24 @@ export function readIntegerLiteralValue(node: TSESTree.Node | null): number | nu
 /**
  * Builds the `create` function for the `prefer-tuple-over-array-length` rule.
  *
- * Owns the shared scaffolding — import tracking, the `ImportDeclaration`
- * listener, `z.array()` detection, the `z.tuple([...])` autofix construction,
- * and the `context.report` call — and delegates length-constraint detection
- * and removal to `options.findLengthConstraint`.
+ * Detection is API-style agnostic: length constraints are collected via
+ * `collectZodSchemaConstraints`, so chained methods (`.length()` / `.min()` /
+ * `.max()`, `zod`) and standalone checks passed to `.check(...)`
+ * (`z.length()` / `z.minLength()` / `z.maxLength()`, `zod/mini`) are
+ * recognized by the same logic, whichever style the plugin's API uses.
  */
 export function buildPreferTupleOverArrayLengthCreate(
   scope: ZodImportScope,
-  options: PreferTupleOverArrayLengthOptions,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
   const { trackZodSchemaImports } = createZodSchemaImportTrack(scope);
-  const { findLengthConstraint } = options;
 
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+    const {
+      importDeclarationListener,
+      detectZodSchemaRootNode,
+      collectZodChainMethods,
+      collectZodSchemaConstraints,
+    } = trackZodSchemaImports();
 
     return {
       ImportDeclaration: importDeclarationListener,
@@ -92,26 +76,88 @@ export function buildPreferTupleOverArrayLengthCreate(
           return;
         }
 
-        const constraint = findLengthConstraint(zodSchemaMeta.node, {
-          detectZodSchemaRootNode,
-          collectZodChainMethods,
-        });
+        const methods = collectZodChainMethods(zodSchemaMeta.node);
+        const constraints = collectZodSchemaConstraints(zodSchemaMeta.node);
 
-        if (!constraint) {
+        const candidates: Array<LengthCandidate> = [];
+        for (const constraint of constraints) {
+          const candidateKind = LENGTH_CONSTRAINT_KINDS.get(constraint.name);
+          if (candidateKind) {
+            candidates.push({
+              kind: candidateKind,
+              constraint,
+              countArgument: constraint.node.arguments.at(0) ?? null,
+            });
+          }
+        }
+
+        // Nothing to flag. (`nonempty` on its own is the idiomatic typed form.)
+        if (candidates.length === 0) {
           return;
+        }
+
+        // `.nonempty()` is itself a typed length constraint: a fix that keeps
+        // it would produce a tuple carrying a method tuples don't have.
+        const hasNonempty = constraints.some((it) => it.name === 'nonempty');
+
+        const lengthCandidates = candidates.filter((it) => it.kind === 'length');
+        const minCandidates = candidates.filter((it) => it.kind === 'min');
+        const maxCandidates = candidates.filter((it) => it.kind === 'max');
+
+        // Decide the reported kind, where the element count comes from, and
+        // which constraints the autofix removes (`null` → report-only).
+        let kind: LengthConstraintKind;
+        let countArgument: TSESTree.Node | null;
+        let removable: Array<ZodSchemaConstraint> | null;
+
+        if (candidates.length === 1 && lengthCandidates.length === 1 && !hasNonempty) {
+          // `length(n)` sole → fixed-length tuple.
+          const [only] = lengthCandidates;
+          kind = 'length';
+          countArgument = only.countArgument;
+          removable = [only.constraint];
+        } else if (
+          candidates.length === 2 &&
+          minCandidates.length === 1 &&
+          maxCandidates.length === 1 &&
+          !hasNonempty
+        ) {
+          // min + max with equal literal bounds ≡ exact length → fixed tuple.
+          const [min] = minCandidates;
+          const [max] = maxCandidates;
+          const minValue = readIntegerLiteralValue(min.countArgument);
+          const maxValue = readIntegerLiteralValue(max.countArgument);
+
+          kind = 'length';
+          countArgument = min.countArgument;
+          removable =
+            minValue !== null && minValue === maxValue ? [min.constraint, max.constraint] : null;
+        } else if (candidates.length === 1 && minCandidates.length === 1 && !hasNonempty) {
+          // `min(n)` sole → rest tuple.
+          const [only] = minCandidates;
+          kind = 'min';
+          countArgument = only.countArgument;
+          removable = [only.constraint];
+        } else {
+          // `max()` alone, several constraints, or a `nonempty()` companion →
+          // report-only.
+          const chosen = lengthCandidates.at(0) ?? candidates[0];
+          kind = chosen.kind;
+          countArgument = chosen.countArgument;
+          removable = null;
         }
 
         context.report({
           node,
           messageId: 'preferTuple',
           fix(fixer) {
-            // `max` has no behavior-preserving tuple form; report-only.
-            // `length` maps to a fixed-length tuple, `min` to a rest tuple.
-            if (constraint.kind === 'max') {
+            // `max` has no behavior-preserving tuple form, and `removable`
+            // is null when the constraints don't reduce to a single length.
+            if (kind === 'max' || removable === null) {
               return null;
             }
 
-            const count = readIntegerLiteralValue(constraint.countArgument);
+            const count = readIntegerLiteralValue(countArgument);
             if (count === null) {
               return null;
             }
@@ -122,9 +168,7 @@ export function buildPreferTupleOverArrayLengthCreate(
               return null;
             }
 
-            const arrayNode = collectZodChainMethods(zodSchemaMeta.node).find(
-              (it) => it.name === 'array',
-            )?.node;
+            const arrayNode = methods.find((it) => it.name === 'array')?.node;
 
             // Need exactly one argument (the element schema) to build the tuple.
             if (arrayNode?.arguments.length !== 1) {
@@ -144,7 +188,11 @@ export function buildPreferTupleOverArrayLengthCreate(
               return null;
             }
 
-            const removeFixes = constraint.buildRemoveFix(fixer);
+            const removeFixes = buildZodConstraintsRemoveFix({
+              fixer,
+              methods,
+              constraints: removable,
+            });
             if (removeFixes === null) {
               return null;
             }
@@ -153,8 +201,7 @@ export function buildPreferTupleOverArrayLengthCreate(
             const items = Array.from({ length: count }, () => elementText).join(', ');
             // `min(n)` → a rest tuple `z.tuple([el × n], el)` (at least n items);
             // `length(n)` → a fixed tuple `z.tuple([el × n])`.
-            const tupleArguments =
-              constraint.kind === 'min' ? `[${items}], ${elementText}` : `[${items}]`;
+            const tupleArguments = kind === 'min' ? `[${items}], ${elementText}` : `[${items}]`;
 
             return [
               fixer.replaceText(arrayCallee.property, 'tuple'),
