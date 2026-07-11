@@ -32,7 +32,7 @@ ruleTester.run(preferMeta.name, preferMeta, {
       name: 'no describe call',
       code: dedent`
         import * as z from 'zod/mini';
-        z.string().check(z.min(5));
+        z.string().check(z.minLength(5));
       `,
     },
     {

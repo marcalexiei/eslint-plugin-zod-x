@@ -89,7 +89,7 @@ z.string().min(1).max(10).optional().describe('desc').meta({ description: 'desc'
 **`zod/mini`** — validation methods are standalone `$ZodCheck` functions passed to `.check()`:
 
 ```ts
-z.string().check(z.min(1), z.max(10));
+z.string().check(z.minLength(1), z.maxLength(10));
 z.optional(z.string());
 z.string().check(z.refine(() => true));
 z.string().check(z.describe('desc')); // z.describe is a standalone call
@@ -97,6 +97,8 @@ z.string().check(z.meta({ description: 'desc' }));
 ```
 
 Methods that ARE chained in `zod/mini`: `check()`, `brand()`, `parse()`, `safeParse()`, `parseAsync()`, `safeParseAsync()`.
+
+**`zod/mini` has no `z.min`/`z.max`.** The chained `.min()`/`.max()` are full-`zod` only; `zod/mini`'s standalone checks are type-specific (`z.minLength`/`z.maxLength` for strings & arrays, `z.gte`/`z.lte` for numbers, `z.minSize`/`z.maxSize` for sets & maps). Never write `z.min(...)`/`z.max(...)` inside a `.check(...)`.
 
 ### Consequence for rule authoring
 
