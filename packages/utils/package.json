@@ -97,6 +97,11 @@
       "import": "./dist/rule-builders/prefer-enum-over-literal-union.mjs",
       "require": "./dist/rule-builders/prefer-enum-over-literal-union.cjs"
     },
+    "./rule-builders/prefer-tuple-over-array-length": {
+      "@eslint-zod/source": "./src/rule-builders/prefer-tuple-over-array-length.ts",
+      "import": "./dist/rule-builders/prefer-tuple-over-array-length.mjs",
+      "require": "./dist/rule-builders/prefer-tuple-over-array-length.cjs"
+    },
     "./rule-builders/require-brand-type-parameter": {
       "@eslint-zod/source": "./src/rule-builders/require-brand-type-parameter.ts",
       "import": "./dist/rule-builders/require-brand-type-parameter.mjs",
