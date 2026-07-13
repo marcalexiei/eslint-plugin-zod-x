@@ -13,6 +13,7 @@ import { noEmptyCustomSchema } from './rules/no-empty-custom-schema.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
 import { noTransformInRecordKey } from './rules/no-transform-in-record-key.js';
 import { noUnknownSchema } from './rules/no-unknown-schema.js';
+import { noUnnecessaryReadonly } from './rules/no-unnecessary-readonly.js';
 import { preferEnumOverLiteralUnion } from './rules/prefer-enum-over-literal-union.js';
 import { preferMeta } from './rules/prefer-meta.js';
 import { preferTupleOverArrayLength } from './rules/prefer-tuple-over-array-length.js';
@@ -51,6 +52,7 @@ const eslintPluginZodMini = {
     'no-throw-in-refine': noThrowInRefine,
     'no-transform-in-record-key': noTransformInRecordKey,
     'no-unknown-schema': noUnknownSchema,
+    'no-unnecessary-readonly': noUnnecessaryReadonly,
     'prefer-enum-over-literal-union': preferEnumOverLiteralUnion,
     'prefer-meta': preferMeta,
     'prefer-tuple-over-array-length': preferTupleOverArrayLength,
