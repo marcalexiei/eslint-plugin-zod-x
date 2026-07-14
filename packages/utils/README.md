@@ -34,18 +34,36 @@ Every export carries JSDoc with usage notes — refer to the linked source files
 
 AST parsing, import tracking, traversal, and fixer helpers.
 
-- `createZodSchemaImportTrack(scope)` — per-rule factory for tracking namespace and named imports
+**Import tracking & scopes**
+
+- `createZodSchemaImportTrack(scope)` — per-rule factory for tracking namespace and named imports; the returned tracker exposes `collectZodChainMethods`, `collectZodSchemaConstraints`, `detectZodSchemaRootNode`, and the import-lookup helpers
+- `zodImportScope`, `zodMiniImportScope`, `zodCoreImportScope` — pre-built `ZodImportScope` instances
+
+**Schema detection & navigation**
+
 - `detectZodSchemaRootNode(node, namespaces, named)` — find the outermost Zod call in a chain
 - `isZodNumberSchemaCallExpression(node, namespaces, named)` — detect `z.number()…` chains
 - `findParentSchemaMatchingCondition(node, options)` — search up the AST for a matching ancestor schema call
-- `buildZodChainRemoveMethodFix(opts)` / `buildZodChainReplacementFix(opts)` — fixer helpers
-- `ZodImportScope` (class) and the pre-built instances `zodImportScope`, `zodMiniImportScope`, `zodCoreImportScope`
-- `ZOD_MUTATING_CHECK_NAMES` — array of Zod check names that mutate the validated value
-- `ZOD_NON_SCHEMA_PRODUCING_METHODS` — array of Zod method names that do not return a schema
+- `getZodSchemaBaseType(schemaType)` — map a schema factory name to its base type category; returns type `ZodSchemaBaseType`
+- types `ZodSchemaConstraint`, `ZodChainedConstraint`, `ZodCheckArgumentConstraint` — the normalized constraints produced by the tracker's `collectZodSchemaConstraints`
+
+**Fixer helpers**
+
+- `buildZodChainRemoveMethodFix(opts)` — remove one method from a chain
+- `buildZodChainReplacementFix(opts)` — replace a run of methods
+- `buildZodConstraintsRemoveFix(opts)` — remove a set of `ZodSchemaConstraint`s (chained or check-argument)
+- `buildZodWrapperUnwrapFix(opts)` — replace a single-argument wrapper call with its argument
+
+**Zod vocabulary tables**
+
+- `ZOD_IMMUTABLE_SCHEMA_TYPES` — schema factory names whose parsed output is already immutable
+- `ZOD_MUTATING_CHECK_NAMES` — Zod check names that mutate the validated value
+- `ZOD_NON_SCHEMA_PRODUCING_METHODS` — Zod method names that do not return a schema
+- `ZOD_STRING_FORMAT_NAMES` — top-level string-format factory names that all parse to `string`
 
 ### Shared rule builders — `@eslint-zod/utils/rule-builders/<rule-name>`
 
-Each rule shared between `eslint-plugin-zod` and `eslint-plugin-zod-mini` exposes its `create(...)` factory from a dedicated subpath. Plugins keep rule metadata local and reuse the runtime logic.
+Each rule shared between `eslint-plugin-zod` and `eslint-plugin-zod-mini` (some also `eslint-plugin-zod-core`) exposes its `create(...)` factory from a dedicated subpath. Plugins keep rule metadata local and reuse the runtime logic.
 
 - `buildConsistentImportCreate(scope)`
 - `buildConsistentImportSourceCreate(scope)`
@@ -54,12 +72,15 @@ Each rule shared between `eslint-plugin-zod` and `eslint-plugin-zod-mini` expose
 - `buildConsistentSchemaVarNameCreate(scope)`
 - `buildNoAnySchemaCreate(scope)`
 - `buildNoCoerceBooleanCreate(scope)`
-- `buildNoDuplicateSchemaMethodsCreate(scope)`
+- `buildNoConflictingChecksCreate(scope)` — also exports the `NoConflictingChecksOptions` and `NoConflictingChecksMessageIds` contracts
+- `buildNoDuplicateSchemaMethodsCreate(scope, excludedMethods)`
 - `buildNoEmptyCustomSchemaCreate(scope)`
 - `buildNoThrowInRefineCreate(scope)`
-- `buildNoTransformInRecordKeyCreate(scope, options)`
+- `buildNoTransformInRecordKeyCreate(scope, options)` — also exports the `NoTransformInRecordKeyOptions` contract
 - `buildNoUnknownSchemaCreate(scope)`
+- `buildNoUnnecessaryReadonlyCreate(scope)`
 - `buildPreferEnumOverLiteralUnionCreate(scope)`
+- `buildPreferTupleOverArrayLengthCreate(scope)`
 - `buildRequireBrandTypeParameterCreate(scope)`
 - `buildRequireErrorMessageCreate(scope)`
 - `buildSchemaErrorPropertyStyleCreate(scope)`

@@ -1,0 +1,68 @@
+import { ZOD_STRING_FORMAT_NAMES } from './zod-string-format-names.js';
+
+/**
+ * Category of values a schema factory parses to. Used by rules that reason
+ * about which checks apply to a schema (e.g. `no-conflicting-checks`).
+ */
+export type ZodSchemaBaseType =
+  | 'string'
+  | 'number'
+  | 'bigint'
+  | 'boolean'
+  | 'date'
+  | 'array'
+  | 'object'
+  | 'set'
+  | 'map'
+  | 'literal'
+  | 'any'
+  | 'unknown'
+  | 'never';
+
+const BASE_TYPES = new Map<string, ZodSchemaBaseType>([
+  // strings — `string` itself, the `iso` namespace (member factories such as
+  // `z.iso.date()`), and every top-level format factory, which all parse to
+  // `string`.
+  ['string', 'string'],
+  ['iso', 'string'],
+  ...ZOD_STRING_FORMAT_NAMES.map((name): [string, ZodSchemaBaseType] => [name, 'string']),
+
+  // numbers
+  ['number', 'number'],
+  ['int', 'number'],
+  ['int32', 'number'],
+  ['uint32', 'number'],
+  ['float32', 'number'],
+  ['float64', 'number'],
+
+  // bigints
+  ['bigint', 'bigint'],
+  ['int64', 'bigint'],
+  ['uint64', 'bigint'],
+
+  // booleans — `stringbool` parses a string INPUT but outputs a boolean,
+  // and checks run against the output
+  ['boolean', 'boolean'],
+  ['stringbool', 'boolean'],
+
+  ['date', 'date'],
+  ['array', 'array'],
+  ['object', 'object'],
+  ['strictObject', 'object'],
+  ['looseObject', 'object'],
+  ['set', 'set'],
+  ['map', 'map'],
+  ['literal', 'literal'],
+  ['any', 'any'],
+  ['unknown', 'unknown'],
+  ['never', 'never'],
+]);
+
+/**
+ * Maps a schema factory name (the `schemaType` of `detectZodSchemaRootNode`)
+ * to its base type category, or `undefined` for factories the caller should
+ * not reason about (`union`, `tuple`, `enum`, `custom`, wrappers, …).
+ */
+export function getZodSchemaBaseType(schemaType: string): ZodSchemaBaseType | undefined {
+  return BASE_TYPES.get(schemaType);
+}

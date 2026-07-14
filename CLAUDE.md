@@ -52,7 +52,7 @@ There is no 'all' scope — rules in `eslint-plugin-zod` never fire on `zod/mini
 - `@eslint-zod/utils` (`packages/utils/src/`) — AST parsing, import tracking, traversal, and fixer helpers
 - `@eslint-zod/utils/rule-builders/<rule-name>` (`packages/utils/src/rule-builders/`) — one export per shared rule builder; the file name matches the rule name (e.g. `consistent-import.ts` → `@eslint-zod/utils/rule-builders/consistent-import`)
 
-Available rule builder exports: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-coerce-boolean`, `no-duplicate-schema-methods`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-transform-in-record-key`, `no-unknown-schema`, `no-unnecessary-readonly`, `prefer-enum-over-literal-union`, `prefer-tuple-over-array-length`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
+Each rule builder is one `<rule-name>.ts` file with a matching `package.json` exports-map entry; the set is derived from the filesystem and intentionally not duplicated here. The one exception is `import-syntax-helpers.ts` — a shared helper, not a builder, so it has no exports-map entry and is re-exported through `consistent-import` instead (see below).
 
 `IMPORT_SYNTAXES` and `ImportSyntax` are exported from `@eslint-zod/utils/rule-builders/consistent-import` (not from the root).
 
@@ -60,6 +60,7 @@ AST helpers exported from `@eslint-zod/utils`:
 
 - `createZodSchemaImportTrack()` — tracks namespace and named imports; returns an object with `isZodNamespace`, `getNamedImportOriginal`, `collectZodChainMethods`, `collectZodSchemaConstraints`, and listener hooks
 - `detectZodSchemaRootNode()` — finds the outermost Zod call expression in a chain
+- `getZodSchemaBaseType()` — maps a schema factory name (`detectZodSchemaRootNode`'s `schemaType`) to its base type category (`string` — including the top-level string formats —, `number`, `bigint`, `array`, `object`, `literal`, `any`/`unknown`/`never`, …); returns `undefined` for factories rules should not reason about
 - `collectZodSchemaConstraints()` (tracker method) — flattens a schema chain into a normalized list of constraints (`ZodSchemaConstraint`), covering both API styles: chained methods (`.min(2)`, `zod`) become `origin: 'chained'` items and recognized zod calls among `.check(...)` arguments (`z.minLength(2)`, `zod/mini`) become `origin: 'check-argument'` items. **This is the standard way to navigate a schema's checks in rules shared between plugins** — detection differs per API style, but rule logic written against the constraint list works unchanged in `zod` and `zod-mini`. Names are not canonicalized (chained `.min()` means `gte` on numbers but `minLength` on strings), so each rule maps spellings to its own vocabulary with a small table (see the `prefer-tuple-over-array-length` rule builder).
 - `buildZodChainRemoveMethodFix` / `buildZodChainReplacementFix` — fixer helpers
 - `buildZodConstraintsRemoveFix` — removes a set of `ZodSchemaConstraint`s from a chain, whatever their origin: chained constraints are removed as methods; check-argument constraints remove the whole containing `.check(...)`, but only when every argument of that call is targeted (never orphans an unrelated check). Returns `null` when removal is unsafe, so callers report without fixing.
@@ -68,6 +69,7 @@ AST helpers exported from `@eslint-zod/utils`:
 - `ZOD_NON_SCHEMA_PRODUCING_METHODS` — array of method names that do not return a schema (parse, codec, error formatters)
 - `ZOD_MUTATING_CHECK_NAMES` — array of Zod check names that mutate the validated value (`trim`, `toLowerCase`, `toUpperCase`, `normalize`, `overwrite`); used in `zod` as chained methods and in `zod-mini` as standalone `.check(...)` arguments
 - `ZOD_IMMUTABLE_SCHEMA_TYPES` — array of schema factory names whose parsed output is already immutable (primitives/scalars, number sub-types, top-level string formats); container factories are intentionally absent
+- `ZOD_STRING_FORMAT_NAMES` — array of top-level string-format factory names (`email`, `uuid`, `ipv4`, …) that all parse to `string`; single source of truth shared by `getZodSchemaBaseType` and format-aware rules (the `iso.*` member formats are intentionally absent)
 
 Rule metadata (name, `meta`, `defaultOptions`) lives entirely per-plugin. When a rule's `create` logic is identical across plugins and differs only by import scope, extract a `build*Create(scope)` factory into `packages/utils/src/rule-builders/<rule-name>.ts`, add it to the `package.json` exports map, and import it in each plugin from `@eslint-zod/utils/rule-builders/<rule-name>`.
 
@@ -114,12 +116,7 @@ The exception is `prefer-meta` in `eslint-plugin-zod-mini`: since `z.describe()`
 
 ## Shared rules between plugins
 
-Several rules exist in both `eslint-plugin-zod` and `eslint-plugin-zod-mini` with the same name and intent but different API examples (see the API differences section above). When updating a rule that exists in both plugins, keep the counterpart in sync:
-
-- **Docs** (`docs/rules/<rule-name>.md`): mirror structure and content, but adapt all code examples to the correct import source (`zod` vs `zod/mini`) and API style (chained methods vs standalone `$ZodCheck` functions passed to `.check()`).
-- **Specs** (`src/rules/<rule-name>.spec.ts`): mirror the test cases, but again adapt import sources and API. Valid/invalid cases should cover the same scenarios in both plugins.
-
-Rules that exist in both plugins: `consistent-import`, `consistent-import-source`, `consistent-object-schema-type`, `consistent-schema-output-type-style`, `consistent-schema-var-name`, `no-any-schema`, `no-coerce-boolean`, `no-duplicate-schema-methods`, `no-empty-custom-schema`, `no-throw-in-refine`, `no-unknown-schema`, `no-unnecessary-readonly`, `prefer-enum-over-literal-union`, `prefer-meta`, `prefer-tuple-over-array-length`, `require-brand-type-parameter`, `require-error-message`, `schema-error-property-style`.
+A rule is shared when the same file name exists in both plugins' `src/rules/` (the list is derived from the filesystem, not maintained here). When updating any shared rule, its counterpart's docs, specs, and metadata must change in the same PR — follow the **`sync-zod-mini` skill** (`.claude/skills/sync-zod-mini/SKILL.md`), which has the zod → zod/mini translation table, the per-file sync checklist, and the cross-contamination greps.
 
 `eslint-plugin-zod-core` additionally shares `consistent-import` and `consistent-schema-output-type-style` (built from the same rule builders with `zodCoreImportScope`). When updating either of those rules, keep the core counterpart's docs and specs in sync too, adapting examples to `zod/v4/core` imports.
 
@@ -129,7 +126,7 @@ Every change must be properly tested and documented:
 
 - Add or update specs to cover the new or modified behavior
 - Update rule docs (`docs/rules/*.md`) when rule behavior changes; run `pnpm build:docs` from the plugin directory afterward
-- Update package READMEs when public API changes
+- Update package READMEs when public API changes. In particular, `packages/utils/README.md` lists **every** public export — its root exports and its `rule-builders/*` subpaths — and must be kept in sync whenever `@eslint-zod/utils` gains, renames, or removes an export (a new rule builder, a new helper/constant, a new exported contract type). It is not auto-generated; nothing fails the build if it drifts, so update it by hand in the same change.
 - Update this file when architecture, utilities, or conventions change
 - Add a changeset for every user-facing change (see **Changesets** below)
 
@@ -159,12 +156,7 @@ This repo uses [Changesets](https://github.com/changesets/changesets) for versio
 
 ## Adding a new rule
 
-1. Create `src/rules/<rule-name>.ts` and `src/rules/<rule-name>.spec.ts` in the relevant plugin.
-2. Export the rule from `src/index.ts` and add it to the plugin's `rules` object.
-3. If it belongs in the `recommended` config, add it there too.
-4. Run `pnpm build:docs` from the plugin directory — this creates the rule doc stub and updates the README table.
-5. Fill in the doc at `docs/rules/<rule-name>.md`.
-6. Add one changeset (`.changeset/<adjective-noun-verb>.md`) per affected package with bump type `minor` — one for each plugin and one for `@eslint-zod/utils` if a rule builder export was added.
+Follow the **`add-rule` skill** (`.claude/skills/add-rule/SKILL.md`) — it covers the full inventory: rule builder + exports-map entry (shared rules), per-plugin rule file, specs, index wiring, docs, changesets, and verification.
 
 ## Docs generation
 
