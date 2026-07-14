@@ -6,6 +6,10 @@
 
 <!-- end auto-generated rule header -->
 
+## Rule Details
+
+`zod/v4/core` exposes two equivalent ways to infer a schema's output type: `core.output<...>` and its alias `core.infer<...>`. This rule enforces one of them consistently.
+
 ## Options
 
 <!-- begin auto-generated rule options list -->
@@ -15,3 +19,23 @@
 | `style` | Decides which style to use for schema type inference | String | `infer`, `output` |
 
 <!-- end auto-generated rule options list -->
+
+`output` is the default.
+
+## Examples
+
+With `{ "style": "output" }` (default):
+
+### ❌ Invalid
+
+```ts
+import * as core from 'zod/v4/core';
+type SchemaType = core.infer<typeof Schema>;
+```
+
+### ✅ Valid
+
+```ts
+import * as core from 'zod/v4/core';
+type SchemaType = core.output<typeof Schema>;
+```
