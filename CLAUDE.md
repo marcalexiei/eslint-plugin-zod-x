@@ -170,6 +170,18 @@ This repo uses [Changesets](https://github.com/changesets/changesets) for versio
 
 `eslint-doc-generator` is configured per-plugin (`.eslint-doc-generatorrc.js` in each plugin directory). It does not traverse past `package.json` boundaries, so a root-level config alone is not sufficient. The root README is a hand-maintained monorepo overview — it has no auto-generated sections.
 
+### Rule doc layout
+
+Every `docs/rules/<rule-name>.md` follows the same section order after the auto-generated header (see `array-style.md` as reference):
+
+1. `## Rule Details` — what the rule does and any analysis limits
+2. `## Why?` — optional motivation
+3. `## Options` — only for rules with options; omit the section entirely when the rule has none. The auto-generated options list comes first, followed by per-option explanations, defaults, and configuration examples. **Never place `## Options` before `## Rule Details` or at the bottom of the file.**
+4. `## Examples` — `### ❌ Invalid` then `### ✅ Valid`
+5. Optional rule-specific sections — `## Autofix Behavior`, `## Limitations`, `## Conflict with …`
+6. `## When Not To Use It` — optional
+7. `## Further Reading`
+
 ## Knip
 
 Two intentional suppressions in `knip.config.ts`:
