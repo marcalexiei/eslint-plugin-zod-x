@@ -1,5 +1,32 @@
 # eslint-plugin-zod-mini
 
+## 1.5.0
+
+### Minor Changes
+
+- [#373](https://github.com/marcalexiei/eslint-zod/pull/373) [`dc8e969`](https://github.com/marcalexiei/eslint-zod/commit/dc8e9696f37cf00404bd78b5d38c6268009b9c1b) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `no-conflicting-checks` rule
+
+  Flags checks that can never match together (`z.check(z.gt(10), z.lt(5))`, `z.check(z.url(), z.email())`), redundant/confusing combinations, and checks that don't apply to the schema's base type (`z.number().check(z.minLength(1))` silently accepts everything).
+
+  Three option-gated categories, all on by default; no autofix.
+
+- [#364](https://github.com/marcalexiei/eslint-zod/pull/364) [`250e526`](https://github.com/marcalexiei/eslint-zod/commit/250e526df7c0870b9f7a98177fc0d9e8e0b78278) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `prefer-tuple-over-array-length` rule
+
+  Flags a length-constrained `z.array()` (`.check(z.length())`, `.check(z.minLength())`, `.check(z.maxLength())`) and suggests `z.tuple()`, which preserves the element count in the inferred type.
+
+  Autofixes `z.length(n)` and equal-bound `z.minLength(n)` + `z.maxLength(n)` to a fixed tuple, and `z.minLength(n)` to a rest tuple; everything else is report-only.
+
+- [#370](https://github.com/marcalexiei/eslint-zod/pull/370) [`5547b24`](https://github.com/marcalexiei/eslint-zod/commit/5547b24ef00a084a8aa943b6c57fd7d0cacbf8d3) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `no-unnecessary-readonly` rule
+
+  Flags `z.readonly()` on schemas whose output is already immutable — primitives/scalars, number sub-types, top-level string formats, and doubled `readonly`.
+
+  Autofix unwraps the schema.
+
+### Patch Changes
+
+- Updated dependencies [[`0913e38`](https://github.com/marcalexiei/eslint-zod/commit/0913e3886976ed138f6a060cead6297be14e8e8d), [`5547b24`](https://github.com/marcalexiei/eslint-zod/commit/5547b24ef00a084a8aa943b6c57fd7d0cacbf8d3), [`dc8e969`](https://github.com/marcalexiei/eslint-zod/commit/dc8e9696f37cf00404bd78b5d38c6268009b9c1b), [`250e526`](https://github.com/marcalexiei/eslint-zod/commit/250e526df7c0870b9f7a98177fc0d9e8e0b78278)]:
+  - @eslint-zod/utils@2.4.0
+
 ## 1.4.0
 
 ### Minor Changes

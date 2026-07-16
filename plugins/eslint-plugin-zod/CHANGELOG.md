@@ -1,5 +1,32 @@
 # eslint-plugin-zod
 
+## 4.8.0
+
+### Minor Changes
+
+- [#373](https://github.com/marcalexiei/eslint-zod/pull/373) [`dc8e969`](https://github.com/marcalexiei/eslint-zod/commit/dc8e9696f37cf00404bd78b5d38c6268009b9c1b) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `no-conflicting-checks` rule
+
+  Flags check combinations that can never match (`.gt(10).lt(5)`, `.uuid().email()`, `.uuid().max(1)`) or are redundant/confusing (`.gt(0).positive()`, `.lowercase().uppercase()`).
+
+  Three option-gated categories, all on by default; no autofix.
+
+- [#370](https://github.com/marcalexiei/eslint-zod/pull/370) [`5547b24`](https://github.com/marcalexiei/eslint-zod/commit/5547b24ef00a084a8aa943b6c57fd7d0cacbf8d3) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `no-unnecessary-readonly` rule
+
+  Flags `.readonly()` on schemas whose output is already immutable — primitives/scalars, number sub-types, top-level string formats, and doubled `readonly`.
+
+  Autofix removes the call.
+
+- [#364](https://github.com/marcalexiei/eslint-zod/pull/364) [`250e526`](https://github.com/marcalexiei/eslint-zod/commit/250e526df7c0870b9f7a98177fc0d9e8e0b78278) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `prefer-tuple-over-array-length` rule
+
+  Flags a length-constrained `z.array()` (`.length()`, `.min()`, `.max()`) and suggests `z.tuple()`, which preserves the element count in the inferred type.
+
+  Autofixes `.length(n)` and equal-bound `.min(n).max(n)` to a fixed tuple, and `.min(n)` to a rest tuple; everything else is report-only.
+
+### Patch Changes
+
+- Updated dependencies [[`0913e38`](https://github.com/marcalexiei/eslint-zod/commit/0913e3886976ed138f6a060cead6297be14e8e8d), [`5547b24`](https://github.com/marcalexiei/eslint-zod/commit/5547b24ef00a084a8aa943b6c57fd7d0cacbf8d3), [`dc8e969`](https://github.com/marcalexiei/eslint-zod/commit/dc8e9696f37cf00404bd78b5d38c6268009b9c1b), [`250e526`](https://github.com/marcalexiei/eslint-zod/commit/250e526df7c0870b9f7a98177fc0d9e8e0b78278)]:
+  - @eslint-zod/utils@2.4.0
+
 ## 4.7.1
 
 ### Patch Changes
