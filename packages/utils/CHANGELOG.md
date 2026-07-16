@@ -1,5 +1,39 @@
 # @eslint-zod/utils
 
+## 2.4.0
+
+### Minor Changes
+
+- [#369](https://github.com/marcalexiei/eslint-zod/pull/369) [`0913e38`](https://github.com/marcalexiei/eslint-zod/commit/0913e3886976ed138f6a060cead6297be14e8e8d) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `collectZodSchemaConstraints` tracker helper and `buildZodConstraintsRemoveFix` fixer
+
+  `collectZodSchemaConstraints(node)` flattens a schema chain into a normalized `ZodSchemaConstraint` list covering both API styles,
+  chained methods (`zod`) and `.check(...)` arguments (`zod/mini`) — so shared rule builders navigate a schema's checks through one surface.
+
+  `buildZodConstraintsRemoveFix` builds the fixes that remove constraints of either origin, deleting a `.check(...)` call only when every one of its arguments is targeted.
+
+- [#370](https://github.com/marcalexiei/eslint-zod/pull/370) [`5547b24`](https://github.com/marcalexiei/eslint-zod/commit/5547b24ef00a084a8aa943b6c57fd7d0cacbf8d3) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `no-unnecessary-readonly` rule builder
+
+  New `@eslint-zod/utils/rule-builders/no-unnecessary-readonly` export:
+
+  `buildNoUnnecessaryReadonlyCreate(scope)` detects the chained `.readonly()` (`zod`) and the `z.readonly(...)` wrapper (`zod/mini`) with the same logic.
+
+  The package root also gains `buildZodWrapperUnwrapFix` (replace a single-argument wrapper call with its argument) and `ZOD_IMMUTABLE_SCHEMA_TYPES`
+  (schema factories whose output is already immutable).
+
+- [#373](https://github.com/marcalexiei/eslint-zod/pull/373) [`dc8e969`](https://github.com/marcalexiei/eslint-zod/commit/dc8e9696f37cf00404bd78b5d38c6268009b9c1b) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `no-conflicting-checks` rule builder and `getZodSchemaBaseType`
+
+  New `@eslint-zod/utils/rule-builders/no-conflicting-checks` export:
+
+  `buildNoConflictingChecksCreate(scope)` analyzes a schema's checks (via `collectZodSchemaConstraints`, both API styles) for impossible, redundant/confusing, and type-inapplicable combinations. The module also exports the `NoConflictingChecksOptions` and `NoConflictingChecksMessageIds` contracts.
+
+  The package root gains `getZodSchemaBaseType` (schema factory name → base type category) and `ZOD_STRING_FORMAT_NAMES` (the top-level string-format factory names).
+
+- [#364](https://github.com/marcalexiei/eslint-zod/pull/364) [`250e526`](https://github.com/marcalexiei/eslint-zod/commit/250e526df7c0870b9f7a98177fc0d9e8e0b78278) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `prefer-tuple-over-array-length` rule builder
+
+  New `@eslint-zod/utils/rule-builders/prefer-tuple-over-array-length` export.
+
+  `buildPreferTupleOverArrayLengthCreate(scope)` owns the whole rule — length-constraint detection via `collectZodSchemaConstraints` (both API styles), the `z.tuple([...])` autofix, and reporting. Plugins only supply their import scope.
+
 ## 2.3.0
 
 ### Minor Changes
