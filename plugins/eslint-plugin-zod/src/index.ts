@@ -9,6 +9,7 @@ import { consistentSchemaOutputTypeStyle } from './rules/consistent-schema-outpu
 import { consistentSchemaVarName } from './rules/consistent-schema-var-name.js';
 import { noAnySchema } from './rules/no-any-schema.js';
 import { noCoerceBoolean } from './rules/no-coerce-boolean.js';
+import { noConflictingChecks } from './rules/no-conflicting-checks.js';
 import { noDuplicateSchemaMethods } from './rules/no-duplicate-schema-methods.js';
 import { noEmptyCustomSchema } from './rules/no-empty-custom-schema.js';
 import { noNativeEnum } from './rules/no-native-enum.js';
@@ -67,6 +68,7 @@ const eslintPluginZod = {
     'consistent-schema-output-type-style': consistentSchemaOutputTypeStyle,
     'no-any-schema': noAnySchema,
     'no-coerce-boolean': noCoerceBoolean,
+    'no-conflicting-checks': noConflictingChecks,
     'no-duplicate-schema-methods': noDuplicateSchemaMethods,
     'no-empty-custom-schema': noEmptyCustomSchema,
     'no-native-enum': noNativeEnum,

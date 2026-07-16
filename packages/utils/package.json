@@ -62,6 +62,11 @@
       "import": "./dist/rule-builders/no-duplicate-schema-methods.mjs",
       "require": "./dist/rule-builders/no-duplicate-schema-methods.cjs"
     },
+    "./rule-builders/no-conflicting-checks": {
+      "@eslint-zod/source": "./src/rule-builders/no-conflicting-checks.ts",
+      "import": "./dist/rule-builders/no-conflicting-checks.mjs",
+      "require": "./dist/rule-builders/no-conflicting-checks.cjs"
+    },
     "./rule-builders/no-any-schema": {
       "@eslint-zod/source": "./src/rule-builders/no-any-schema.ts",
       "import": "./dist/rule-builders/no-any-schema.mjs",
