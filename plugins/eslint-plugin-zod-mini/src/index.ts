@@ -17,6 +17,7 @@ import { noUnknownSchema } from './rules/no-unknown-schema.js';
 import { noUnnecessaryReadonly } from './rules/no-unnecessary-readonly.js';
 import { preferEnumOverLiteralUnion } from './rules/prefer-enum-over-literal-union.js';
 import { preferMeta } from './rules/prefer-meta.js';
+import { preferNullish } from './rules/prefer-nullish.js';
 import { preferTupleOverArrayLength } from './rules/prefer-tuple-over-array-length.js';
 import { requireBrandTypeParameter } from './rules/require-brand-type-parameter.js';
 import { requireErrorMessage } from './rules/require-error-message.js';
@@ -57,6 +58,7 @@ const eslintPluginZodMini = {
     'no-unnecessary-readonly': noUnnecessaryReadonly,
     'prefer-enum-over-literal-union': preferEnumOverLiteralUnion,
     'prefer-meta': preferMeta,
+    'prefer-nullish': preferNullish,
     'prefer-tuple-over-array-length': preferTupleOverArrayLength,
     'require-brand-type-parameter': requireBrandTypeParameter,
     'require-error-message': requireErrorMessage,
@@ -84,6 +86,7 @@ const recommendedConfig = {
     'zod-mini/no-throw-in-refine': 'error',
     'zod-mini/prefer-enum-over-literal-union': 'error',
     'zod-mini/prefer-meta': 'error',
+    'zod-mini/prefer-nullish': 'error',
     'zod-mini/require-brand-type-parameter': 'error',
     'zod-mini/require-error-message': 'error',
   },

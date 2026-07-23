@@ -32,6 +32,7 @@ import { preferEnumOverLiteralUnion } from './rules/prefer-enum-over-literal-uni
 import { preferLooseObject } from './rules/prefer-loose-object.js';
 import { preferMetaLast } from './rules/prefer-meta-last.js';
 import { preferMeta } from './rules/prefer-meta.js';
+import { preferNullish } from './rules/prefer-nullish.js';
 import { preferStrictObject } from './rules/prefer-strict-object.js';
 import { preferStringSchemaWithTrim } from './rules/prefer-string-schema-with-trim.js';
 import { preferTopLevelStringFormats } from './rules/prefer-top-level-string-formats.js';
@@ -91,6 +92,7 @@ const eslintPluginZod = {
     'prefer-loose-object': preferLooseObject,
     'prefer-meta': preferMeta,
     'prefer-meta-last': preferMetaLast,
+    'prefer-nullish': preferNullish,
     'prefer-strict-object': preferStrictObject,
     'prefer-top-level-string-formats': preferTopLevelStringFormats,
     'prefer-string-schema-with-trim': preferStringSchemaWithTrim,
@@ -136,6 +138,7 @@ const recommendedConfig = {
     'zod/prefer-loose-object': 'error',
     'zod/prefer-meta': 'error',
     'zod/prefer-meta-last': 'error',
+    'zod/prefer-nullish': 'error',
     'zod/prefer-strict-object': 'error',
     'zod/prefer-top-level-string-formats': 'error',
     'zod/prefer-string-schema-with-trim': 'error',
