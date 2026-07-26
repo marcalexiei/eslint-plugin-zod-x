@@ -4,6 +4,9 @@ import { describe, expect, it } from 'vitest';
 
 import type { ZodSchemaConstraint } from './collect-zod-schema-constraints.js';
 import { canonicalizeZodConstraintName, getZodCheckDescriptor } from './zod-check-vocabulary.js';
+import { ZOD_IMMUTABLE_SCHEMA_TYPES } from './zod-immutable-schema-types.js';
+import { ZOD_MUTATING_CHECK_NAMES } from './zod-mutating-check-names.js';
+import { ZOD_NON_SCHEMA_PRODUCING_METHODS } from './zod-non-schema-producing-methods.js';
 import { ZOD_STRING_FORMAT_METHODS } from './zod-string-format-methods.js';
 import { ZOD_STRING_FORMAT_NAMES } from './zod-string-format-names.js';
 
@@ -99,8 +102,8 @@ describe('getZodCheckDescriptor', () => {
     expect(getZodCheckDescriptor('positive')?.bound?.fixedValue).toBe(0);
   });
 
-  it('returns undefined for names the vocabulary does not model', () => {
-    expect(getZodCheckDescriptor('brand')).toBeUndefined();
+  it('returns null for names the vocabulary does not model', () => {
+    expect(getZodCheckDescriptor('brand')).toBeNull();
   });
 
   it('describes every canonical string format as a string format check', () => {
@@ -111,6 +114,19 @@ describe('getZodCheckDescriptor', () => {
     for (const name of [...ZOD_STRING_FORMAT_NAMES, ...canonicalFormats]) {
       expect(getZodCheckDescriptor(name)).toEqual({ appliesTo: ['string'], format: true });
     }
+  });
+});
+
+describe('vocabulary tables are frozen', () => {
+  it.each([
+    ['ZOD_IMMUTABLE_SCHEMA_TYPES', ZOD_IMMUTABLE_SCHEMA_TYPES],
+    ['ZOD_MUTATING_CHECK_NAMES', ZOD_MUTATING_CHECK_NAMES],
+    ['ZOD_NON_SCHEMA_PRODUCING_METHODS', ZOD_NON_SCHEMA_PRODUCING_METHODS],
+    ['ZOD_STRING_FORMAT_NAMES', ZOD_STRING_FORMAT_NAMES],
+    ['ZOD_STRING_FORMAT_METHODS', ZOD_STRING_FORMAT_METHODS],
+  ])('%s cannot be mutated at runtime', (_name, table) => {
+    expect(Object.isFrozen(table)).toBe(true);
+    expect(() => (table as Array<unknown>).push('injected')).toThrow(TypeError);
   });
 });
 

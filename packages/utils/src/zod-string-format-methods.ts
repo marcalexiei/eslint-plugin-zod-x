@@ -15,7 +15,7 @@
  * @see {@link ZOD_STRING_FORMAT_NAMES} for the top-level factory names, which
  * additionally cover formats that never had a chained spelling.
  */
-export const ZOD_STRING_FORMAT_METHODS = [
+export const ZOD_STRING_FORMAT_METHODS = Object.freeze([
   { sourceMethodName: 'base64', replacementMethodName: 'base64' },
   { sourceMethodName: 'base64url', replacementMethodName: 'base64url' },
   { sourceMethodName: 'cidrv4', replacementMethodName: 'cidrv4' },
@@ -42,7 +42,7 @@ export const ZOD_STRING_FORMAT_METHODS = [
   { sourceMethodName: 'uuidv6', replacementMethodName: 'uuidv6' },
   { sourceMethodName: 'uuidv7', replacementMethodName: 'uuidv7' },
   { sourceMethodName: 'xid', replacementMethodName: 'xid' },
-] as const;
+] as const);
 
 /** Name of a deprecated `z.string().<format>()` method. */
 export type ZodStringFormatMethodName =

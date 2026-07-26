@@ -4,7 +4,7 @@
  * terminal calls when traversing a chain (e.g. to detect the last "schema-shaped"
  * node in `z.string().parse(input)`).
  */
-export const ZOD_NON_SCHEMA_PRODUCING_METHODS = [
+export const ZOD_NON_SCHEMA_PRODUCING_METHODS = Object.freeze([
   // parse methods
   'parse',
   'parseAsync',
@@ -28,4 +28,4 @@ export const ZOD_NON_SCHEMA_PRODUCING_METHODS = [
   'prettifyError',
   'formatError',
   'flattenError',
-];
+]);

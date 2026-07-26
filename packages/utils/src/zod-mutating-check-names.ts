@@ -3,10 +3,10 @@
  * Used in `zod` as chained methods on a schema; used in `zod-mini` as standalone
  * `$ZodCheck` calls passed to `.check(...)`.
  */
-export const ZOD_MUTATING_CHECK_NAMES = [
+export const ZOD_MUTATING_CHECK_NAMES = Object.freeze([
   'normalize',
   'overwrite',
   'toLowerCase',
   'toUpperCase',
   'trim',
-];
+]);
