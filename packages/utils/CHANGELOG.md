@@ -1,5 +1,13 @@
 # @eslint-zod/utils
 
+## 2.5.0
+
+### Minor Changes
+
+- [#374](https://github.com/marcalexiei/eslint-zod/pull/374) [`6bbcdf0`](https://github.com/marcalexiei/eslint-zod/commit/6bbcdf06cb37a151e36af25146297c24897846d0) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `prefer-nullish` rule builder
+
+  New `@eslint-zod/utils/rule-builders/prefer-nullish` export: `buildPreferNullishCreate(scope)` detects the redundant optional + nullable combination across both API styles — adjacent chained methods (`zod`) and directly nested wrapper calls (`zod/mini`) — and autofixes it to `nullish`.
+
 ## 2.4.0
 
 ### Minor Changes
