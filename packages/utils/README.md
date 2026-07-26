@@ -80,6 +80,7 @@ Each rule shared between `eslint-plugin-zod` and `eslint-plugin-zod-mini` (some 
 - `buildNoUnknownSchemaCreate(scope)`
 - `buildNoUnnecessaryReadonlyCreate(scope)`
 - `buildPreferEnumOverLiteralUnionCreate(scope)`
+- `buildPreferNullishCreate(scope)`
 - `buildPreferTupleOverArrayLengthCreate(scope)`
 - `buildRequireBrandTypeParameterCreate(scope)`
 - `buildRequireErrorMessageCreate(scope)`
