@@ -10,7 +10,8 @@ import {
 import type { DetectResult } from './detect-zod-schema-root-node.js';
 import type { ZodImportScope } from './zod-import-scope.js';
 
-interface ZodChainItem {
+/** One call in a zod chain: the method's name and the call expression carrying it. */
+export interface ZodChainItem {
   name: string;
   node: TSESTree.CallExpression;
 }
@@ -56,13 +57,15 @@ export interface ZodSchemaImportTracker {
   /**
    * Check if given node is a zod schema
    */
-  detectZodSchemaRootNode: (node: TSESTree.Node) => null | DetectResult;
+  detectZodSchemaRootNode: (node: TSESTree.Node) => DetectResult;
 
   /**
-   * Recursively walks up a chain of method calls to collect all method names
-   * in a zod expression.
+   * Walks up a chain of method calls and returns each call with its node.
+   * Use this over `detectZodSchemaRootNode(...).methods` when the nodes are
+   * needed: it only names plain-identifier properties, so every item is safe
+   * to rewrite, while `methods` also covers computed members (`z['uuid']()`).
    *
-   * Returns an empty array if the expression isn't a zod chain.
+   * Returns an empty array if the expression isn't a navigable zod chain.
    */
   collectZodChainMethods: (node: TSESTree.CallExpression) => Array<ZodChainItem>;
 
@@ -83,19 +86,27 @@ export interface ZodSchemaImportTracker {
 }
 
 /**
- * Function to create helpers that allow to manage default, namespace and named `zod`
- * imports without too much hassle.
+ * Creates a tracker for one file, scoped to `importScope`. Rules normally
+ * reach it through {@link ZodImportScope.createTracker}.
  */
-function trackZodSchemaImports(importScope: ZodImportScope): ZodSchemaImportTracker {
-  const scope = importScope;
+export function trackZodSchemaImports(scope: ZodImportScope): ZodSchemaImportTracker {
   const zodNamespaces = new Set<string>();
   // localName → original export name
   const zodNamedImports = new Map<string, string>();
   // original export name → localName (last import wins)
   const zodNamedImportsByOriginal = new Map<string, string>();
 
+  // Safe to cache: the walk is purely syntactic and never reads the import
+  // maps, which keep filling up as `ImportDeclaration` nodes are visited.
+  const chainCache = new WeakMap<TSESTree.CallExpression, Array<ZodChainItem>>();
+
   function collectZodChainMethods(node: TSESTree.CallExpression): Array<ZodChainItem> {
-    const methods: Array<{ name: string; node: TSESTree.CallExpression }> = [];
+    const cached = chainCache.get(node);
+    if (cached) {
+      return cached;
+    }
+
+    const methods: Array<ZodChainItem> = [];
     let current: TSESTree.Expression | null = node;
 
     while (current.type === AST_NODE_TYPES.CallExpression) {
@@ -128,6 +139,7 @@ function trackZodSchemaImports(importScope: ZodImportScope): ZodSchemaImportTrac
       break;
     }
 
+    chainCache.set(node, methods);
     return methods;
   }
 
@@ -189,40 +201,4 @@ function trackZodSchemaImports(importScope: ZodImportScope): ZodSchemaImportTrac
   };
 
   return result;
-}
-
-/**
- * Creates a per-rule factory for tracking namespace and named imports from a
- * Zod source. Call `trackZodSchemaImports()` once at the top of `create(...)` to
- * get a fresh tracker for the file being linted, then wire its
- * `importDeclarationListener` into the visitor.
- *
- * The returned tracker exposes:
- * - `importDeclarationListener` — visitor for `ImportDeclaration` nodes
- * - `isZodNamespace(name)` — whether `name` was imported as the `z` namespace
- * - `getNamedImportOriginal(localName)` / `getNamedImportLocal(originalName)` — alias lookups
- * - `detectZodSchemaRootNode(node)` — see {@link detectZodSchemaRootNode}
- * - `collectZodChainMethods(node)` — walks a chain and returns `{ name, node }` items
- * - `collectZodSchemaConstraints(node)` — see {@link collectZodSchemaConstraints}
- * - `isZodNumberSchemaCallExpression(node)` — see {@link isZodNumberSchemaCallExpression}
- *
- * @example
- * ```ts
- * const { trackZodSchemaImports } = createZodSchemaImportTrack(zodImportScope);
- *
- * function create(context) {
- *   const { importDeclarationListener, detectZodSchemaRootNode } = trackZodSchemaImports();
- *   return {
- *     ImportDeclaration: importDeclarationListener,
- *     CallExpression(node) { ... },
- *   };
- * }
- * ```
- */
-export function createZodSchemaImportTrack(scope: ZodImportScope): {
-  trackZodSchemaImports: () => ReturnType<typeof trackZodSchemaImports>;
-} {
-  return {
-    trackZodSchemaImports: () => trackZodSchemaImports(scope),
-  };
 }

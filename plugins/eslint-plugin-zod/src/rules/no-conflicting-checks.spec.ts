@@ -213,10 +213,34 @@ ruleTester.run(noConflictingChecks.name, noConflictingChecks, {
       errors: [{ messageId: 'impossibleCase' }],
     },
     {
+      name: 'mutually exclusive deprecated chained formats',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().ipv4().ipv6();
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
+      name: 'chained format equals its top-level replacement',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().datetime().date();
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
       name: 'format conflicting with a length bound',
       code: dedent`
         import * as z from 'zod';
         z.string().uuid().max(1);
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
+      name: 'deprecated chained format conflicting with a length bound',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().guid().max(1);
       `,
       errors: [{ messageId: 'impossibleCase' }],
     },

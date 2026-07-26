@@ -1,14 +1,12 @@
+import { ZOD_STRING_FORMAT_METHODS } from '@eslint-zod/utils';
 import { RuleTester } from '@typescript-eslint/rule-tester';
 import dedent from 'dedent';
 
-import {
-  TOP_LEVEL_STRING_FORMATS,
-  preferTopLevelStringFormats,
-} from './prefer-top-level-string-formats.js';
+import { preferTopLevelStringFormats } from './prefer-top-level-string-formats.js';
 
 const ruleTester = new RuleTester();
 
-const valid = TOP_LEVEL_STRING_FORMATS.flatMap(({ replacementMethodName, sourceMethodName }) => {
+const valid = ZOD_STRING_FORMAT_METHODS.flatMap(({ replacementMethodName, sourceMethodName }) => {
   const [namedImportSpecifier] = replacementMethodName.split('.');
   const namedImportExpression = `${replacementMethodName}()`;
   const replacementExpression = `z.${replacementMethodName}()`;
@@ -53,7 +51,7 @@ const valid = TOP_LEVEL_STRING_FORMATS.flatMap(({ replacementMethodName, sourceM
   ];
 });
 
-const invalid = TOP_LEVEL_STRING_FORMATS.flatMap(({ replacementMethodName, sourceMethodName }) => {
+const invalid = ZOD_STRING_FORMAT_METHODS.flatMap(({ replacementMethodName, sourceMethodName }) => {
   const replacementExpression = `z.${replacementMethodName}()`;
 
   return [

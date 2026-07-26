@@ -67,9 +67,8 @@ export type ZodSchemaConstraint = ZodChainedConstraint | ZodCheckArgumentConstra
  *   skipped, but still counted in `argumentCount` so fixers can tell whether
  *   removing a whole `.check(...)` would orphan an unrelated argument.
  *
- * Prefer the bound `collectZodSchemaConstraints(node)` exposed by
- * `trackZodSchemaImports()`; this standalone form exists for callers that
- * already hold the chain and a bound detector.
+ * Internal: rules use the bound `collectZodSchemaConstraints(node)` from
+ * `scope.createTracker()`, which supplies the chain and the detector.
  */
 export function collectZodSchemaConstraints(opts: {
   /** Chain items from `collectZodChainMethods`, factory first. */

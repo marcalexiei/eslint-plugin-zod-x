@@ -4,9 +4,9 @@ import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 import type { ZodSchemaConstraint } from '../collect-zod-schema-constraints.js';
 import { getZodSchemaBaseType } from '../get-zod-schema-base-type.js';
 import type { ZodSchemaBaseType } from '../get-zod-schema-base-type.js';
-import { createZodSchemaImportTrack } from '../track-zod-schema-imports.js';
+import type { ZodCheckDescriptor, ZodCheckDomain } from '../zod-check-vocabulary.js';
+import { canonicalizeZodConstraintName, getZodCheckDescriptor } from '../zod-check-vocabulary.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
-import { ZOD_STRING_FORMAT_NAMES } from '../zod-string-format-names.js';
 
 /** Options contract implemented by each plugin's rule. */
 export interface NoConflictingChecksOptions {
@@ -32,106 +32,6 @@ export type NoConflictingChecksMessageIds =
  */
 const TYPE_CHANGING_METHODS = ['and', 'array', 'or', 'pipe', 'preprocess', 'transform'];
 
-type Domain = 'length' | 'size' | 'value';
-
-interface BoundSpec {
-  kind: 'lower' | 'upper' | 'exact';
-  domain: Domain;
-  /** Whether the bound includes its value; irrelevant for `exact`. */
-  inclusive?: boolean;
-  /** Bound value implied by the check itself (e.g. `positive()` = `> 0`). */
-  fixedValue?: number;
-}
-
-interface CheckDescriptor {
-  appliesTo: ReadonlyArray<ZodSchemaBaseType>;
-  bound?: BoundSpec;
-  format?: boolean;
-  content?: 'includes' | 'startsWith' | 'endsWith';
-  casing?: 'lowercase' | 'uppercase';
-  multipleOf?: boolean;
-  intMarker?: boolean;
-}
-
-const STRING = ['string'] as const;
-const STRING_OR_ARRAY = ['string', 'array'] as const;
-const NUMERIC = ['number', 'bigint'] as const;
-const COMPARABLE = ['number', 'bigint', 'date'] as const;
-const SIZED = ['set', 'map'] as const;
-
-/** Known checks by canonical name — the standalone `$ZodCheck` vocabulary. */
-const KNOWN_CHECKS = new Map<string, CheckDescriptor>([
-  // length
-  [
-    'minLength',
-    { appliesTo: STRING_OR_ARRAY, bound: { kind: 'lower', domain: 'length', inclusive: true } },
-  ],
-  [
-    'maxLength',
-    { appliesTo: STRING_OR_ARRAY, bound: { kind: 'upper', domain: 'length', inclusive: true } },
-  ],
-  ['length', { appliesTo: STRING_OR_ARRAY, bound: { kind: 'exact', domain: 'length' } }],
-  [
-    'nonempty',
-    {
-      appliesTo: STRING_OR_ARRAY,
-      bound: { kind: 'lower', domain: 'length', inclusive: true, fixedValue: 1 },
-    },
-  ],
-  // size
-  ['minSize', { appliesTo: SIZED, bound: { kind: 'lower', domain: 'size', inclusive: true } }],
-  ['maxSize', { appliesTo: SIZED, bound: { kind: 'upper', domain: 'size', inclusive: true } }],
-  ['size', { appliesTo: SIZED, bound: { kind: 'exact', domain: 'size' } }],
-  // value bounds
-  ['gt', { appliesTo: COMPARABLE, bound: { kind: 'lower', domain: 'value', inclusive: false } }],
-  ['gte', { appliesTo: COMPARABLE, bound: { kind: 'lower', domain: 'value', inclusive: true } }],
-  ['lt', { appliesTo: COMPARABLE, bound: { kind: 'upper', domain: 'value', inclusive: false } }],
-  ['lte', { appliesTo: COMPARABLE, bound: { kind: 'upper', domain: 'value', inclusive: true } }],
-  [
-    'positive',
-    {
-      appliesTo: NUMERIC,
-      bound: { kind: 'lower', domain: 'value', inclusive: false, fixedValue: 0 },
-    },
-  ],
-  [
-    'negative',
-    {
-      appliesTo: NUMERIC,
-      bound: { kind: 'upper', domain: 'value', inclusive: false, fixedValue: 0 },
-    },
-  ],
-  [
-    'nonnegative',
-    {
-      appliesTo: NUMERIC,
-      bound: { kind: 'lower', domain: 'value', inclusive: true, fixedValue: 0 },
-    },
-  ],
-  [
-    'nonpositive',
-    {
-      appliesTo: NUMERIC,
-      bound: { kind: 'upper', domain: 'value', inclusive: true, fixedValue: 0 },
-    },
-  ],
-  // numeric shape
-  ['multipleOf', { appliesTo: NUMERIC, multipleOf: true }],
-  ['int', { appliesTo: ['number'], intMarker: true }],
-  // string content / casing / pattern
-  ['includes', { appliesTo: STRING, content: 'includes' }],
-  ['startsWith', { appliesTo: STRING, content: 'startsWith' }],
-  ['endsWith', { appliesTo: STRING, content: 'endsWith' }],
-  ['lowercase', { appliesTo: STRING, casing: 'lowercase' }],
-  ['uppercase', { appliesTo: STRING, casing: 'uppercase' }],
-  ['regex', { appliesTo: STRING }],
-  // string formats — the top-level factories plus the dotted `iso.*` member
-  // format checks (`z.iso.date()`, …), which the top-level list omits.
-  ...[...ZOD_STRING_FORMAT_NAMES, 'iso.date', 'iso.datetime', 'iso.duration', 'iso.time'].map(
-    (name): [string, CheckDescriptor] => [name, { appliesTo: STRING, format: true }],
-  ),
-]);
-
 /** Length range `[min, max]` of well-known fixed-shape formats. */
 const FORMAT_LENGTH_RANGES = new Map<string, [number, number]>([
   ['uuid', [36, 36]],
@@ -151,83 +51,11 @@ const FORMAT_LENGTH_RANGES = new Map<string, [number, number]>([
   ['iso.date', [10, 10]],
 ]);
 
-/**
- * Chained (`zod`) spellings → canonical check names. `.min()`/`.max()` are
- * type-dependent: length bounds on strings/arrays, value bounds on
- * numbers/bigints/dates, size bounds on sets/maps.
- */
-const CHAINED_COMMON: ReadonlyArray<[string, string]> = [
-  ...[
-    'gt',
-    'gte',
-    'lt',
-    'lte',
-    'positive',
-    'negative',
-    'nonnegative',
-    'nonpositive',
-    'multipleOf',
-    'int',
-    'includes',
-    'startsWith',
-    'endsWith',
-    'lowercase',
-    'uppercase',
-    'regex',
-    'nonempty',
-  ].map((name): [string, string] => [name, name]),
-  ['step', 'multipleOf'],
-];
-
-const CHAINED_STRING_FORMATS: ReadonlyArray<[string, string]> = [
-  ...[
-    'email',
-    'url',
-    'emoji',
-    'nanoid',
-    'cuid',
-    'cuid2',
-    'ulid',
-    'base64',
-    'base64url',
-    'e164',
-    'jwt',
-    'uuid',
-  ].map((name): [string, string] => [name, name]),
-  // legacy chained ISO helpers on z.string()
-  ['date', 'iso.date'],
-  ['time', 'iso.time'],
-  ['datetime', 'iso.datetime'],
-  ['duration', 'iso.duration'],
-];
-
-const CHAINED_CANONICAL = new Map<ZodSchemaBaseType, Map<string, string>>([
-  [
-    'string',
-    new Map([
-      ...CHAINED_COMMON,
-      ...CHAINED_STRING_FORMATS,
-      ['min', 'minLength'],
-      ['max', 'maxLength'],
-      ['length', 'length'],
-    ]),
-  ],
-  [
-    'array',
-    new Map([...CHAINED_COMMON, ['min', 'minLength'], ['max', 'maxLength'], ['length', 'length']]),
-  ],
-  ['number', new Map([...CHAINED_COMMON, ['min', 'gte'], ['max', 'lte']])],
-  ['bigint', new Map([...CHAINED_COMMON, ['min', 'gte'], ['max', 'lte']])],
-  ['date', new Map([...CHAINED_COMMON, ['min', 'gte'], ['max', 'lte']])],
-  ['set', new Map([...CHAINED_COMMON, ['min', 'minSize'], ['max', 'maxSize'], ['size', 'size']])],
-  ['map', new Map([...CHAINED_COMMON, ['min', 'minSize'], ['max', 'maxSize'], ['size', 'size']])],
-]);
-
 type LiteralValue = string | number | bigint | boolean;
 
 interface AnalyzedCheck {
   canonical: string;
-  descriptor: CheckDescriptor;
+  descriptor: ZodCheckDescriptor;
   /** Node carrying the check's arguments; used for reporting. */
   node: TSESTree.CallExpression;
   /** Name as written in the source, for messages. */
@@ -312,8 +140,6 @@ export function buildNoConflictingChecksCreate(
     TSESLint.RuleContext<NoConflictingChecksMessageIds, [NoConflictingChecksOptions]>
   >,
 ) => TSESLint.RuleListener {
-  const { trackZodSchemaImports } = createZodSchemaImportTrack(scope);
-
   return function create(context) {
     const options = {
       checkImpossibleCases: true,
@@ -327,7 +153,7 @@ export function buildNoConflictingChecksCreate(
       detectZodSchemaRootNode,
       collectZodChainMethods,
       collectZodSchemaConstraints,
-    } = trackZodSchemaImports();
+    } = scope.createTracker();
 
     function describe(check: AnalyzedCheck): string {
       const args = check.node.arguments
@@ -381,28 +207,6 @@ export function buildNoConflictingChecksCreate(
       });
     }
 
-    function canonicalNameOf(
-      constraint: ZodSchemaConstraint,
-      baseType: ZodSchemaBaseType,
-    ): string | null {
-      if (constraint.origin === 'check-argument') {
-        if (constraint.name !== 'iso') {
-          return constraint.name;
-        }
-        // `z.iso.date()` detects as `iso`; read the member name to tell the
-        // ISO formats apart.
-        const { callee } = constraint.node;
-        if (
-          callee.type === AST_NODE_TYPES.MemberExpression &&
-          callee.property.type === AST_NODE_TYPES.Identifier
-        ) {
-          return `iso.${callee.property.name}`;
-        }
-        return null;
-      }
-      return CHAINED_CANONICAL.get(baseType)?.get(constraint.name) ?? null;
-    }
-
     function readLiteralArgument(node: TSESTree.CallExpression): LiteralValue | undefined {
       const argument = node.arguments.at(0);
       if (argument?.type !== AST_NODE_TYPES.Literal) {
@@ -421,7 +225,7 @@ export function buildNoConflictingChecksCreate(
     }
 
     /** Bounds reasoning: empty ranges (impossible) and implied bounds (redundant). */
-    function analyzeBounds(checks: Array<AnalyzedCheck>, domain: Domain): void {
+    function analyzeBounds(checks: Array<AnalyzedCheck>, domain: ZodCheckDomain): void {
       const lowers: Array<Bound> = [];
       const uppers: Array<Bound> = [];
       const exacts: Array<Bound> = [];
@@ -728,7 +532,7 @@ export function buildNoConflictingChecksCreate(
 
         // A string-format factory (`z.uuid()`, `z.email()`, …) behaves like a
         // format check applied to a string schema.
-        const baseDescriptor = KNOWN_CHECKS.get(zodSchemaMeta.schemaType);
+        const baseDescriptor = getZodCheckDescriptor(zodSchemaMeta.schemaType);
         if (baseDescriptor?.format) {
           checks.push({
             canonical: zodSchemaMeta.schemaType,
@@ -743,8 +547,8 @@ export function buildNoConflictingChecksCreate(
         for (const [index, constraint] of collectZodSchemaConstraints(
           zodSchemaMeta.node,
         ).entries()) {
-          const canonical = canonicalNameOf(constraint, baseType);
-          const descriptor = canonical === null ? undefined : KNOWN_CHECKS.get(canonical);
+          const canonical = canonicalizeZodConstraintName(constraint, baseType);
+          const descriptor = canonical === null ? undefined : getZodCheckDescriptor(canonical);
           if (canonical === null || !descriptor) {
             continue;
           }

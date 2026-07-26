@@ -1,12 +1,6 @@
-import {
-  createZodSchemaImportTrack,
-  findParentSchemaMatchingCondition,
-  zodImportScope,
-} from '@eslint-zod/utils';
+import { findParentSchemaMatchingCondition, zodImportScope } from '@eslint-zod/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
-
-const { trackZodSchemaImports } = createZodSchemaImportTrack(zodImportScope);
 
 export const preferStringSchemaWithTrim = createZodPluginRule({
   name: 'prefer-string-schema-with-trim',
@@ -24,7 +18,7 @@ export const preferStringSchemaWithTrim = createZodPluginRule({
   defaultOptions: [],
   create(context) {
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+      zodImportScope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

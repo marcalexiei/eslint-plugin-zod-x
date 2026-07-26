@@ -1,4 +1,4 @@
-import { createZodSchemaImportTrack, zodImportScope } from '@eslint-zod/utils';
+import { zodImportScope } from '@eslint-zod/utils';
 import type { TSESTree } from '@typescript-eslint/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
@@ -11,8 +11,6 @@ interface Options {
 type MessageIds = 'useFunction' | 'useMethod';
 
 const defaultOptions: Options = { style: 'function' };
-
-const { trackZodSchemaImports } = createZodSchemaImportTrack(zodImportScope);
 
 export const arrayStyle = createZodPluginRule<[Options], MessageIds>({
   name: 'array-style',
@@ -45,7 +43,7 @@ export const arrayStyle = createZodPluginRule<[Options], MessageIds>({
     const { sourceCode } = context;
 
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+      zodImportScope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

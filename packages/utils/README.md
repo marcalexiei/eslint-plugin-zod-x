@@ -36,8 +36,10 @@ AST parsing, import tracking, traversal, and fixer helpers.
 
 **Import tracking & scopes**
 
-- `createZodSchemaImportTrack(scope)` — per-rule factory for tracking namespace and named imports; the returned tracker exposes `collectZodChainMethods`, `collectZodSchemaConstraints`, `detectZodSchemaRootNode`, and the import-lookup helpers
+- `ZodImportScope` — the class defining which import sources a plugin considers in-scope; `scope.createTracker()` is how rules get a per-file import tracker
 - `zodImportScope`, `zodMiniImportScope`, `zodCoreImportScope` — pre-built `ZodImportScope` instances
+- `trackZodSchemaImports(scope)` — the standalone form of `scope.createTracker()`; the returned tracker exposes `collectZodChainMethods`, `collectZodSchemaConstraints`, `detectZodSchemaRootNode`, and the import-lookup helpers
+- types `ZodSchemaImportTracker`, `ZodChainItem`
 
 **Schema detection & navigation**
 
@@ -45,6 +47,7 @@ AST parsing, import tracking, traversal, and fixer helpers.
 - `isZodNumberSchemaCallExpression(node, namespaces, named)` — detect `z.number()…` chains
 - `findParentSchemaMatchingCondition(node, options)` — search up the AST for a matching ancestor schema call
 - `getZodSchemaBaseType(schemaType)` — map a schema factory name to its base type category; returns type `ZodSchemaBaseType`
+- types `DetectData`, `DetectResult` — what `detectZodSchemaRootNode` returns
 - types `ZodSchemaConstraint`, `ZodChainedConstraint`, `ZodCheckArgumentConstraint` — the normalized constraints produced by the tracker's `collectZodSchemaConstraints`
 
 **Fixer helpers**
@@ -59,7 +62,16 @@ AST parsing, import tracking, traversal, and fixer helpers.
 - `ZOD_IMMUTABLE_SCHEMA_TYPES` — schema factory names whose parsed output is already immutable
 - `ZOD_MUTATING_CHECK_NAMES` — Zod check names that mutate the validated value
 - `ZOD_NON_SCHEMA_PRODUCING_METHODS` — Zod method names that do not return a schema
+- `ZOD_STRING_FORMAT_METHODS` — deprecated `z.string().<format>()` methods and the top-level factory replacing each; type `ZodStringFormatMethodName`
 - `ZOD_STRING_FORMAT_NAMES` — top-level string-format factory names that all parse to `string`
+
+**Check vocabulary**
+
+Canonical names shared by both API styles, so rule logic compares `zod`'s `.min(2)` with `zod/mini`'s `z.minLength(2)` as one constraint.
+
+- `canonicalizeZodConstraintName(constraint, baseType)` — reduce a constraint's spelling to its canonical name
+- `getZodCheckDescriptor(canonicalName)` — what a check means: which base types accept it and what it bounds
+- types `ZodCheckDescriptor`, `ZodCheckBound`, `ZodCheckDomain`
 
 ### Shared rule builders — `@eslint-zod/utils/rule-builders/<rule-name>`
 
@@ -87,3 +99,11 @@ Each rule shared between `eslint-plugin-zod` and `eslint-plugin-zod-mini` (some 
 - `buildSchemaErrorPropertyStyleCreate(scope)`
 
 The `consistent-import` builder additionally re-exports the import-syntax helpers used by its fixer: `IMPORT_SYNTAXES`, `ImportSyntax`, `isGroupFirstImportKindValidForSyntax`, `shouldIdentifierBeRenamed`, `getNamespaceAliasNameFrom`.
+
+### Rule patterns — `@eslint-zod/utils/rule-patterns/<pattern-name>`
+
+Rule shapes that recur across several rules, parameterized by the names they differ in. Unlike rule builders these are not tied to one rule name, and a single plugin may use one several times.
+
+- `buildDeprecatedSchemaPropertyCreate(options)` — flag a deprecated property access on a number schema (`z.number().isInt`); also exports `DeprecatedSchemaPropertyOptions`
+- `buildDeprecatedSchemaMethodCreate(options)` — flag a deprecated method anywhere in a schema chain (`.isOptional()`); also exports `DeprecatedSchemaMethodOptions`
+- `buildPreferDedicatedFactoryCreate(options)` — prefer a dedicated factory over a general one plus a chained modifier (`z.looseObject()` over `z.object().passthrough()`); also exports `PreferDedicatedFactoryOptions`

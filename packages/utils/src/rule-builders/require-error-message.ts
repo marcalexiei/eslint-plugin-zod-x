@@ -1,7 +1,6 @@
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-import { createZodSchemaImportTrack } from '../track-zod-schema-imports.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
 type MessageIds = 'requireErrorMessage' | 'preferError' | 'removeMessage';
@@ -9,11 +8,9 @@ type MessageIds = 'requireErrorMessage' | 'preferError' | 'removeMessage';
 export function buildRequireErrorMessageCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
-  const { trackZodSchemaImports } = createZodSchemaImportTrack(scope);
-
   return function create(context) {
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+      scope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

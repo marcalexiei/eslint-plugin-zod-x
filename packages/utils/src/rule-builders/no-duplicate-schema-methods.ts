@@ -1,6 +1,5 @@
 import type { TSESLint } from '@typescript-eslint/utils';
 
-import { createZodSchemaImportTrack } from '../track-zod-schema-imports.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
 export function buildNoDuplicateSchemaMethodsCreate(
@@ -9,11 +8,9 @@ export function buildNoDuplicateSchemaMethodsCreate(
 ): (
   context: Readonly<TSESLint.RuleContext<'noDuplicateSchemaMethod', []>>,
 ) => TSESLint.RuleListener {
-  const { trackZodSchemaImports } = createZodSchemaImportTrack(scope);
-
   return function create(context) {
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+      scope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

@@ -1,9 +1,7 @@
-import { createZodSchemaImportTrack, zodImportScope } from '@eslint-zod/utils';
-import { AST_NODE_TYPES } from '@typescript-eslint/utils';
+import { zodImportScope } from '@eslint-zod/utils';
+import { buildDeprecatedSchemaPropertyCreate } from '@eslint-zod/utils/rule-patterns/deprecated-schema-property';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
-
-const { trackZodSchemaImports } = createZodSchemaImportTrack(zodImportScope);
 
 export const noNumberSchemaWithIsFinite = createZodPluginRule({
   name: 'no-number-schema-with-is-finite',
@@ -23,35 +21,9 @@ export const noNumberSchemaWithIsFinite = createZodPluginRule({
     schema: [],
   },
   defaultOptions: [],
-
-  create(context) {
-    const { importDeclarationListener, isZodNumberSchemaCallExpression } = trackZodSchemaImports();
-
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      MemberExpression(node): void {
-        if (node.computed) {
-          return;
-        }
-        if (node.property.type !== AST_NODE_TYPES.Identifier) {
-          return;
-        }
-        if (node.property.name !== 'isFinite') {
-          return;
-        }
-        if (node.object.type !== AST_NODE_TYPES.CallExpression) {
-          return;
-        }
-        if (!isZodNumberSchemaCallExpression(node.object)) {
-          return;
-        }
-
-        context.report({
-          node,
-          messageId: 'deprecated',
-        });
-      },
-    };
-  },
+  create: buildDeprecatedSchemaPropertyCreate({
+    scope: zodImportScope,
+    propertyName: 'isFinite',
+    messageId: 'deprecated',
+  }),
 });

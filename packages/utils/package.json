@@ -23,114 +23,43 @@
     "dist"
   ],
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.cts",
   "exports": {
     ".": {
       "@eslint-zod/source": "./src/index.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
-    "./rule-builders/consistent-import": {
-      "@eslint-zod/source": "./src/rule-builders/consistent-import.ts",
-      "import": "./dist/rule-builders/consistent-import.mjs",
-      "require": "./dist/rule-builders/consistent-import.cjs"
+    "./rule-builders/*": {
+      "@eslint-zod/source": "./src/rule-builders/*.ts",
+      "import": {
+        "types": "./dist/rule-builders/*.d.mts",
+        "default": "./dist/rule-builders/*.mjs"
+      },
+      "require": {
+        "types": "./dist/rule-builders/*.d.cts",
+        "default": "./dist/rule-builders/*.cjs"
+      }
     },
-    "./rule-builders/consistent-import-source": {
-      "@eslint-zod/source": "./src/rule-builders/consistent-import-source.ts",
-      "import": "./dist/rule-builders/consistent-import-source.mjs",
-      "require": "./dist/rule-builders/consistent-import-source.cjs"
-    },
-    "./rule-builders/consistent-object-schema-type": {
-      "@eslint-zod/source": "./src/rule-builders/consistent-object-schema-type.ts",
-      "import": "./dist/rule-builders/consistent-object-schema-type.mjs",
-      "require": "./dist/rule-builders/consistent-object-schema-type.cjs"
-    },
-    "./rule-builders/consistent-schema-output-type-style": {
-      "@eslint-zod/source": "./src/rule-builders/consistent-schema-output-type-style.ts",
-      "import": "./dist/rule-builders/consistent-schema-output-type-style.mjs",
-      "require": "./dist/rule-builders/consistent-schema-output-type-style.cjs"
-    },
-    "./rule-builders/consistent-schema-var-name": {
-      "@eslint-zod/source": "./src/rule-builders/consistent-schema-var-name.ts",
-      "import": "./dist/rule-builders/consistent-schema-var-name.mjs",
-      "require": "./dist/rule-builders/consistent-schema-var-name.cjs"
-    },
-    "./rule-builders/no-duplicate-schema-methods": {
-      "@eslint-zod/source": "./src/rule-builders/no-duplicate-schema-methods.ts",
-      "import": "./dist/rule-builders/no-duplicate-schema-methods.mjs",
-      "require": "./dist/rule-builders/no-duplicate-schema-methods.cjs"
-    },
-    "./rule-builders/no-conflicting-checks": {
-      "@eslint-zod/source": "./src/rule-builders/no-conflicting-checks.ts",
-      "import": "./dist/rule-builders/no-conflicting-checks.mjs",
-      "require": "./dist/rule-builders/no-conflicting-checks.cjs"
-    },
-    "./rule-builders/no-any-schema": {
-      "@eslint-zod/source": "./src/rule-builders/no-any-schema.ts",
-      "import": "./dist/rule-builders/no-any-schema.mjs",
-      "require": "./dist/rule-builders/no-any-schema.cjs"
-    },
-    "./rule-builders/no-coerce-boolean": {
-      "@eslint-zod/source": "./src/rule-builders/no-coerce-boolean.ts",
-      "import": "./dist/rule-builders/no-coerce-boolean.mjs",
-      "require": "./dist/rule-builders/no-coerce-boolean.cjs"
-    },
-    "./rule-builders/no-empty-custom-schema": {
-      "@eslint-zod/source": "./src/rule-builders/no-empty-custom-schema.ts",
-      "import": "./dist/rule-builders/no-empty-custom-schema.mjs",
-      "require": "./dist/rule-builders/no-empty-custom-schema.cjs"
-    },
-    "./rule-builders/no-throw-in-refine": {
-      "@eslint-zod/source": "./src/rule-builders/no-throw-in-refine.ts",
-      "import": "./dist/rule-builders/no-throw-in-refine.mjs",
-      "require": "./dist/rule-builders/no-throw-in-refine.cjs"
-    },
-    "./rule-builders/no-transform-in-record-key": {
-      "@eslint-zod/source": "./src/rule-builders/no-transform-in-record-key.ts",
-      "import": "./dist/rule-builders/no-transform-in-record-key.mjs",
-      "require": "./dist/rule-builders/no-transform-in-record-key.cjs"
-    },
-    "./rule-builders/no-unknown-schema": {
-      "@eslint-zod/source": "./src/rule-builders/no-unknown-schema.ts",
-      "import": "./dist/rule-builders/no-unknown-schema.mjs",
-      "require": "./dist/rule-builders/no-unknown-schema.cjs"
-    },
-    "./rule-builders/no-unnecessary-readonly": {
-      "@eslint-zod/source": "./src/rule-builders/no-unnecessary-readonly.ts",
-      "import": "./dist/rule-builders/no-unnecessary-readonly.mjs",
-      "require": "./dist/rule-builders/no-unnecessary-readonly.cjs"
-    },
-    "./rule-builders/prefer-enum-over-literal-union": {
-      "@eslint-zod/source": "./src/rule-builders/prefer-enum-over-literal-union.ts",
-      "import": "./dist/rule-builders/prefer-enum-over-literal-union.mjs",
-      "require": "./dist/rule-builders/prefer-enum-over-literal-union.cjs"
-    },
-    "./rule-builders/prefer-nullish": {
-      "@eslint-zod/source": "./src/rule-builders/prefer-nullish.ts",
-      "import": "./dist/rule-builders/prefer-nullish.mjs",
-      "require": "./dist/rule-builders/prefer-nullish.cjs"
-    },
-    "./rule-builders/prefer-tuple-over-array-length": {
-      "@eslint-zod/source": "./src/rule-builders/prefer-tuple-over-array-length.ts",
-      "import": "./dist/rule-builders/prefer-tuple-over-array-length.mjs",
-      "require": "./dist/rule-builders/prefer-tuple-over-array-length.cjs"
-    },
-    "./rule-builders/require-brand-type-parameter": {
-      "@eslint-zod/source": "./src/rule-builders/require-brand-type-parameter.ts",
-      "import": "./dist/rule-builders/require-brand-type-parameter.mjs",
-      "require": "./dist/rule-builders/require-brand-type-parameter.cjs"
-    },
-    "./rule-builders/require-error-message": {
-      "@eslint-zod/source": "./src/rule-builders/require-error-message.ts",
-      "import": "./dist/rule-builders/require-error-message.mjs",
-      "require": "./dist/rule-builders/require-error-message.cjs"
-    },
-    "./rule-builders/schema-error-property-style": {
-      "@eslint-zod/source": "./src/rule-builders/schema-error-property-style.ts",
-      "import": "./dist/rule-builders/schema-error-property-style.mjs",
-      "require": "./dist/rule-builders/schema-error-property-style.cjs"
+    "./rule-patterns/*": {
+      "@eslint-zod/source": "./src/rule-patterns/*.ts",
+      "import": {
+        "types": "./dist/rule-patterns/*.d.mts",
+        "default": "./dist/rule-patterns/*.mjs"
+      },
+      "require": {
+        "types": "./dist/rule-patterns/*.d.cts",
+        "default": "./dist/rule-patterns/*.cjs"
+      }
     },
     "./package.json": "./package.json"
   },

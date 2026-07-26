@@ -2,7 +2,6 @@ import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 import esquery from 'esquery';
 
-import { createZodSchemaImportTrack } from '../track-zod-schema-imports.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
 interface Options {
@@ -18,11 +17,9 @@ export function buildSchemaErrorPropertyStyleCreate(
   context: Readonly<TSESLint.RuleContext<MessageIds, [Options]>>,
   options: readonly [Options],
 ) => TSESLint.RuleListener {
-  const { trackZodSchemaImports } = createZodSchemaImportTrack(scope);
-
   return function create(context, [{ selector, example }]) {
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+      scope.createTracker();
 
     let parsedSelector: ReturnType<typeof esquery.parse>;
 

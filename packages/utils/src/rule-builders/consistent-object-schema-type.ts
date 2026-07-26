@@ -1,7 +1,6 @@
 import type { TSESLint } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-import { createZodSchemaImportTrack } from '../track-zod-schema-imports.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
 const ZOD_OBJECT_METHODS = ['object', 'looseObject', 'strictObject'] as const;
@@ -20,10 +19,8 @@ export function buildConsistentObjectSchemaTypeCreate(
   context: Readonly<TSESLint.RuleContext<MessageIds, [Options]>>,
   options: readonly [Options],
 ) => TSESLint.RuleListener {
-  const { trackZodSchemaImports } = createZodSchemaImportTrack(scope);
-
   return function create(context, [{ allow: allowedList }]) {
-    const { importDeclarationListener, detectZodSchemaRootNode } = trackZodSchemaImports();
+    const { importDeclarationListener, detectZodSchemaRootNode } = scope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

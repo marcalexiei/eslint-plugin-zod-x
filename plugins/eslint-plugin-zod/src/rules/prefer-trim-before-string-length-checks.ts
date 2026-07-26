@@ -1,13 +1,7 @@
-import {
-  createZodSchemaImportTrack,
-  findParentSchemaMatchingCondition,
-  zodImportScope,
-} from '@eslint-zod/utils';
+import { findParentSchemaMatchingCondition, zodImportScope } from '@eslint-zod/utils';
 import type { TSESTree } from '@typescript-eslint/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
-
-const { trackZodSchemaImports } = createZodSchemaImportTrack(zodImportScope);
 
 const LENGTH_CHECK_METHODS = ['min', 'max', 'length'];
 
@@ -29,7 +23,7 @@ export const preferTrimBeforeStringLengthChecks = createZodPluginRule({
   defaultOptions: [],
   create(context) {
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+      zodImportScope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

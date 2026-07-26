@@ -1,8 +1,6 @@
-import { createZodSchemaImportTrack, zodImportScope } from '@eslint-zod/utils';
+import { zodImportScope } from '@eslint-zod/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
-
-const { trackZodSchemaImports } = createZodSchemaImportTrack(zodImportScope);
 
 export const noPromiseSchema = createZodPluginRule({
   name: 'no-promise-schema',
@@ -19,7 +17,7 @@ export const noPromiseSchema = createZodPluginRule({
   },
   defaultOptions: [],
   create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode } = trackZodSchemaImports();
+    const { importDeclarationListener, detectZodSchemaRootNode } = zodImportScope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

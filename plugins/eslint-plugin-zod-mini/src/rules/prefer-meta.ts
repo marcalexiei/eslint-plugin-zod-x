@@ -1,9 +1,7 @@
-import { createZodSchemaImportTrack, zodMiniImportScope } from '@eslint-zod/utils';
+import { zodMiniImportScope } from '@eslint-zod/utils';
 import type { TSESTree } from '@typescript-eslint/utils';
 
 import { createZodMiniPluginRule } from '../utils/create-plugin-rule.js';
-
-const { trackZodSchemaImports } = createZodSchemaImportTrack(zodMiniImportScope);
 
 export const preferMeta = createZodMiniPluginRule({
   name: 'prefer-meta',
@@ -21,7 +19,8 @@ export const preferMeta = createZodMiniPluginRule({
   },
   defaultOptions: [],
   create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode } = trackZodSchemaImports();
+    const { importDeclarationListener, detectZodSchemaRootNode } =
+      zodMiniImportScope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

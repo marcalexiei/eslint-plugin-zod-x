@@ -1,7 +1,8 @@
 import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-interface DetectData {
+/** What {@link detectZodSchemaRootNode} learned about a zod call chain. */
+export interface DetectData {
   /**
    * How the schema is declared:
    * - `namespace` -> `z.string()`
@@ -12,7 +13,11 @@ interface DetectData {
   /** the "factory" for the outer expression */
   schemaType: string;
 
-  /** full chain in call order, e.g. ["number", "int", "min"] */
+  /**
+   * Full chain in call order, e.g. `["number", "int", "min"]`. Names only, and
+   * includes computed members (`z['uuid']()`) — use `collectZodChainMethods`
+   * when the nodes are needed.
+   */
   methods: Array<string>;
 
   /** the outer call expression analyzed */
@@ -69,12 +74,7 @@ function parseZodCallExpression(
   call: TSESTree.CallExpression,
   zodNamespaces: Set<string>,
   zodNamedImports: Map<string, string>,
-): {
-  schemaDecl: 'namespace' | 'named';
-  schemaType: string;
-  methods: Array<string>;
-  node: TSESTree.CallExpression;
-} | null {
+): DetectResult {
   let cur: TSESTree.Node = call.callee;
 
   // Collect names in right-to-left order, then reverse at the end

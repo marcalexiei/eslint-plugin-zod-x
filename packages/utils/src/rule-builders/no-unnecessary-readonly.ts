@@ -3,7 +3,6 @@ import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { buildZodConstraintsRemoveFix } from '../build-zod-constraints-remove-fix.js';
 import { buildZodWrapperUnwrapFix } from '../build-zod-wrapper-unwrap-fix.js';
-import { createZodSchemaImportTrack } from '../track-zod-schema-imports.js';
 import { ZOD_IMMUTABLE_SCHEMA_TYPES } from '../zod-immutable-schema-types.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
@@ -48,15 +47,13 @@ type ChainItems = Array<{ name: string; node: TSESTree.CallExpression }>;
 export function buildNoUnnecessaryReadonlyCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
-  const { trackZodSchemaImports } = createZodSchemaImportTrack(scope);
-
   return function create(context) {
     const {
       importDeclarationListener,
       detectZodSchemaRootNode,
       collectZodChainMethods,
       collectZodSchemaConstraints,
-    } = trackZodSchemaImports();
+    } = scope.createTracker();
 
     /** Immutability of the schema produced by `chain[0..endIndex)`. */
     function classifyChain(schemaType: string, chain: ChainItems, endIndex: number): Immutability {

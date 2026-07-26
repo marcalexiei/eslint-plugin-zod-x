@@ -43,6 +43,14 @@ Import source: `'zod'` → `'zod/mini'` (core: `'zod/v4/core'`). Namespace impor
 | `z.string().describe('d')`                                | `z.string().check(z.describe('d'))`                                        |
 | `z.string().meta({...})`                                  | `z.string().check(z.meta({...}))`                                          |
 
+**String formats** — the deprecated chained spellings do not exist in zod/mini; use the top-level factory:
+
+| zod (deprecated)        | zod (preferred) / zod-mini |
+| ----------------------- | -------------------------- |
+| `z.string().email()`    | `z.email()`                |
+| `z.string().uuid()`     | `z.uuid()`                 |
+| `z.string().datetime()` | `z.iso.datetime()`         |
+
 There is **no** `z.min`/`z.max` in zod/mini — the check name depends on the schema type (`minLength` strings & arrays, `gte`/`lte` numbers, `minSize` sets & maps).
 
 **Unchanged (chained in both):** `.check()`, `.brand()`, `.parse()`, `.safeParse()`, `.parseAsync()`, `.safeParseAsync()`; also schema factories (`z.object`, `z.array`, `z.enum`, `z.tuple`, …) and `z.pipe`/`z.transform` composition via factories.
@@ -52,7 +60,8 @@ There is **no** `z.min`/`z.max` in zod/mini — the check name depends on the sc
 - **Never mix styles** in any example, spec, doc, or changeset: chained validation methods are `zod`-only; standalone checks inside `.check(...)` are `zod/mini`-only. `z.string().check(z.minLength(1))` under a `'zod'` import is invalid, as is `z.string().min(1)` under `'zod/mini'`.
 - One known asymmetry: `prefer-meta` detection in mini uses `isZodNamespace`/`getNamedImportOriginal` directly because `z.describe()` is not a chain method.
 - Rule _names, message ids, and option shapes_ stay identical across plugins; only spellings inside human-readable text and code examples differ.
-- Chained-name semantics differ by schema type (`.min()` = `gte` on numbers but `minLength` on strings) — when a rule maps constraint names, keep its per-plugin vocabulary table in the rule builder (see `prefer-tuple-over-array-length`).
+- Chained-name semantics differ by schema type (`.min()` = `gte` on numbers but `minLength` on strings). Do **not** write a per-rule spelling table: call `canonicalizeZodConstraintName(constraint, baseType)` from `@eslint-zod/utils`, which reduces both API styles to one canonical name. Add missing spellings to `packages/utils/src/zod-check-vocabulary.ts` so every rule gains them at once.
+- Deprecated chained string formats canonicalize to their top-level factory (`z.string().datetime()` → `iso.datetime`, `.guid()` → `guid`) via `ZOD_STRING_FORMAT_METHODS`. These are `zod`-only spellings — zod/mini uses the top-level factory directly — so a shared rule sees them only through canonicalization.
 
 ## Final check
 

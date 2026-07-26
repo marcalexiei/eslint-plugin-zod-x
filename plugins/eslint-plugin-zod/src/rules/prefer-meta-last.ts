@@ -1,9 +1,7 @@
-import { createZodSchemaImportTrack, zodImportScope } from '@eslint-zod/utils';
+import { zodImportScope } from '@eslint-zod/utils';
 import type { TSESTree } from '@typescript-eslint/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
-
-const { trackZodSchemaImports } = createZodSchemaImportTrack(zodImportScope);
 
 export const preferMetaLast = createZodPluginRule({
   name: 'prefer-meta-last',
@@ -21,7 +19,7 @@ export const preferMetaLast = createZodPluginRule({
   defaultOptions: [],
   create(context) {
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+      zodImportScope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

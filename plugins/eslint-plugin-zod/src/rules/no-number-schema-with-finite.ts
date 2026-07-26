@@ -1,12 +1,6 @@
-import {
-  buildZodChainRemoveMethodFix,
-  createZodSchemaImportTrack,
-  zodImportScope,
-} from '@eslint-zod/utils';
+import { buildZodChainRemoveMethodFix, zodImportScope } from '@eslint-zod/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
-
-const { trackZodSchemaImports } = createZodSchemaImportTrack(zodImportScope);
 
 export const noNumberSchemaWithFinite = createZodPluginRule({
   name: 'no-number-schema-with-finite',
@@ -27,7 +21,7 @@ export const noNumberSchemaWithFinite = createZodPluginRule({
 
   create(context) {
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+      zodImportScope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

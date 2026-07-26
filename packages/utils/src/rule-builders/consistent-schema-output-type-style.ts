@@ -1,7 +1,6 @@
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-import { createZodSchemaImportTrack } from '../track-zod-schema-imports.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
 type SchemaTypeStyle = 'infer' | 'output';
@@ -18,15 +17,13 @@ export function buildConsistentSchemaOutputTypeStyleCreate(
   context: Readonly<TSESLint.RuleContext<MessageIds, [Options]>>,
   options: readonly [Options],
 ) => TSESLint.RuleListener {
-  const { trackZodSchemaImports } = createZodSchemaImportTrack(scope);
-
   return function create(context, [{ style }]) {
     const {
       importDeclarationListener,
       isZodNamespace,
       getNamedImportOriginal,
       getNamedImportLocal,
-    } = trackZodSchemaImports();
+    } = scope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,
