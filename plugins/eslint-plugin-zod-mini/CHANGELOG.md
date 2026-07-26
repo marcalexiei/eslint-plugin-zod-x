@@ -1,5 +1,18 @@
 # eslint-plugin-zod-mini
 
+## 1.6.0
+
+### Minor Changes
+
+- [#374](https://github.com/marcalexiei/eslint-zod/pull/374) [`6bbcdf0`](https://github.com/marcalexiei/eslint-zod/commit/6bbcdf06cb37a151e36af25146297c24897846d0) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `prefer-nullish` rule
+
+  Flags nesting `z.optional()` and `z.nullable()` (in either order) when the outer wrapper's single argument is directly the other bare wrapper, and autofixes it to `z.nullish()`. Enabled in `recommended`.
+
+### Patch Changes
+
+- Updated dependencies [[`6bbcdf0`](https://github.com/marcalexiei/eslint-zod/commit/6bbcdf06cb37a151e36af25146297c24897846d0)]:
+  - @eslint-zod/utils@2.5.0
+
 ## 1.5.0
 
 ### Minor Changes
