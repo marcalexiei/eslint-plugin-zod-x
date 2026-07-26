@@ -98,6 +98,13 @@ ruleTester.run(noOptionalAndDefaultTogether.name, noOptionalAndDefaultTogether, 
           something.string().optional().default("Test")
         `,
     },
+    {
+      name: 'computed factory access yields no walkable chain',
+      code: dedent`
+          import * as z from 'zod';
+          z['string']();
+        `,
+    },
   ],
   invalid: [
     {

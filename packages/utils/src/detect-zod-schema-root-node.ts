@@ -24,12 +24,7 @@ export type DetectResult = DetectData | null;
 /**
  * Helper: extract static property names (Identifier | Literal | simple template literal)
  */
-function getPropertyName(
-  prop: TSESTree.Expression | TSESTree.PrivateIdentifier | undefined,
-): string | null {
-  if (!prop) {
-    return null;
-  }
+function getPropertyName(prop: TSESTree.Expression | TSESTree.PrivateIdentifier): string | null {
   if (prop.type === AST_NODE_TYPES.Identifier) {
     return prop.name;
   }
@@ -84,8 +79,8 @@ function parseZodCallExpression(
 
   // Collect names in right-to-left order, then reverse at the end
   const methodsRightToLeft: Array<string> = [];
-  // eslint-disable-next-line no-useless-assignment
-  let leftmostIdentifier: string | null = null;
+  // Assigned by the only `break` in the loop below; every other exit returns.
+  let leftmostIdentifier: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   while (true) {
@@ -116,10 +111,6 @@ function parseZodCallExpression(
 
   const methods = methodsRightToLeft.slice().reverse(); // left -> right order
 
-  if (!leftmostIdentifier) {
-    return null;
-  }
-
   // Namespace style: z.number().int()
   if (zodNamespaces.has(leftmostIdentifier)) {
     // the factory for namespace style is typically the first method
@@ -136,9 +127,10 @@ function parseZodCallExpression(
   }
 
   // Named import style: number().int() or array(...)
-  if (zodNamedImports.has(leftmostIdentifier)) {
-    // prettier-ignore
-    const factory = zodNamedImports.get(leftmostIdentifier) ?? leftmostIdentifier;
+  // A single lookup: the map value is the original zod export name, so an
+  // aliased import (`import { nativeEnum as e }`) resolves to `nativeEnum`.
+  const factory = zodNamedImports.get(leftmostIdentifier);
+  if (factory !== undefined) {
     return {
       schemaDecl: 'named',
       schemaType: factory,

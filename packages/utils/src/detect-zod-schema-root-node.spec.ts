@@ -25,6 +25,36 @@ function makeME(object: TSESTree.Expression, propertyName: string): TSESTree.Mem
   } as unknown as TSESTree.MemberExpression;
 }
 
+function makeComputedME(
+  object: TSESTree.Expression,
+  property: TSESTree.Expression,
+): TSESTree.MemberExpression {
+  return {
+    type: AST_NODE_TYPES.MemberExpression,
+    object,
+    property,
+    computed: true,
+  } as unknown as TSESTree.MemberExpression;
+}
+
+function makeLiteral(value: string | null): TSESTree.Literal {
+  return {
+    type: AST_NODE_TYPES.Literal,
+    value,
+  } as unknown as TSESTree.Literal;
+}
+
+function makeTemplateLiteral(
+  cooked: string,
+  expressions: Array<TSESTree.Expression> = [],
+): TSESTree.TemplateLiteral {
+  return {
+    type: AST_NODE_TYPES.TemplateLiteral,
+    expressions,
+    quasis: [{ type: AST_NODE_TYPES.TemplateElement, value: { cooked, raw: cooked } }],
+  } as unknown as TSESTree.TemplateLiteral;
+}
+
 function makeCall(
   callee: TSESTree.Expression,
   args: Array<TSESTree.Expression> = [],
@@ -135,6 +165,78 @@ describe('detectZodSchemaRootNode', () => {
     expect(result?.schemaDecl).toBe('named');
     expect(result?.schemaType).toBe('nativeEnum');
     expect(result?.methods).toStrictEqual([]);
+  });
+
+  it('returns null when the call is the callee of another call: z.custom()()', () => {
+    const customCall = makeCall(makeME(makeIdent('z'), 'custom'));
+    const outerCall = makeCall(customCall);
+    (customCall as unknown as Record<string, unknown>).parent = outerCall;
+
+    expect(detectZodSchemaRootNode(customCall, zodNamespaces, zodNamedImports)).toBeNull();
+  });
+
+  describe('computed property access', () => {
+    it("resolves a string literal property: z['string']()", () => {
+      const call = makeCall(makeComputedME(makeIdent('z'), makeLiteral('string')));
+      setOutermostParent(call);
+
+      const result = detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports);
+
+      expect(result?.schemaDecl).toBe('namespace');
+      expect(result?.schemaType).toBe('string');
+    });
+
+    it('resolves a simple template literal property: z[`string`]()', () => {
+      const call = makeCall(makeComputedME(makeIdent('z'), makeTemplateLiteral('string')));
+      setOutermostParent(call);
+
+      const result = detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports);
+
+      expect(result?.schemaDecl).toBe('namespace');
+      expect(result?.schemaType).toBe('string');
+    });
+
+    it('returns null for a template literal with interpolations', () => {
+      const call = makeCall(
+        makeComputedME(makeIdent('z'), makeTemplateLiteral('str', [makeIdent('x')])),
+      );
+      setOutermostParent(call);
+
+      expect(detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports)).toBeNull();
+    });
+
+    it('returns null for a null literal property: z[null]()', () => {
+      const call = makeCall(makeComputedME(makeIdent('z'), makeLiteral(null)));
+      setOutermostParent(call);
+
+      expect(detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports)).toBeNull();
+    });
+
+    it('returns null for a non-static property: z[a + b]()', () => {
+      const binary = {
+        type: AST_NODE_TYPES.BinaryExpression,
+        operator: '+',
+        left: makeIdent('a'),
+        right: makeIdent('b'),
+      } as unknown as TSESTree.Expression;
+      const call = makeCall(makeComputedME(makeIdent('z'), binary));
+      setOutermostParent(call);
+
+      expect(detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports)).toBeNull();
+    });
+
+    it('returns null when the leftmost node is not an identifier: (a + b).string()', () => {
+      const binary = {
+        type: AST_NODE_TYPES.BinaryExpression,
+        operator: '+',
+        left: makeIdent('a'),
+        right: makeIdent('b'),
+      } as unknown as TSESTree.Expression;
+      const call = makeCall(makeME(binary, 'string'));
+      setOutermostParent(call);
+
+      expect(detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports)).toBeNull();
+    });
   });
 });
 

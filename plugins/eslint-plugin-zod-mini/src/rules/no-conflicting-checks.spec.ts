@@ -102,6 +102,66 @@ ruleTester.run(noConflictingChecks.name, noConflictingChecks, {
       `,
       options: [{ checkInapplicableChecks: false }],
     },
+    {
+      name: 'a pointless literal check is silenced by `checkConfusingCases: false`',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal('foo').check(z.minLength(2));
+      `,
+      options: [{ checkConfusingCases: false }],
+    },
+    {
+      name: 'literal argument that is not a primitive is not analyzed',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal(null).check(z.minLength(2));
+      `,
+    },
+    {
+      name: 'literal built from a reference is not analyzed',
+      code: dedent`
+        import * as z from 'zod/mini';
+        declare const value: 'foo';
+        z.literal(value).check(z.minLength(2));
+      `,
+    },
+    {
+      name: 'literal against a bound with a non-literal argument is not analyzed',
+      code: dedent`
+        import * as z from 'zod/mini';
+        declare const min: number;
+        z.literal(5).check(z.gt(min));
+      `,
+    },
+    {
+      name: 'literal against a format check is not evaluated',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal('foo@example.com').check(z.email());
+      `,
+    },
+    {
+      name: 'literal against a multipleOf of a different numeric type is not evaluated',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal(10).check(z.multipleOf(3n));
+      `,
+    },
+    {
+      name: 'multipleOf values of different numeric types are not compared',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.number().check(z.multipleOf(2), z.multipleOf(3n));
+      `,
+    },
+    {
+      name: 'a bare `iso` call has no member name to identify the format',
+      code: dedent`
+        import * as z from 'zod/mini';
+        import { iso } from 'zod/mini';
+        z.string().check(iso());
+      `,
+    },
   ],
   invalid: [
     {
@@ -371,6 +431,142 @@ ruleTester.run(noConflictingChecks.name, noConflictingChecks, {
         { messageId: 'impossibleCase' },
         { messageId: 'inapplicableCheck' },
       ],
+    },
+    {
+      name: 'exact length matching the literal is pointless',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal('foo').check(z.length(3));
+      `,
+      errors: [{ messageId: 'pointlessCheck' }],
+    },
+    {
+      name: 'exact length contradicting the literal is impossible',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal('foo').check(z.length(5));
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
+      name: 'lowercase check on an already lowercase literal is pointless',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal('foo').check(z.lowercase());
+      `,
+      errors: [{ messageId: 'pointlessCheck' }],
+    },
+    {
+      name: 'uppercase check on a lowercase literal is impossible',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal('foo').check(z.uppercase());
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
+      name: 'multipleOf satisfied by a number literal is pointless',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal(10).check(z.multipleOf(5));
+      `,
+      errors: [{ messageId: 'pointlessCheck' }],
+    },
+    {
+      name: 'multipleOf satisfied by a bigint literal is pointless',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal(10n).check(z.multipleOf(5n));
+      `,
+      errors: [{ messageId: 'pointlessCheck' }],
+    },
+    {
+      name: 'int check on an integer literal is pointless',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal(5).check(z.int());
+      `,
+      errors: [{ messageId: 'pointlessCheck' }],
+    },
+    {
+      name: 'int check on a fractional literal is impossible',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal(5.5).check(z.int());
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
+      name: 'bigint literal outside a bound',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal(10n).check(z.gt(20n));
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
+      name: 'length check on a boolean literal does not apply',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal(true).check(z.minLength(2));
+      `,
+      errors: [{ messageId: 'inapplicableCheck' }],
+    },
+    {
+      name: 'exact length conflicting with a minimum',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.string().check(z.length(3), z.minLength(5));
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
+      name: 'exact length conflicting with a maximum',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.string().check(z.length(3), z.maxLength(2));
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
+      name: 'repeated equal exact lengths are redundant',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.string().check(z.length(3), z.length(3));
+      `,
+      errors: [{ messageId: 'redundantCheck' }],
+    },
+    {
+      name: 'uppercase before lowercase is still reported',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.string().check(z.uppercase(), z.lowercase());
+      `,
+      errors: [{ messageId: 'confusingCombination' }],
+    },
+    {
+      name: 'minimum length above the maximum a format allows',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.uuid().check(z.minLength(40));
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
+      name: 'inclusive lower bound equal to the literal is pointless',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal(5).check(z.gte(5));
+      `,
+      errors: [{ messageId: 'pointlessCheck' }],
+    },
+    {
+      name: 'inclusive upper bound equal to the literal is pointless',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.literal(5).check(z.lte(5));
+      `,
+      errors: [{ messageId: 'pointlessCheck' }],
     },
   ],
 });

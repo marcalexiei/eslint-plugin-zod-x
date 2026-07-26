@@ -28,6 +28,13 @@ ruleTester.run(noNumberSchemaWithStep.name, noNumberSchemaWithStep, {
         z.number().multipleOf(2);
       `,
     },
+    {
+      name: 'number factory aliased to `step` — the call is the schema, not a `.step()` method',
+      code: dedent`
+        import { number as step } from 'zod';
+        step();
+      `,
+    },
   ],
   invalid: [
     {

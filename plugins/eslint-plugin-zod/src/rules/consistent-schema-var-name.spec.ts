@@ -189,6 +189,13 @@ ruleTester.run(consistentSchemaVarName.name, consistentSchemaVarName, {
       `,
       options: [{ before: '$', after: 'Schema' }],
     },
+    {
+      name: 'destructured declaration has no single name to check',
+      code: dedent`
+        import * as z from 'zod';
+        const { shape } = z.object({ a: z.string() });
+      `,
+    },
   ],
 
   invalid: [

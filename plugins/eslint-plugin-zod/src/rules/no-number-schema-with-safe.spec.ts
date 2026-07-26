@@ -28,6 +28,13 @@ ruleTester.run(noNumberSchemaWithSafe.name, noNumberSchemaWithSafe, {
         z.int();
       `,
     },
+    {
+      name: 'number schema without `.safe()`',
+      code: dedent`
+        import * as z from 'zod';
+        z.number().min(0);
+      `,
+    },
   ],
   invalid: [
     {

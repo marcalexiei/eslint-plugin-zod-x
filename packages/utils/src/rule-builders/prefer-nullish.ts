@@ -45,21 +45,16 @@ export function buildPreferNullishCreate(
       wrapperCall: TSESTree.CallExpression,
       schemaDecl: 'namespace' | 'named',
     ): TSESLint.RuleFix | null {
+      // `wrapperCall` is the leftmost item of a walked chain, so its callee is
+      // `<ns>.<factory>` for a namespace schema and a bare identifier for a
+      // named one — `collectZodChainMethods` cannot produce any other shape.
       const { callee } = wrapperCall;
 
       if (schemaDecl === 'namespace') {
-        if (
-          callee.type !== AST_NODE_TYPES.MemberExpression ||
-          callee.property.type !== AST_NODE_TYPES.Identifier
-        ) {
-          return null;
-        }
-        return fixer.replaceText(callee.property, 'nullish');
+        const { property } = callee as TSESTree.MemberExpression;
+        return fixer.replaceText(property, 'nullish');
       }
 
-      if (callee.type !== AST_NODE_TYPES.Identifier) {
-        return null;
-      }
       const nullishLocalName = getNamedImportLocal('nullish');
       if (!nullishLocalName) {
         return null;

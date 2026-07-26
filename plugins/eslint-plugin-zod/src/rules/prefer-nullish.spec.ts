@@ -116,5 +116,14 @@ ruleTester.run(preferNullish.name, preferNullish, {
         string().nullish();
       `,
     },
+    {
+      name: 'factory aliased to `optional` — reported, but the pair cannot be merged',
+      code: dedent`
+        import { string as optional } from 'zod';
+        optional().nullable();
+      `,
+      errors: [{ messageId: 'preferNullish' }],
+      output: null,
+    },
   ],
 });

@@ -35,12 +35,14 @@ export function buildNoAnySchemaCreate(
         }
 
         if (callee.type === AST_NODE_TYPES.MemberExpression) {
-          const [{ node: schemaMethod }] = collectZodChainMethods(node);
-
-          const schemaMethodCallee = schemaMethod.callee;
+          // The chain is empty when the factory is not a plain member access
+          // (e.g. `z['any']()`), and its callee is a bare identifier for a
+          // named import (`any().optional()`). Neither can be renamed, so both
+          // fall through to the plain report below.
+          const schemaMethodCallee = collectZodChainMethods(node).at(0)?.node.callee;
 
           if (
-            schemaMethodCallee.type === AST_NODE_TYPES.MemberExpression &&
+            schemaMethodCallee?.type === AST_NODE_TYPES.MemberExpression &&
             schemaMethodCallee.property.type === AST_NODE_TYPES.Identifier
           ) {
             context.report({

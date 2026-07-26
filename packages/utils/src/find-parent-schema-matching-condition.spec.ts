@@ -99,30 +99,64 @@ describe('findParentSchemaMatchingCondition', () => {
     expect(condition).toHaveBeenCalledWith(recordCall);
   });
 
-  it('traverses through MemberExpression parents to find the matching call', () => {
-    // Simulates: z.record(z.string().optional()) where we check z.string()
-    // z.string().optional() is an argument to z.record()
-    // z.string() is the object of the .optional MemberExpression
+  it('finds the matching call when the start node is already its direct argument', () => {
+    // z.record(z.string().optional()) starting from the outermost `.optional()`
+    // call, which is the argument of z.record() — no chain to walk up.
     const stringCall = makeCall(makeME(makeIdent('z'), 'string'));
     const optME = makeME(stringCall, 'optional');
     const optCall = makeCall(optME);
     const recordCall = makeCall(makeME(makeIdent('z'), 'record'), [optCall]);
 
-    // stringCall.parent = optME (it's the object of .optional)
     setParent(stringCall, optME);
-    // optCall.parent = recordCall
     setParent(optCall, recordCall);
 
-    // The function traverses up from stringCall:
-    // 1. parent = optME (MemberExpression) → current = optME, continue
-    // 2. parent of optME is not set → loop ends
-    // So this particular traversal won't find record. The function would need
-    // to be called on optCall (the outermost) instead.
     expect(
       findParentSchemaMatchingCondition(optCall, {
         schemaName: 'record',
         condition: () => true,
       }),
     ).toBe(true);
+  });
+
+  it('traverses through MemberExpression parents to find the matching call', () => {
+    // Same tree as above, but starting from the inner `z.string()` call, whose
+    // parent is the `.optional` MemberExpression rather than a call. The walker
+    // must step through the member expression to reach z.record().
+    const stringCall = makeCall(makeME(makeIdent('z'), 'string'));
+    const optME = makeME(stringCall, 'optional');
+    const optCall = makeCall(optME);
+    const recordCall = makeCall(makeME(makeIdent('z'), 'record'), [optCall]);
+
+    setParent(stringCall, optME);
+    setParent(optME, optCall);
+    setParent(optCall, recordCall);
+
+    expect(
+      findParentSchemaMatchingCondition(stringCall, {
+        schemaName: 'record',
+        condition: () => true,
+      }),
+    ).toBe(true);
+  });
+
+  it('ignores an ancestor call whose method name is not a plain identifier', () => {
+    // z['record'](z.string()) — the computed property is not an Identifier, so
+    // the ancestor cannot be matched by name.
+    const stringCall = makeCall(makeME(makeIdent('z'), 'string'));
+    const computedRecordME = {
+      type: AST_NODE_TYPES.MemberExpression,
+      object: makeIdent('z'),
+      property: { type: AST_NODE_TYPES.Literal, value: 'record' },
+      computed: true,
+    } as unknown as TSESTree.MemberExpression;
+    const recordCall = makeCall(computedRecordME, [stringCall]);
+    setParent(stringCall, recordCall);
+
+    expect(
+      findParentSchemaMatchingCondition(stringCall, {
+        schemaName: 'record',
+        condition: () => true,
+      }),
+    ).toBe(false);
   });
 });

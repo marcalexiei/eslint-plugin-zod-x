@@ -42,6 +42,27 @@ ruleTester.run(schemaErrorPropertyStyle.name, schemaErrorPropertyStyle, {
         z.custom(() => true, \`asd\`);
       `,
     },
+    {
+      name: 'default with string literal',
+      code: dedent`
+        import * as z from 'zod';
+        z.custom(() => true, 'asd');
+      `,
+    },
+    {
+      name: 'no params argument',
+      code: dedent`
+        import * as z from 'zod';
+        z.custom(() => true);
+      `,
+    },
+    {
+      name: 'params object without an `error` property',
+      code: dedent`
+        import * as z from 'zod';
+        z.custom(() => true, { abort: true });
+      `,
+    },
   ],
   invalid: [
     {

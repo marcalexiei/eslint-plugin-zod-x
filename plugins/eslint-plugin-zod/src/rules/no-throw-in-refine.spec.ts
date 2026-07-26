@@ -28,6 +28,30 @@ ruleTester.run(noThrowInRefine.name, noThrowInRefine, {
       name: 'refine not starting with `z`',
       code: 'anotherLibrary.number().min(0).refine((val) => { throw Error("boom") });',
     },
+    {
+      name: 'nested function declaration not reported',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine((val) => {
+          function nested() { throw new Error("nested"); }
+          return val.length > 0;
+        });
+      `,
+    },
+    {
+      name: 'returned arrow function not reported',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine((val) => () => { throw new Error("nested"); });
+      `,
+    },
+    {
+      name: 'returned function expression not reported',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine((val) => function () { throw new Error("nested"); });
+      `,
+    },
   ],
   invalid: [
     {
@@ -90,6 +114,60 @@ ruleTester.run(noThrowInRefine.name, noThrowInRefine, {
         }).array();
       `,
       errors: [{ messageId: 'noThrowInRefine' }],
+    },
+    {
+      name: 'inside a function-expression callback',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine(function (val) {
+          throw new Error('Invalid');
+        });
+      `,
+      errors: [{ messageId: 'noThrowInRefine' }],
+    },
+    {
+      name: 'inside a classic for loop',
+      code: dedent`
+        import * as z from 'zod';
+        z.number().refine((val) => {
+          for (let i = 0; i < val; i += 1) {
+            throw new Error('Invalid')
+          }
+        });
+      `,
+      errors: [{ messageId: 'noThrowInRefine' }],
+    },
+    {
+      name: 'inside a for-in loop',
+      code: dedent`
+        import * as z from 'zod';
+        z.object({}).refine((val) => {
+          for (const key in val) {
+            throw new Error('Invalid')
+          }
+        });
+      `,
+      errors: [{ messageId: 'noThrowInRefine' }],
+    },
+    {
+      name: 'inside every branch of a try statement',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine((val) => {
+          try {
+            throw new Error('try');
+          } catch {
+            throw new Error('catch');
+          } finally {
+            throw new Error('finally');
+          }
+        });
+      `,
+      errors: [
+        { messageId: 'noThrowInRefine' },
+        { messageId: 'noThrowInRefine' },
+        { messageId: 'noThrowInRefine' },
+      ],
     },
   ],
 });

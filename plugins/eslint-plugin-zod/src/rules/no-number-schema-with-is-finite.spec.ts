@@ -28,6 +28,40 @@ ruleTester.run(noNumberSchemaWithIsFinite.name, noNumberSchemaWithIsFinite, {
         const n = z.number();
       `,
     },
+    {
+      name: 'computed access with an `isFinite` variable is not the deprecated property',
+      code: dedent`
+        import * as z from 'zod';
+        declare const isFinite: string;
+        void z.number()[isFinite];
+      `,
+    },
+    {
+      name: 'private field named `isFinite`',
+      code: dedent`
+        class Counter {
+          #isFinite = true;
+          read() {
+            return this.#isFinite;
+          }
+        }
+      `,
+    },
+    {
+      name: '`isFinite` on a plain object',
+      code: dedent`
+        import * as z from 'zod';
+        const o = { isFinite: true };
+        void o.isFinite;
+      `,
+    },
+    {
+      name: '`isFinite` on a non-number zod schema',
+      code: dedent`
+        import * as z from 'zod';
+        void z.string().isFinite;
+      `,
+    },
   ],
   invalid: [
     {

@@ -19,6 +19,7 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "release": "pnpm run build && changeset publish",
     "check-all": "pnpm run format && pnpm run build && pnpm run lint && pnpm run test && pnpm run typecheck"
   },
@@ -28,6 +29,7 @@
     "@marcalexiei/eslint-config": "7.0.0",
     "@marcalexiei/prettier-config": "catalog:dev",
     "@types/node": "24.13.2",
+    "@vitest/coverage-v8": "catalog:dev",
     "@vitest/eslint-plugin": "1.6.20",
     "eslint": "10.6.0",
     "eslint-import-resolver-typescript": "4.4.5",
