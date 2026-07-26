@@ -23,6 +23,7 @@ export const noNumberSchemaWithIsInt = createZodPluginRule({
   defaultOptions: [],
   create: buildDeprecatedSchemaPropertyCreate({
     scope: zodImportScope,
+    schemaType: 'number',
     propertyName: 'isInt',
     messageId: 'useFormat',
   }),

@@ -73,8 +73,8 @@ export function buildPreferTupleOverArrayLengthCreate(
           return;
         }
 
-        const methods = collectZodChainMethods(zodSchemaMeta.node);
-        const constraints = collectZodSchemaConstraints(zodSchemaMeta.node);
+        const methods = collectZodChainMethods(node);
+        const constraints = collectZodSchemaConstraints(node);
 
         const candidates: Array<LengthCandidate> = [];
         for (const constraint of constraints) {

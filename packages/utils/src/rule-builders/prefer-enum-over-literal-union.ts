@@ -19,7 +19,7 @@ export function buildPreferEnumOverLiteralUnionCreate(
           return;
         }
 
-        const methods = collectZodChainMethods(zodSchemaMeta.node);
+        const methods = collectZodChainMethods(node);
         const union = methods.find((it) => it.name === 'union');
 
         if (!union) {
@@ -38,12 +38,16 @@ export function buildPreferEnumOverLiteralUnionCreate(
             return null;
           }
 
+          if (s.type !== AST_NODE_TYPES.CallExpression) {
+            return null;
+          }
+
           const maybeLiteralSchema = detectZodSchemaRootNode(s);
           if (maybeLiteralSchema?.schemaType !== 'literal') {
             return null;
           }
 
-          const [literalArgument] = maybeLiteralSchema.node.arguments;
+          const [literalArgument] = s.arguments;
           if (
             literalArgument.type === AST_NODE_TYPES.Literal &&
             // Literal could be also a number

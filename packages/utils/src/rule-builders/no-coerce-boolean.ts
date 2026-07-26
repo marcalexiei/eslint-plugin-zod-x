@@ -36,7 +36,7 @@ export function buildNoCoerceBooleanCreate(
         // string→boolean codec that maps `"true"`/`"false"` (and similar pairs)
         // explicitly. This is only offered for the namespace form, since the named
         // `coerce.boolean()` form would require introducing a `stringbool` import.
-        const [{ node: factoryCall }] = collectZodChainMethods(zodSchemaMeta.node);
+        const [{ node: factoryCall }] = collectZodChainMethods(node);
         const factoryCallee = factoryCall.callee;
 
         if (

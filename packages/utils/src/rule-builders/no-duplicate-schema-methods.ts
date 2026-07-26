@@ -20,7 +20,7 @@ export function buildNoDuplicateSchemaMethodsCreate(
           return;
         }
 
-        const chainMethods = collectZodChainMethods(zodSchemaMeta.node);
+        const chainMethods = collectZodChainMethods(node);
         const seen = new Set<string>();
 
         for (const method of chainMethods) {

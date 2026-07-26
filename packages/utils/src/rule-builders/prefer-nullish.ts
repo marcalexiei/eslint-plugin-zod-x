@@ -2,6 +2,7 @@ import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { buildZodWrapperUnwrapFix } from '../build-zod-wrapper-unwrap-fix.js';
+import type { DetectData } from '../detect-zod-schema-root-node.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
 type MessageIds = 'preferNullish';
@@ -60,8 +61,8 @@ export function buildPreferNullishCreate(
     }
 
     /** Wrapper form (`zod/mini`): `z.optional(z.nullable(inner))`. */
-    function handleWrapper(meta: NonNullable<ReturnType<typeof detectZodSchemaRootNode>>): void {
-      const wrapperCall = collectZodChainMethods(meta.node).at(0)?.node;
+    function handleWrapper(node: TSESTree.CallExpression, meta: DetectData): void {
+      const wrapperCall = collectZodChainMethods(node).at(0)?.node;
       // The leftmost chain item is the factory call itself; guard extra args.
       if (wrapperCall?.arguments.length !== 1) {
         return;
@@ -103,8 +104,8 @@ export function buildPreferNullishCreate(
     }
 
     /** Chained form (`zod`): `schema.optional().nullable()`. */
-    function handleChained(meta: NonNullable<ReturnType<typeof detectZodSchemaRootNode>>): void {
-      const methods = collectZodChainMethods(meta.node);
+    function handleChained(node: TSESTree.CallExpression): void {
+      const methods = collectZodChainMethods(node);
       const optionalIndex = methods.findIndex((it) => it.name === 'optional');
       const nullableIndex = methods.findIndex((it) => it.name === 'nullable');
 
@@ -152,11 +153,11 @@ export function buildPreferNullishCreate(
         }
 
         if (meta.schemaType === 'optional' || meta.schemaType === 'nullable') {
-          handleWrapper(meta);
+          handleWrapper(node, meta);
           return;
         }
 
-        handleChained(meta);
+        handleChained(node);
       },
     };
   };

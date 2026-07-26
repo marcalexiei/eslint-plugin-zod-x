@@ -44,7 +44,7 @@ export function buildPreferDedicatedFactoryCreate<TMessageIds extends string>(
           return;
         }
 
-        const methods = collectZodChainMethods(zodSchemaMeta.node);
+        const methods = collectZodChainMethods(node);
         const modifierMethod = methods.find((it) => modifierMethods.includes(it.name));
 
         if (!modifierMethod) {

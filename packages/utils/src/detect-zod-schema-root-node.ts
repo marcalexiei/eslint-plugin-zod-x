@@ -19,12 +19,20 @@ export interface DetectData {
    * when the nodes are needed.
    */
   methods: Array<string>;
-
-  /** the outer call expression analyzed */
-  node: TSESTree.CallExpression;
 }
 
 export type DetectResult = DetectData | null;
+
+/**
+ * The zod imports a file has in scope, as accumulated by a tracker. Passed
+ * around as one value so detection helpers keep a small signature.
+ */
+export interface ZodImports {
+  /** Local names bound to the `z` namespace. */
+  namespaces: Set<string>;
+  /** Local name → original zod export name. */
+  named: Map<string, string>;
+}
 
 /**
  * Helper: extract static property names (Identifier | Literal | simple template literal)
@@ -70,11 +78,7 @@ function isOutermostCallExpression(node: TSESTree.CallExpression): boolean {
  *  { schemaDecl, schemaType, methods, node } if successful
  *  null otherwise
  */
-function parseZodCallExpression(
-  call: TSESTree.CallExpression,
-  zodNamespaces: Set<string>,
-  zodNamedImports: Map<string, string>,
-): DetectResult {
+function parseZodCallExpression(call: TSESTree.CallExpression, imports: ZodImports): DetectResult {
   let cur: TSESTree.Node = call.callee;
 
   // Collect names in right-to-left order, then reverse at the end
@@ -112,7 +116,7 @@ function parseZodCallExpression(
   const methods = methodsRightToLeft.slice().reverse(); // left -> right order
 
   // Namespace style: z.number().int()
-  if (zodNamespaces.has(leftmostIdentifier)) {
+  if (imports.namespaces.has(leftmostIdentifier)) {
     // the factory for namespace style is typically the first method
     const factory = methods[0] ?? null;
     if (!factory) {
@@ -122,20 +126,18 @@ function parseZodCallExpression(
       schemaDecl: 'namespace',
       schemaType: factory,
       methods,
-      node: call,
     };
   }
 
   // Named import style: number().int() or array(...)
   // A single lookup: the map value is the original zod export name, so an
   // aliased import (`import { nativeEnum as e }`) resolves to `nativeEnum`.
-  const factory = zodNamedImports.get(leftmostIdentifier);
+  const factory = imports.named.get(leftmostIdentifier);
   if (factory !== undefined) {
     return {
       schemaDecl: 'named',
       schemaType: factory,
       methods,
-      node: call,
     };
   }
 
@@ -143,20 +145,21 @@ function parseZodCallExpression(
 }
 
 /**
- * True when `node` is a zod number schema call chain (e.g. `z.number().min(1)`) or `number().min(1)`.
- * Used for member access like `z.number().isInt` where the call is not the outermost expression
- * in the file (so {@link detectZodSchemaRootNode} does not apply).
+ * True when `node` is a zod call chain built from `schemaType` (e.g.
+ * `z.number().min(1)` or `number().min(1)` for `'number'`). Unlike
+ * {@link detectZodSchemaRootNode} the call need not be outermost, which is
+ * what member access like `z.number().isInt` requires.
  */
-export function isZodNumberSchemaCallExpression(
+export function isZodSchemaOfType(
   node: TSESTree.Node,
-  zodNamespaces: Set<string>,
-  zodNamedImports: Map<string, string>,
+  schemaType: string,
+  imports: ZodImports,
 ): boolean {
   if (node.type !== AST_NODE_TYPES.CallExpression) {
     return false;
   }
-  const parsed = parseZodCallExpression(node, zodNamespaces, zodNamedImports);
-  return parsed !== null && parsed.schemaType === 'number';
+  const parsed = parseZodCallExpression(node, imports);
+  return parsed !== null && parsed.schemaType === schemaType;
 }
 
 /**
@@ -168,14 +171,9 @@ export function isZodNumberSchemaCallExpression(
  * Returns `null` if the node is not a Zod schema call or not the outermost call in its chain.
  *
  * @param node - The AST node to analyze (typically a `CallExpression` from an ESLint visitor)
- * @param zodNamespaces - Local names of `z` namespace imports (e.g. `new Set(['z'])`)
- * @param zodNamedImports - Map of local name → original Zod export name (e.g. `'string' -> 'string'`)
+ * @param imports - The file's zod imports, from a tracker
  */
-export function detectZodSchemaRootNode(
-  node: TSESTree.Node,
-  zodNamespaces: Set<string>,
-  zodNamedImports: Map<string, string>,
-): DetectResult {
+export function detectZodSchemaRootNode(node: TSESTree.Node, imports: ZodImports): DetectResult {
   if (node.type !== AST_NODE_TYPES.CallExpression) {
     return null;
   }
@@ -187,15 +185,10 @@ export function detectZodSchemaRootNode(
   }
 
   // Parse the outer call expression into zod schema info
-  const outer = parseZodCallExpression(call, zodNamespaces, zodNamedImports);
+  const outer = parseZodCallExpression(call, imports);
   if (!outer) {
     return null;
   }
 
-  return {
-    schemaDecl: outer.schemaDecl,
-    schemaType: outer.schemaType,
-    methods: outer.methods,
-    node: call,
-  };
+  return outer;
 }

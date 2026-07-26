@@ -1,9 +1,14 @@
 ---
-'@eslint-zod/utils': minor
+'@eslint-zod/utils': major
 ---
 
-feat: export `ZodImportScope`, `detectZodSchemaRootNode` and the tracker types
+feat!: schema detection is reachable only through a tracker
 
-`ZodImportScope` is the parameter type of every rule builder but was not
-exported, so a custom scope could not be typed. Also exports `DetectData`,
-`DetectResult`, `ZodSchemaImportTracker` and `ZodChainItem`.
+`detectZodSchemaRootNode` and `isZodNumberSchemaCallExpression` are no longer
+root exports — their 2nd and 3rd parameters were the tracker's private import
+maps, which no consumer can obtain. Use `scope.createTracker()`.
+
+- `isZodNumberSchemaCallExpression` becomes `isZodSchemaOfType(node, schemaType)`
+- `DetectData.node` is gone: it always returned the node you passed in
+- `ZodImportScope`, `DetectData`, `DetectResult`, `ZodSchemaImportTracker` and
+  `ZodChainItem` are now exported — all were already referenced by the public API

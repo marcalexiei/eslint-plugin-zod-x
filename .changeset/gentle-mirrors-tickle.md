@@ -2,7 +2,7 @@
 '@eslint-zod/utils': major
 ---
 
-refactor: replace `createZodSchemaImportTrack(scope)` with `scope.createTracker()`
+feat!: replace `createZodSchemaImportTrack(scope)` with `scope.createTracker()`
 
 Migration: `const { trackZodSchemaImports } = createZodSchemaImportTrack(scope)`
 

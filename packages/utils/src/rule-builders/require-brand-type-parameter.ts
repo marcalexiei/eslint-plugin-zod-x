@@ -19,7 +19,7 @@ export function buildRequireBrandTypeParameterCreate(
           return;
         }
 
-        const methods = collectZodChainMethods(zodSchemaMeta.node);
+        const methods = collectZodChainMethods(node);
 
         const brandMethod = methods.find((it) => it.name === 'brand');
 

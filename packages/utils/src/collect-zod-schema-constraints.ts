@@ -110,7 +110,7 @@ export function collectZodSchemaConstraints(opts: {
 
       constraints.push({
         name: checkMeta.schemaType,
-        node: checkMeta.node,
+        node: argument,
         origin: 'check-argument',
         chainIndex,
         checkNode: method.node,
