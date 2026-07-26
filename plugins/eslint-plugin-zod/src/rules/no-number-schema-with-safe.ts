@@ -28,7 +28,7 @@ export const noNumberSchemaWithSafe = createZodPluginRule({
       schemaType: 'number',
       onSchema(node, zodSchemaMeta): void {
         const methods = collectZodChainMethods(node);
-        const safeIndex = methods.findIndex((m) => m.name === 'safe' && m.node === node);
+        const safeIndex = methods.findIndex((m) => m.name === 'safe');
         if (safeIndex === -1) {
           return;
         }

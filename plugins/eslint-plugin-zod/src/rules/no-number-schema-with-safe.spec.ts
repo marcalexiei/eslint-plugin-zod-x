@@ -62,6 +62,18 @@ ruleTester.run(noNumberSchemaWithSafe.name, noNumberSchemaWithSafe, {
       `,
     },
     {
+      name: 'z.number().safe().min(0) — reported even when not the last call',
+      code: dedent`
+        import * as z from 'zod';
+        z.number().safe().min(0);
+      `,
+      errors: [{ messageId: 'useInt' }],
+      output: dedent`
+        import * as z from 'zod';
+        z.int().min(0);
+      `,
+    },
+    {
       name: 'named import number().safe() — no fix',
       code: dedent`
         import { number } from 'zod';

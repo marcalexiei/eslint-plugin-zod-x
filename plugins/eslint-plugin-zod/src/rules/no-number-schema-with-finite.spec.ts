@@ -45,6 +45,18 @@ ruleTester.run(noNumberSchemaWithFinite.name, noNumberSchemaWithFinite, {
       `,
     },
     {
+      name: 'z.number().finite().min(0) — reported even when not the last call',
+      code: dedent`
+        import * as z from 'zod';
+        z.number().finite().min(0);
+      `,
+      errors: [{ messageId: 'removeFinite' }],
+      output: dedent`
+        import * as z from 'zod';
+        z.number().min(0);
+      `,
+    },
+    {
       name: 'named import number().finite() — can fix',
       code: dedent`
         import { number } from 'zod';

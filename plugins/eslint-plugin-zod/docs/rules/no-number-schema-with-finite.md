@@ -21,6 +21,7 @@ import { z } from 'zod';
 
 z.number().finite();
 z.number().min(0).finite();
+z.number().finite().min(0);
 ```
 
 ### Valid

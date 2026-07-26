@@ -26,12 +26,14 @@ export const noNumberSchemaWithStep = createZodPluginRule({
       schemaType: 'number',
       onSchema(node): void {
         const methods = collectZodChainMethods(node);
-        const stepIndex = methods.findIndex((m) => m.name === 'step' && m.node === node);
+        const stepIndex = methods.findIndex((m) => m.name === 'step');
         if (stepIndex === -1) {
           return;
         }
 
-        const { callee } = node;
+        // Rename the `step` call's own property, not the chain's outermost one:
+        // in `z.number().step(5).min(0)` the outermost callee is `.min`.
+        const { callee } = methods[stepIndex].node;
         // A named import aliased to `step` (`import { number as step }`) also
         // yields a chain item called `step`, but its callee is a bare
         // identifier with no property to rename.

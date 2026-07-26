@@ -21,6 +21,7 @@ import { z } from 'zod';
 
 z.number().safe();
 z.number().safe('message');
+z.number().safe().min(0);
 ```
 
 ### Valid
@@ -29,6 +30,7 @@ z.number().safe('message');
 import { z } from 'zod';
 
 z.int();
+z.int().min(0);
 ```
 
 ## When Not To Use It
