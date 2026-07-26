@@ -1,12 +1,6 @@
-import {
-  buildZodChainReplacementFix,
-  createZodSchemaImportTrack,
-  zodImportScope,
-} from '@eslint-zod/utils';
+import { buildZodChainReplacementFix, zodImportScope } from '@eslint-zod/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
-
-const { trackZodSchemaImports } = createZodSchemaImportTrack(zodImportScope);
 
 export const noStringSchemaWithUuid = createZodPluginRule({
   name: 'no-string-schema-with-uuid',
@@ -32,7 +26,7 @@ export const noStringSchemaWithUuid = createZodPluginRule({
     const { sourceCode } = context;
 
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+      zodImportScope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

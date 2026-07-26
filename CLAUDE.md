@@ -48,21 +48,22 @@ There is no 'all' scope — rules in `eslint-plugin-zod` never fire on `zod/mini
 
 ### Shared utilities (`@eslint-zod/utils`)
 
-`@eslint-zod/utils` exposes two groups of export paths:
+`@eslint-zod/utils` exposes three groups of export paths:
 
 - `@eslint-zod/utils` (`packages/utils/src/`) — AST parsing, import tracking, traversal, and fixer helpers
 - `@eslint-zod/utils/rule-builders/<rule-name>` (`packages/utils/src/rule-builders/`) — one export per shared rule builder; the file name matches the rule name (e.g. `consistent-import.ts` → `@eslint-zod/utils/rule-builders/consistent-import`)
+- `@eslint-zod/utils/rule-patterns/<pattern-name>` (`packages/utils/src/rule-patterns/`) — recurring rule shapes parameterized by the names they differ in (see **Rule patterns** below)
 
-Each rule builder is one `<rule-name>.ts` file with a matching `package.json` exports-map entry; the set is derived from the filesystem and intentionally not duplicated here. The one exception is `import-syntax-helpers.ts` — a shared helper, not a builder, so it has no exports-map entry and is re-exported through `consistent-import` instead (see below).
+Both subpath groups are exposed by a single wildcard exports-map entry each (`./rule-builders/*`, `./rule-patterns/*`), so adding a file is enough — there is no per-file entry to keep in sync. Every file in those directories is therefore public: helpers that are not builders or patterns live at `src/` root instead (e.g. `import-syntax-helpers.ts`, re-exported through `consistent-import`).
 
 `IMPORT_SYNTAXES` and `ImportSyntax` are exported from `@eslint-zod/utils/rule-builders/consistent-import` (not from the root).
 
 AST helpers exported from `@eslint-zod/utils`:
 
-- `createZodSchemaImportTrack()` — tracks namespace and named imports; returns an object with `isZodNamespace`, `getNamedImportOriginal` (local name → zod export name), `getNamedImportLocal` (zod export name → local name, for fixers that must write a call site: `import { nullable } from 'zod'` → `getNamedImportLocal('nullish')`, `undefined` when that export was never imported), `collectZodChainMethods`, `collectZodSchemaConstraints`, and listener hooks
-- `detectZodSchemaRootNode()` — finds the outermost Zod call expression in a chain
+- `scope.createTracker()` (or `trackZodSchemaImports(scope)`) — tracks namespace and named imports; returns an object with `isZodNamespace`, `getNamedImportOriginal` (local name → zod export name), `getNamedImportLocal` (zod export name → local name, for fixers that must write a call site: `import { nullable } from 'zod'` → `getNamedImportLocal('nullish')`, `undefined` when that export was never imported), `collectZodChainMethods`, `collectZodSchemaConstraints`, and listener hooks
+- `detectZodSchemaRootNode()` — finds the outermost Zod call expression in a chain. Its `methods` are names only and include computed members (`z['uuid']()`); use `collectZodChainMethods` when a fixer needs the nodes, since that walk only names plain-identifier properties
 - `getZodSchemaBaseType()` — maps a schema factory name (`detectZodSchemaRootNode`'s `schemaType`) to its base type category (`string` — including the top-level string formats —, `number`, `bigint`, `array`, `object`, `literal`, `any`/`unknown`/`never`, …); returns `undefined` for factories rules should not reason about
-- `collectZodSchemaConstraints()` (tracker method) — flattens a schema chain into a normalized list of constraints (`ZodSchemaConstraint`), covering both API styles: chained methods (`.min(2)`, `zod`) become `origin: 'chained'` items and recognized zod calls among `.check(...)` arguments (`z.minLength(2)`, `zod/mini`) become `origin: 'check-argument'` items. **This is the standard way to navigate a schema's checks in rules shared between plugins** — detection differs per API style, but rule logic written against the constraint list works unchanged in `zod` and `zod-mini`. Names are not canonicalized (chained `.min()` means `gte` on numbers but `minLength` on strings), so each rule maps spellings to its own vocabulary with a small table (see the `prefer-tuple-over-array-length` rule builder).
+- `collectZodSchemaConstraints()` (tracker method) — flattens a schema chain into a normalized list of constraints (`ZodSchemaConstraint`), covering both API styles: chained methods (`.min(2)`, `zod`) become `origin: 'chained'` items and recognized zod calls among `.check(...)` arguments (`z.minLength(2)`, `zod/mini`) become `origin: 'check-argument'` items. **This is the standard way to navigate a schema's checks in rules shared between plugins** — detection differs per API style, but rule logic written against the constraint list works unchanged in `zod` and `zod-mini`. Names are left as written (chained `.min()` means `gte` on numbers but `minLength` on strings) — pass them through `canonicalizeZodConstraintName` below rather than mapping them per rule.
 - `buildZodChainRemoveMethodFix` / `buildZodChainReplacementFix` — fixer helpers
 - `buildZodConstraintsRemoveFix` — removes a set of `ZodSchemaConstraint`s from a chain, whatever their origin: chained constraints are removed as methods; check-argument constraints remove the whole containing `.check(...)`, but only when every argument of that call is targeted (never orphans an unrelated check). Returns `null` when removal is unsafe, so callers report without fixing.
 - `buildZodWrapperUnwrapFix` — replaces a single-argument wrapper call with its argument (e.g. `z.readonly(z.string())` → `z.string()`), preserving any chain on the wrapper; returns `null` when the call doesn't have exactly one non-spread argument.
@@ -72,9 +73,19 @@ AST helpers exported from `@eslint-zod/utils`:
 - `ZOD_IMMUTABLE_SCHEMA_TYPES` — array of schema factory names whose parsed output is already immutable (primitives/scalars, number sub-types, top-level string formats); container factories are intentionally absent
 - `ZOD_STRING_FORMAT_NAMES` — array of top-level string-format factory names (`email`, `uuid`, `ipv4`, …) that all parse to `string`; single source of truth shared by `getZodSchemaBaseType` and format-aware rules (the `iso.*` member formats are intentionally absent)
 
-Rule metadata (name, `meta`, `defaultOptions`) lives entirely per-plugin. When a rule's `create` logic is identical across plugins and differs only by import scope, extract a `build*Create(scope)` factory into `packages/utils/src/rule-builders/<rule-name>.ts`, add it to the `package.json` exports map, and import it in each plugin from `@eslint-zod/utils/rule-builders/<rule-name>`.
+`canonicalizeZodConstraintName(constraint, baseType)` / `getZodCheckDescriptor(name)` (`zod-check-vocabulary.ts`) — **the single source of truth for what a check is called and what it means.** Chained spellings are type-dependent (`.min()` is `minLength` on a string, `gte` on a number, `minSize` on a set) and deprecated chained formats reduce to their top-level replacement (`.datetime()` → `iso.datetime`). Rules must canonicalize through this rather than keeping a private spelling table — that duplication is what the module exists to prevent.
+
+`ZOD_STRING_FORMAT_METHODS` — deprecated `z.string().<format>()` methods paired with the top-level factory replacing each. Read two ways: as a migration (`prefer-top-level-string-formats`) and as canonicalization (`no-conflicting-checks`). Related but distinct from `ZOD_STRING_FORMAT_NAMES`, which lists top-level factory names including formats that never had a chained spelling.
+
+Rule metadata (name, `meta`, `defaultOptions`) lives entirely per-plugin. When a rule's `create` logic is identical across plugins and differs only by import scope, extract a `build*Create(scope)` factory into `packages/utils/src/rule-builders/<rule-name>.ts` and import it in each plugin from `@eslint-zod/utils/rule-builders/<rule-name>` — the wildcard exports entry needs no per-file update.
 
 When part of a shared rule's behavior is genuinely plugin-specific (i.e. it cannot be expressed through the shared constraint list), the rule builder defines the contract: it exports the options interface / function signature from the builder module, and each plugin implements that interface with its own behavior — plugins never fork or duplicate the shared logic itself. Prefer eliminating the custom part first (e.g. `prefer-tuple-over-array-length` used a `findLengthConstraint` strategy until `collectZodSchemaConstraints` made it unnecessary); reach for an exported contract only when a real per-plugin difference remains.
+
+### Rule patterns
+
+A rule builder is keyed to one rule name and exists to share logic _between plugins_. When two or more rules have the same shape and differ only in the names they mention — a deprecated method, a factory to prefer — that shape belongs in `packages/utils/src/rule-patterns/` instead, even when all its callers live in one plugin. Sharing across plugins is not a requirement there; three patterns currently back six `eslint-plugin-zod` rules.
+
+Do not extract a pattern when the rules differ in their _fix strategy_ rather than in names — `no-number-schema-with-step` (rename the property) and `no-number-schema-with-safe` (replace a run of methods) look alike but would need two implementations behind one switch, which dedupes nothing.
 
 ### TypeScript resolution
 
@@ -157,7 +168,7 @@ This repo uses [Changesets](https://github.com/changesets/changesets) for versio
 
 ## Adding a new rule
 
-Follow the **`add-rule` skill** (`.claude/skills/add-rule/SKILL.md`) — it covers the full inventory: rule builder + exports-map entry (shared rules), per-plugin rule file, specs, index wiring, docs, changesets, and verification.
+Follow the **`add-rule` skill** (`.claude/skills/add-rule/SKILL.md`) — it covers the full inventory: rule builder or rule pattern, per-plugin rule file, specs, index wiring, docs, changesets, and verification.
 
 ## Docs generation
 

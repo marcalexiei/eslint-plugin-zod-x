@@ -1,6 +1,5 @@
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
 
-import { createZodSchemaImportTrack } from '../track-zod-schema-imports.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
 type MessageIds = 'missingTypeParameter' | 'removeBrandFunction';
@@ -8,11 +7,9 @@ type MessageIds = 'missingTypeParameter' | 'removeBrandFunction';
 export function buildRequireBrandTypeParameterCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
-  const { trackZodSchemaImports } = createZodSchemaImportTrack(scope);
-
   return function create(context) {
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+      scope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

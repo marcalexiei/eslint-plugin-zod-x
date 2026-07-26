@@ -1,9 +1,7 @@
-import { createZodSchemaImportTrack, zodImportScope } from '@eslint-zod/utils';
+import { zodImportScope } from '@eslint-zod/utils';
 import type { TSESTree } from '@typescript-eslint/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
-
-const { trackZodSchemaImports } = createZodSchemaImportTrack(zodImportScope);
 
 const preferredMethods = ['none', 'default', 'optional'] as const;
 
@@ -50,7 +48,7 @@ export const noOptionalAndDefaultTogether = createZodPluginRule<[Options], Messa
     const { sourceCode } = context;
 
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+      zodImportScope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

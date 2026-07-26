@@ -2,7 +2,6 @@ import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { buildZodWrapperUnwrapFix } from '../build-zod-wrapper-unwrap-fix.js';
-import { createZodSchemaImportTrack } from '../track-zod-schema-imports.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
 type MessageIds = 'preferNullish';
@@ -23,8 +22,6 @@ type MessageIds = 'preferNullish';
 export function buildPreferNullishCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
-  const { trackZodSchemaImports } = createZodSchemaImportTrack(scope);
-
   return function create(context) {
     const { sourceCode } = context;
     const {
@@ -32,7 +29,7 @@ export function buildPreferNullishCreate(
       detectZodSchemaRootNode,
       collectZodChainMethods,
       getNamedImportLocal,
-    } = trackZodSchemaImports();
+    } = scope.createTracker();
 
     /**
      * Fixer that renames the factory of a wrapper call to `nullish`.

@@ -1,7 +1,6 @@
 import type { TSESLint } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-import { createZodSchemaImportTrack } from '../track-zod-schema-imports.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 import { ZOD_NON_SCHEMA_PRODUCING_METHODS } from '../zod-non-schema-producing-methods.js';
 
@@ -16,11 +15,9 @@ export function buildConsistentSchemaVarNameCreate(
   context: Readonly<TSESLint.RuleContext<'invalidName', [Options]>>,
   options: readonly [Options],
 ) => TSESLint.RuleListener {
-  const { trackZodSchemaImports } = createZodSchemaImportTrack(scope);
-
   return function create(context, [{ before = '', after = '' }]) {
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      trackZodSchemaImports();
+      scope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,

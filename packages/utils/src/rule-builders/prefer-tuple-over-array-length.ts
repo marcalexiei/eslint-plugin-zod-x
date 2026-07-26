@@ -3,7 +3,7 @@ import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { buildZodConstraintsRemoveFix } from '../build-zod-constraints-remove-fix.js';
 import type { ZodSchemaConstraint } from '../collect-zod-schema-constraints.js';
-import { createZodSchemaImportTrack } from '../track-zod-schema-imports.js';
+import { canonicalizeZodConstraintName } from '../zod-check-vocabulary.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
 type MessageIds = 'preferTuple';
@@ -12,14 +12,13 @@ type MessageIds = 'preferTuple';
 type LengthConstraintKind = 'length' | 'min' | 'max';
 
 /**
- * Length-constraint spellings across both API styles: chained methods
- * (`.length()` / `.min()` / `.max()`, `zod`) and standalone checks passed to
- * `.check(...)` (`z.length()` / `z.minLength()` / `z.maxLength()`, `zod/mini`).
+ * Length constraints by canonical name. Both API styles reduce to these via
+ * `canonicalizeZodConstraintName`, so chained methods (`.length()` / `.min()` /
+ * `.max()`, `zod`) and standalone checks (`z.length()` / `z.minLength()` /
+ * `z.maxLength()`, `zod/mini`) are matched by the same three entries.
  */
 const LENGTH_CONSTRAINT_KINDS = new Map<string, LengthConstraintKind>([
   ['length', 'length'],
-  ['min', 'min'],
-  ['max', 'max'],
   ['minLength', 'min'],
   ['maxLength', 'max'],
 ]);
@@ -57,15 +56,13 @@ function readIntegerLiteralValue(node: TSESTree.Node | null): number | null {
 export function buildPreferTupleOverArrayLengthCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
-  const { trackZodSchemaImports } = createZodSchemaImportTrack(scope);
-
   return function create(context) {
     const {
       importDeclarationListener,
       detectZodSchemaRootNode,
       collectZodChainMethods,
       collectZodSchemaConstraints,
-    } = trackZodSchemaImports();
+    } = scope.createTracker();
 
     return {
       ImportDeclaration: importDeclarationListener,
@@ -81,7 +78,9 @@ export function buildPreferTupleOverArrayLengthCreate(
 
         const candidates: Array<LengthCandidate> = [];
         for (const constraint of constraints) {
-          const candidateKind = LENGTH_CONSTRAINT_KINDS.get(constraint.name);
+          const canonical = canonicalizeZodConstraintName(constraint, 'array');
+          const candidateKind =
+            canonical === null ? undefined : LENGTH_CONSTRAINT_KINDS.get(canonical);
           if (candidateKind) {
             candidates.push({
               kind: candidateKind,

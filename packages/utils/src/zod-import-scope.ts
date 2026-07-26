@@ -1,3 +1,6 @@
+import { trackZodSchemaImports } from './track-zod-schema-imports.js';
+import type { ZodSchemaImportTracker } from './track-zod-schema-imports.js';
+
 /**
  * Defines the set of import source strings (e.g. `'zod'`, `'zod/mini'`) that a
  * plugin considers in-scope. Used by each plugin's rules to ignore files that
@@ -21,6 +24,20 @@ export class ZodImportScope<TSources extends Array<string> = Array<string>> {
   /** Returns `true` if `source` is one of the scope's recognised import sources. */
   isAllowed(source: string): source is TSources[number] {
     return this.sources.includes(source);
+  }
+
+  /**
+   * Creates an import tracker bound to this scope. Call it once per
+   * `create(...)` — a tracker accumulates one file's imports.
+   *
+   * @example
+   * ```ts
+   * const { importDeclarationListener, detectZodSchemaRootNode } =
+   *   zodImportScope.createTracker();
+   * ```
+   */
+  createTracker(): ZodSchemaImportTracker {
+    return trackZodSchemaImports(this);
   }
 }
 
