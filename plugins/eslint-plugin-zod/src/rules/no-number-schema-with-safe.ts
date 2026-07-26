@@ -22,19 +22,11 @@ export const noNumberSchemaWithSafe = createZodPluginRule({
   create(context) {
     const { sourceCode } = context;
 
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'number') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'number',
+      onSchema(node, zodSchemaMeta): void {
         const methods = collectZodChainMethods(node);
         const safeIndex = methods.findIndex((m) => m.name === 'safe' && m.node === node);
         if (safeIndex === -1) {
@@ -65,6 +57,6 @@ export const noNumberSchemaWithSafe = createZodPluginRule({
           },
         });
       },
-    };
+    });
   },
 });

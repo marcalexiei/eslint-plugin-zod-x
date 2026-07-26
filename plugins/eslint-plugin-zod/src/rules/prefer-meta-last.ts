@@ -18,21 +18,12 @@ export const preferMetaLast = createZodPluginRule({
   },
   defaultOptions: [],
   create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        // If not inside a schema root AND doesn't look like a zod chain, bail out.
-        // This preserves previous behavior while allowing standalone zod chains to be processed.
-        if (!zodSchemaMeta) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      // If not inside a schema root AND doesn't look like a zod chain, bail out.
+      // This preserves previous behavior while allowing standalone zod chains to be processed.
+      onSchema(node): void {
         // Collect the full chain methods
         const chain = collectZodChainMethods(node);
 
@@ -81,6 +72,6 @@ export const preferMetaLast = createZodPluginRule({
           },
         });
       },
-    };
+    });
   },
 });

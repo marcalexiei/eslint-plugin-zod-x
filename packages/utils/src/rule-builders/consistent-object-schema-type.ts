@@ -20,19 +20,11 @@ export function buildConsistentObjectSchemaTypeCreate(
   options: readonly [Options],
 ) => TSESLint.RuleListener {
   return function create(context, [{ allow: allowedList }]) {
-    const { importDeclarationListener, detectZodSchemaRootNode } = scope.createTracker();
+    const { createSchemaVisitor } = scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        const schemaType = zodSchemaMeta?.schemaType as ZodObjectMethod | undefined;
-
-        if (!schemaType || !ZOD_OBJECT_METHODS.includes(schemaType)) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: ZOD_OBJECT_METHODS,
+      onSchema(node, { schemaType }): void {
         if (allowedList.includes(schemaType)) {
           return;
         }
@@ -66,6 +58,6 @@ export function buildConsistentObjectSchemaTypeCreate(
           });
         }
       },
-    };
+    });
   };
 }

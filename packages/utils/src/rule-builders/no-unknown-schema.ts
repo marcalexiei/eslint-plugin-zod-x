@@ -6,20 +6,16 @@ export function buildNoUnknownSchemaCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<'noZUnknown', []>>) => TSESLint.RuleListener {
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode } = scope.createTracker();
+    const { createSchemaVisitor } = scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType === 'unknown') {
-          context.report({
-            node,
-            messageId: 'noZUnknown',
-          });
-        }
+    return createSchemaVisitor({
+      schemaType: 'unknown',
+      onSchema(node): void {
+        context.report({
+          node,
+          messageId: 'noZUnknown',
+        });
       },
-    };
+    });
   };
 }

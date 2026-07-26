@@ -19,18 +19,11 @@ export const preferMeta = createZodMiniPluginRule({
   },
   defaultOptions: [],
   create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode } =
-      zodMiniImportScope.createTracker();
+    const { createSchemaVisitor } = zodMiniImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'describe') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'describe',
+      onSchema(node, zodSchemaMeta) {
         context.report({
           node,
           messageId: 'preferMeta',
@@ -52,6 +45,6 @@ export const preferMeta = createZodMiniPluginRule({
           },
         });
       },
-    };
+    });
   },
 });

@@ -4,5 +4,5 @@
 
 fix: declare `types` conditions in the exports map
 
-Collapses the per-builder subpath entries into a `rule-builders/*` wildcard and
-adds `"sideEffects": false`.
+- collapses the per-builder subpath entries into a `rule-builders/*` wildcard
+- adds `"sideEffects": false`.

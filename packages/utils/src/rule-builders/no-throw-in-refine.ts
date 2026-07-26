@@ -9,8 +9,7 @@ export function buildNoThrowInRefineCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      scope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = scope.createTracker();
 
     function checkNode(node: TSESTree.Node): void {
       switch (node.type) {
@@ -53,15 +52,8 @@ export function buildNoThrowInRefineCreate(
       }
     }
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (!zodSchemaMeta) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      onSchema(node): void {
         const refineMethod = collectZodChainMethods(node).find((it) => it.name === 'refine');
 
         if (!refineMethod) {
@@ -76,6 +68,6 @@ export function buildNoThrowInRefineCreate(
           checkNode(callback.body);
         }
       },
-    };
+    });
   };
 }

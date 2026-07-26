@@ -6,21 +6,11 @@ export function buildNoEmptyCustomSchemaCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<'noEmptyCustomSchema', []>>) => TSESLint.RuleListener {
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      scope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-        if (!zodSchemaMeta) {
-          return;
-        }
-
-        if (zodSchemaMeta.schemaType !== 'custom') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'custom',
+      onSchema(node): void {
         // Find the actual custom() call node in the chain
         const chainMethods = collectZodChainMethods(node);
         const customCallNode = chainMethods.find((method) => method.name === 'custom')?.node;
@@ -32,6 +22,6 @@ export function buildNoEmptyCustomSchemaCreate(
           });
         }
       },
-    };
+    });
   };
 }

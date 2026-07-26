@@ -17,18 +17,11 @@ export const preferStringSchemaWithTrim = createZodPluginRule({
   },
   defaultOptions: [],
   create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'string') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'string',
+      onSchema(node, zodSchemaMeta): void {
         // Skip if this string schema is the key schema of z.record()
         // because transforms on record keys cause data loss
         // https://github.com/marcalexiei/eslint-zod/issues/242
@@ -61,6 +54,6 @@ export const preferStringSchemaWithTrim = createZodPluginRule({
           },
         });
       },
-    };
+    });
   },
 });

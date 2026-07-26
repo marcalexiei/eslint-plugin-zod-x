@@ -65,19 +65,11 @@ export const preferTopLevelStringFormats = createZodPluginRule<[Options], Messag
 
     const ignoredMethods = new Set<ZodStringFormatMethodName>(ignore);
 
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'string') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'string',
+      onSchema(node, zodSchemaMeta): void {
         const methods = collectZodChainMethods(node);
 
         const stringIndex = methods.findIndex((method) => method.name === 'string');
@@ -125,6 +117,6 @@ export const preferTopLevelStringFormats = createZodPluginRule<[Options], Messag
           },
         });
       },
-    };
+    });
   },
 });

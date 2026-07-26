@@ -1,7 +1,7 @@
 import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-import type { DetectResult } from './detect-zod-schema-root-node.js';
+import type { ZodSchemaMeta } from './detect-zod-schema-root-node.js';
 
 interface ZodSchemaConstraintBase {
   /**
@@ -75,7 +75,7 @@ export function collectZodSchemaConstraints(opts: {
   methods: Array<{ name: string; node: TSESTree.CallExpression }>;
 
   /** Detector bound to the file's imports (see `detectZodSchemaRootNode`). */
-  detectZodSchemaRootNode: (node: TSESTree.Node) => DetectResult;
+  detectZodSchemaRootNode: (node: TSESTree.Node) => ZodSchemaMeta | null;
 }): Array<ZodSchemaConstraint> {
   const { methods, detectZodSchemaRootNode } = opts;
 

@@ -38,14 +38,15 @@ AST parsing, import tracking, traversal, and fixer helpers.
 
 - `ZodImportScope` — the class defining which import sources a plugin considers in-scope; `scope.createTracker()` is how rules get a per-file import tracker
 - `zodImportScope`, `zodMiniImportScope`, `zodCoreImportScope` — pre-built `ZodImportScope` instances
-- `trackZodSchemaImports(scope)` — the standalone form of `scope.createTracker()`; the returned tracker exposes `detectZodSchemaRootNode`, `isZodSchemaOfType`, `collectZodChainMethods`, `collectZodSchemaConstraints`, and the import-lookup helpers. Schema detection is reachable **only** through a tracker — the raw forms need the tracker's private import maps
-- types `ZodSchemaImportTracker`, `ZodChainItem`
+- `trackZodSchemaImports(scope)` — the standalone form of `scope.createTracker()`; the returned tracker exposes `createSchemaVisitor`, `detectZodSchemaRootNode`, `isZodSchemaOfType`, `collectZodChainMethods`, `collectZodSchemaConstraints`, and the import-lookup helpers. Schema detection is reachable **only** through a tracker — the raw forms need the tracker's private import maps
+- `tracker.createSchemaVisitor({ schemaType?, onSchema })` — builds the `{ ImportDeclaration, CallExpression }` visitor a rule returns, with detection and the `schemaType` filter already applied. **The standard shape for a schema rule**; spread it to add more visitor keys
+- types `ZodSchemaImportTracker`, `ZodChainItem`, `ZodSchemaVisitorOptions`
 
 **Schema detection & navigation**
 
 - `findParentSchemaMatchingCondition(node, options)` — search up the AST for a matching ancestor schema call
 - `getZodSchemaBaseType(schemaType)` — map a schema factory name to its base type category; returns type `ZodSchemaBaseType`
-- types `DetectData`, `DetectResult` — what the tracker's `detectZodSchemaRootNode` returns
+- type `ZodSchemaMeta` — what the tracker's `detectZodSchemaRootNode` returns (or `null`)
 - types `ZodSchemaConstraint`, `ZodChainedConstraint`, `ZodCheckArgumentConstraint` — the normalized constraints produced by the tracker's `collectZodSchemaConstraints`
 
 **Fixer helpers**
@@ -86,7 +87,7 @@ Each rule shared between `eslint-plugin-zod` and `eslint-plugin-zod-mini` (some 
 - `buildNoDuplicateSchemaMethodsCreate(scope, excludedMethods)`
 - `buildNoEmptyCustomSchemaCreate(scope)`
 - `buildNoThrowInRefineCreate(scope)`
-- `buildNoTransformInRecordKeyCreate(scope, options)` — also exports the `NoTransformInRecordKeyOptions` contract
+- `buildNoTransformInRecordKeyCreate(scope, options)` — also exports the `NoTransformInRecordKeyOptions` contract and the `FindTransformNodeHelpers` type its `findTransformNode` strategy receives
 - `buildNoUnknownSchemaCreate(scope)`
 - `buildNoUnnecessaryReadonlyCreate(scope)`
 - `buildPreferEnumOverLiteralUnionCreate(scope)`

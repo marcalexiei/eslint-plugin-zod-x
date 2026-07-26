@@ -18,8 +18,7 @@ export function buildSchemaErrorPropertyStyleCreate(
   options: readonly [Options],
 ) => TSESLint.RuleListener {
   return function create(context, [{ selector, example }]) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      scope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = scope.createTracker();
 
     let parsedSelector: ReturnType<typeof esquery.parse>;
 
@@ -38,14 +37,8 @@ export function buildSchemaErrorPropertyStyleCreate(
       return {};
     }
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-        if (!zodSchemaMeta) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      onSchema(node, zodSchemaMeta): void {
         if (
           zodSchemaMeta.schemaType !== 'custom' &&
           !collectZodChainMethods(node).some((it) => it.name === 'refine')
@@ -109,6 +102,6 @@ export function buildSchemaErrorPropertyStyleCreate(
           },
         });
       },
-    };
+    });
   };
 }

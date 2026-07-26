@@ -2,7 +2,7 @@ import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { buildZodWrapperUnwrapFix } from '../build-zod-wrapper-unwrap-fix.js';
-import type { DetectData } from '../detect-zod-schema-root-node.js';
+import type { ZodSchemaMeta } from '../detect-zod-schema-root-node.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
 type MessageIds = 'preferNullish';
@@ -26,7 +26,7 @@ export function buildPreferNullishCreate(
   return function create(context) {
     const { sourceCode } = context;
     const {
-      importDeclarationListener,
+      createSchemaVisitor,
       detectZodSchemaRootNode,
       collectZodChainMethods,
       getNamedImportLocal,
@@ -61,7 +61,7 @@ export function buildPreferNullishCreate(
     }
 
     /** Wrapper form (`zod/mini`): `z.optional(z.nullable(inner))`. */
-    function handleWrapper(node: TSESTree.CallExpression, meta: DetectData): void {
+    function handleWrapper(node: TSESTree.CallExpression, meta: ZodSchemaMeta): void {
       const wrapperCall = collectZodChainMethods(node).at(0)?.node;
       // The leftmost chain item is the factory call itself; guard extra args.
       if (wrapperCall?.arguments.length !== 1) {
@@ -144,14 +144,8 @@ export function buildPreferNullishCreate(
       });
     }
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const meta = detectZodSchemaRootNode(node);
-        if (!meta) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      onSchema(node, meta): void {
         if (meta.schemaType === 'optional' || meta.schemaType === 'nullable') {
           handleWrapper(node, meta);
           return;
@@ -159,6 +153,6 @@ export function buildPreferNullishCreate(
 
         handleChained(node);
       },
-    };
+    });
   };
 }

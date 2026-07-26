@@ -20,19 +20,11 @@ export const noNumberSchemaWithStep = createZodPluginRule({
   defaultOptions: [],
 
   create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'number') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'number',
+      onSchema(node): void {
         const methods = collectZodChainMethods(node);
         const stepIndex = methods.findIndex((m) => m.name === 'step' && m.node === node);
         if (stepIndex === -1) {
@@ -59,6 +51,6 @@ export const noNumberSchemaWithStep = createZodPluginRule({
           },
         });
       },
-    };
+    });
   },
 });

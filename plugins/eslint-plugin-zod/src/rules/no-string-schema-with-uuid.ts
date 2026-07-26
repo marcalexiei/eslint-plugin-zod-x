@@ -25,20 +25,12 @@ export const noStringSchemaWithUuid = createZodPluginRule({
   create(context) {
     const { sourceCode } = context;
 
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        // Only care about string schemas
-        if (zodSchemaMeta?.schemaType !== 'string') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      // Only care about string schemas
+      schemaType: 'string',
+      onSchema(node, zodSchemaMeta): void {
         // Collect the full chain from the outermost call (left-to-right)
         const methods = collectZodChainMethods(node);
 
@@ -72,6 +64,6 @@ export const noStringSchemaWithUuid = createZodPluginRule({
           },
         });
       },
-    };
+    });
   },
 });

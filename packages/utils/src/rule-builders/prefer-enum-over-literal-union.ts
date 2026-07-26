@@ -7,18 +7,12 @@ export function buildPreferEnumOverLiteralUnionCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<'useEnum', []>>) => TSESLint.RuleListener {
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
+    const { createSchemaVisitor, detectZodSchemaRootNode, collectZodChainMethods } =
       scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'union') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'union',
+      onSchema(node, zodSchemaMeta): void {
         const methods = collectZodChainMethods(node);
         const union = methods.find((it) => it.name === 'union');
 
@@ -79,6 +73,6 @@ export function buildPreferEnumOverLiteralUnionCreate(
           },
         });
       },
-    };
+    });
   };
 }
