@@ -209,5 +209,23 @@ ruleTester.run(preferTupleOverArrayLength.name, preferTupleOverArrayLength, {
       errors: [{ messageId: 'preferTuple' }],
       output: null,
     },
+    {
+      name: 'array without an element schema is report-only (no autofix)',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.array().check(z.length(2))
+      `,
+      errors: [{ messageId: 'preferTuple' }],
+      output: null,
+    },
+    {
+      name: 'removing the length check would orphan a sibling check (no autofix)',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.array(z.string()).check(z.length(2), z.refine((value) => value.length > 0))
+      `,
+      errors: [{ messageId: 'preferTuple' }],
+      output: null,
+    },
   ],
 });

@@ -14,6 +14,8 @@ catalogs:
 
     # build & test toolchain
     tsdown: '0.22.3'
+    # keep `@vitest/coverage-v8` aligned with `vitest`
+    '@vitest/coverage-v8': '4.1.9'
     vitest: '4.1.9'
 
     # plugin dev utilities

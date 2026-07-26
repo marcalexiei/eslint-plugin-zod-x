@@ -210,5 +210,25 @@ ruleTester.run(`${arrayStyle.name} (method)`, arrayStyle, {
       errors: [{ messageId: 'useMethod' }],
       output: null,
     },
+    {
+      name: 'computed access is reported but not fixed — the chain walker cannot name it',
+      code: dedent`
+        import * as z from 'zod';
+        z['array'](z.string());
+      `,
+      options: [{ style: 'method' }],
+      errors: [{ messageId: 'useMethod' }],
+      output: null,
+    },
+    {
+      name: 'z.array() without an inner schema is reported but not fixed',
+      code: dedent`
+        import * as z from 'zod';
+        z.array();
+      `,
+      options: [{ style: 'method' }],
+      errors: [{ messageId: 'useMethod' }],
+      output: null,
+    },
   ],
 });

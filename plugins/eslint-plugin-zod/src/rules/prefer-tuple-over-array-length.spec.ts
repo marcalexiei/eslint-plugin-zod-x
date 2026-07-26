@@ -200,5 +200,33 @@ ruleTester.run(preferTupleOverArrayLength.name, preferTupleOverArrayLength, {
       errors: [{ messageId: 'preferTuple' }],
       output: null,
     },
+    {
+      name: 'array without an element schema is report-only (no autofix)',
+      code: dedent`
+        import * as z from 'zod';
+        z.array().length(2)
+      `,
+      errors: [{ messageId: 'preferTuple' }],
+      output: null,
+    },
+    {
+      name: 'length without an argument is report-only (no autofix)',
+      code: dedent`
+        import * as z from 'zod';
+        z.array(z.string()).length()
+      `,
+      errors: [{ messageId: 'preferTuple' }],
+      output: null,
+    },
+    {
+      name: 'spread element schema is report-only (no autofix)',
+      code: dedent`
+        import * as z from 'zod';
+        declare const args: [z.ZodString];
+        z.array(...args).length(2)
+      `,
+      errors: [{ messageId: 'preferTuple' }],
+      output: null,
+    },
   ],
 });

@@ -124,6 +124,21 @@ ruleTester.run(noTransformInRecordKey.name, noTransformInRecordKey, {
         const config = z.record(z.string().min(1), z.unknown());
       `,
     },
+    {
+      name: 'key schema referenced through a variable is not analyzed',
+      code: dedent`
+        import * as z from 'zod';
+        const Key = z.string().trim();
+        const config = z.record(Key, z.unknown());
+      `,
+    },
+    {
+      name: 'z.record() without arguments',
+      code: dedent`
+        import * as z from 'zod';
+        const config = z.record();
+      `,
+    },
   ],
   invalid: [
     {

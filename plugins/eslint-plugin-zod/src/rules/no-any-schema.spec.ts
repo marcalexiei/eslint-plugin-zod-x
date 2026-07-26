@@ -149,5 +149,21 @@ ruleTester.run(noAnySchema.name, noAnySchema, {
         },
       ],
     },
+    {
+      name: 'named import with a chained method — reported without a rename suggestion',
+      code: dedent`
+        import { any } from 'zod';
+        const schema = any().optional();
+      `,
+      errors: [{ messageId: 'noZAny', suggestions: [] }],
+    },
+    {
+      name: 'computed factory access — reported without a rename suggestion',
+      code: dedent`
+        import * as z from 'zod';
+        const schema = z['any']();
+      `,
+      errors: [{ messageId: 'noZAny', suggestions: [] }],
+    },
   ],
 });

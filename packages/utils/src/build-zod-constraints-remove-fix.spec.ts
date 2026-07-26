@@ -161,4 +161,22 @@ describe('buildZodConstraintsRemoveFix', () => {
 
     expect(fixes).toBeNull();
   });
+
+  it('returns null when the `.check(...)` call itself sits in factory position', () => {
+    // Not reachable from a real chain — `.check()` always follows a factory —
+    // but it pins the null-propagation contract of the chain-removal helper.
+    const checkNode = makeNodeWithRange(0, 20);
+    const methods = [{ name: 'check', node: checkNode }];
+    const { fixer } = makeFixer();
+
+    const fixes = buildZodConstraintsRemoveFix({
+      fixer,
+      methods,
+      constraints: [
+        makeCheckArgument({ chainIndex: 0, checkNode, argumentIndex: 0, argumentCount: 1 }),
+      ],
+    });
+
+    expect(fixes).toBeNull();
+  });
 });

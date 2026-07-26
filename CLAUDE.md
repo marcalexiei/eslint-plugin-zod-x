@@ -24,6 +24,7 @@ pnpm monorepo containing three ESLint plugins and a shared utilities package for
 # from repo root
 pnpm build          # build all packages
 pnpm test           # run all test suites
+pnpm test:coverage  # run all test suites with coverage + thresholds
 pnpm typecheck      # tsc -b (project references, no emit)
 pnpm lint           # lint:js + lint:docs + lint:knip
 pnpm format         # prettier --write
@@ -58,7 +59,7 @@ Each rule builder is one `<rule-name>.ts` file with a matching `package.json` ex
 
 AST helpers exported from `@eslint-zod/utils`:
 
-- `createZodSchemaImportTrack()` — tracks namespace and named imports; returns an object with `isZodNamespace`, `getNamedImportOriginal`, `collectZodChainMethods`, `collectZodSchemaConstraints`, and listener hooks
+- `createZodSchemaImportTrack()` — tracks namespace and named imports; returns an object with `isZodNamespace`, `getNamedImportOriginal` (local name → zod export name), `getNamedImportLocal` (zod export name → local name, for fixers that must write a call site: `import { nullable } from 'zod'` → `getNamedImportLocal('nullish')`, `undefined` when that export was never imported), `collectZodChainMethods`, `collectZodSchemaConstraints`, and listener hooks
 - `detectZodSchemaRootNode()` — finds the outermost Zod call expression in a chain
 - `getZodSchemaBaseType()` — maps a schema factory name (`detectZodSchemaRootNode`'s `schemaType`) to its base type category (`string` — including the top-level string formats —, `number`, `bigint`, `array`, `object`, `literal`, `any`/`unknown`/`never`, …); returns `undefined` for factories rules should not reason about
 - `collectZodSchemaConstraints()` (tracker method) — flattens a schema chain into a normalized list of constraints (`ZodSchemaConstraint`), covering both API styles: chained methods (`.min(2)`, `zod`) become `origin: 'chained'` items and recognized zod calls among `.check(...)` arguments (`z.minLength(2)`, `zod/mini`) become `origin: 'check-argument'` items. **This is the standard way to navigate a schema's checks in rules shared between plugins** — detection differs per API style, but rule logic written against the constraint list works unchanged in `zod` and `zod-mini`. Names are not canonicalized (chained `.min()` means `gte` on numbers but `minLength` on strings), so each rule maps spellings to its own vocabulary with a small table (see the `prefer-tuple-over-array-length` rule builder).
@@ -124,7 +125,7 @@ A rule is shared when the same file name exists in both plugins' `src/rules/` (t
 
 Every change must be properly tested and documented:
 
-- Add or update specs to cover the new or modified behavior
+- Add or update specs to cover the new or modified behavior. A CI job runs `pnpm test:coverage`; the thresholds in `vitest.config.ts` are no-regression floors pinned just below the measured baseline. If a change drops coverage below them, add the missing specs — never lower a threshold to make the build pass.
 - Update rule docs (`docs/rules/*.md`) when rule behavior changes; run `pnpm build:docs` from the plugin directory afterward
 - Update package READMEs when public API changes. In particular, `packages/utils/README.md` lists **every** public export — its root exports and its `rule-builders/*` subpaths — and must be kept in sync whenever `@eslint-zod/utils` gains, renames, or removes an export (a new rule builder, a new helper/constant, a new exported contract type). It is not auto-generated; nothing fails the build if it drifts, so update it by hand in the same change.
 - Update this file when architecture, utilities, or conventions change

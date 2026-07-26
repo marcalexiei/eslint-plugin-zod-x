@@ -67,6 +67,18 @@ function mockNamedSpec(localName: string, originalName?: string): TSESTree.Impor
   } as unknown as TSESTree.ImportSpecifier;
 }
 
+/** `import { 'string' as s } from 'zod'` — an arbitrary module namespace name. */
+function mockStringLiteralNamedSpec(
+  localName: string,
+  importedValue: string,
+): TSESTree.ImportSpecifier {
+  return {
+    type: AST_NODE_TYPES.ImportSpecifier,
+    local: makeIdent(localName),
+    imported: { type: AST_NODE_TYPES.Literal, value: importedValue },
+  } as unknown as TSESTree.ImportSpecifier;
+}
+
 // --- tests ---
 
 describe('createZodSchemaImportTrack', () => {
@@ -120,6 +132,17 @@ describe('importDeclarationListener', () => {
     );
     expect(tracker.getNamedImportOriginal('zodString')).toBe('string');
     expect(tracker.getNamedImportLocal('string')).toBe('zodString');
+  });
+
+  it('falls back to the local name for a string-literal import name', () => {
+    // `import { 'string' as s } from 'zod'` — the imported name is a
+    // StringLiteral, which carries no `name`, so the local name is used.
+    const { trackZodSchemaImports } = createZodSchemaImportTrack(zodImportScope);
+    const tracker = trackZodSchemaImports();
+    tracker.importDeclarationListener(
+      mockImportDecl('zod', [mockStringLiteralNamedSpec('s', 'string')]),
+    );
+    expect(tracker.getNamedImportOriginal('s')).toBe('s');
   });
 
   it('ignores imports from non-zod sources', () => {

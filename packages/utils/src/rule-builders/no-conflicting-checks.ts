@@ -580,13 +580,12 @@ export function buildNoConflictingChecksCreate(
       const intMarker = checks.find((check) => check.descriptor.intMarker);
 
       for (const [index, a] of multiples.entries()) {
-        const left = asNumeric(a.literalValue);
-        if (left === undefined) {
-          continue;
-        }
+        // `multiples` is filtered on `asNumeric(...) !== undefined`, so both
+        // sides are numeric here; only their types may differ.
+        const left = asNumeric(a.literalValue)!;
         for (const b of multiples.slice(index + 1)) {
-          const right = asNumeric(b.literalValue);
-          if (right === undefined || typeof left !== typeof right) {
+          const right = asNumeric(b.literalValue)!;
+          if (typeof left !== typeof right) {
             continue;
           }
           if (left === right) {

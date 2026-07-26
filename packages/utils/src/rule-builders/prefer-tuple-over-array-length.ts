@@ -180,13 +180,9 @@ export function buildPreferTupleOverArrayLengthCreate(
               return null;
             }
 
-            const arrayCallee = arrayNode.callee;
-            if (
-              arrayCallee.type !== AST_NODE_TYPES.MemberExpression ||
-              arrayCallee.property.type !== AST_NODE_TYPES.Identifier
-            ) {
-              return null;
-            }
+            // Named declarations returned above and a computed factory produces
+            // no walkable `array` chain item, so the callee is `<ns>.array`.
+            const arrayCallee = arrayNode.callee as TSESTree.MemberExpression;
 
             const removeFixes = buildZodConstraintsRemoveFix({
               fixer,

@@ -57,6 +57,37 @@ ruleTester.run(noUnnecessaryReadonly.name, noUnnecessaryReadonly, {
         readonly(string());
       `,
     },
+    {
+      name: 'readonly wrapping a non-zod call is not analyzed',
+      code: dedent`
+        import * as z from 'zod/mini';
+        declare function buildSchema(): z.ZodMiniString;
+        z.readonly(buildSchema());
+      `,
+    },
+    {
+      name: 'passthrough wrapper around a schema reference is not analyzed',
+      code: dedent`
+        import * as z from 'zod/mini';
+        const inner = z.string();
+        z.readonly(z.optional(inner));
+      `,
+    },
+    {
+      name: 'passthrough wrapper around a non-zod call is not analyzed',
+      code: dedent`
+        import * as z from 'zod/mini';
+        declare function buildSchema(): z.ZodMiniString;
+        z.readonly(z.optional(buildSchema()));
+      `,
+    },
+    {
+      name: 'readonly without an argument is not analyzed',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.readonly();
+      `,
+    },
   ],
   invalid: [
     {

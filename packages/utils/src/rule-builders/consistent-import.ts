@@ -79,11 +79,10 @@ export function buildConsistentImportCreate(
           }
 
           if (!namespaceAliasName) {
-            namespaceAliasName = 'z';
-            if (namespaceAliasNameIndex > 0) {
-              namespaceAliasName = `z${namespaceAliasNameIndex}`;
-              namespaceAliasNameIndex += 1;
-            }
+            // Each group that needs the fallback gets a distinct name, so two
+            // sources rewritten in the same file don't both become `z`.
+            namespaceAliasName = namespaceAliasNameIndex > 0 ? `z${namespaceAliasNameIndex}` : 'z';
+            namespaceAliasNameIndex += 1;
           }
 
           // Check if first import node is a namespace import

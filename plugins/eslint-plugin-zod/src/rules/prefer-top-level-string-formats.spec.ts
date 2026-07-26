@@ -150,6 +150,13 @@ ruleTester.run(preferTopLevelStringFormats.name, preferTopLevelStringFormats, {
       name: 'unrelated to zod',
       code: 'something.string().email()',
     },
+    {
+      name: 'string factory aliased on import — the chain has no `string` method to replace',
+      code: dedent`
+        import { string as str } from 'zod';
+        str().email();
+      `,
+    },
   ],
   invalid,
 });

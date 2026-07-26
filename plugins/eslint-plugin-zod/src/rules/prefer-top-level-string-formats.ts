@@ -129,12 +129,10 @@ export const preferTopLevelStringFormats = createZodPluginRule<[Options], Messag
           return;
         }
 
-        if (!isTopLevelStringFormatMethodName(formatMethod.name)) {
-          return;
-        }
-
+        // The `find` predicate above already checked the name against the
+        // format list; TS just cannot carry a type guard through `find`.
         const { replacementMethodName, sourceMethodName } =
-          TOP_LEVEL_STRING_FORMATS_BY_SOURCE[formatMethod.name];
+          TOP_LEVEL_STRING_FORMATS_BY_SOURCE[formatMethod.name as TopLevelStringFormatMethodName];
 
         context.report({
           node,

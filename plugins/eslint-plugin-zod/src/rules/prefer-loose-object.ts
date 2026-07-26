@@ -1,5 +1,5 @@
 import { createZodSchemaImportTrack, zodImportScope } from '@eslint-zod/utils';
-import { AST_NODE_TYPES } from '@typescript-eslint/utils';
+import type { TSESTree } from '@typescript-eslint/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
 
@@ -58,18 +58,20 @@ export const preferLooseObject = createZodPluginRule({
             }
 
             const { sourceCode } = context;
-            const replacementText =
-              objectMethod.node.callee.type === AST_NODE_TYPES.MemberExpression
-                ? `${sourceCode.getText(objectMethod.node.callee.object)}.looseObject`
-                : 'looseObject';
 
-            const fixes = [fixer.replaceText(objectMethod.node.callee, replacementText)];
+            // Named declarations returned above, so both calls are `<ns>.<name>(…)`
+            // member expressions — a bare identifier callee is unreachable here.
+            const objectCallee = objectMethod.node.callee as TSESTree.MemberExpression;
+            const looseCallee = looseMethod.node.callee as TSESTree.MemberExpression;
 
-            const calleeProperty =
-              looseMethod.node.callee.type === AST_NODE_TYPES.MemberExpression
-                ? looseMethod.node.callee.property
-                : looseMethod.node.callee;
-            const tokenBefore = sourceCode.getTokenBefore(calleeProperty);
+            const fixes = [
+              fixer.replaceText(
+                objectCallee,
+                `${sourceCode.getText(objectCallee.object)}.looseObject`,
+              ),
+            ];
+
+            const tokenBefore = sourceCode.getTokenBefore(looseCallee.property);
 
             if (tokenBefore?.value === '.') {
               fixes.push(fixer.removeRange([tokenBefore.range[0], looseMethod.node.range[1]]));

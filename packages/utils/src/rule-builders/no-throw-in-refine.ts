@@ -15,11 +15,7 @@ export function buildNoThrowInRefineCreate(
     const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
       trackZodSchemaImports();
 
-    function checkNode(node: TSESTree.Node | null): void {
-      if (!node) {
-        return;
-      }
-
+    function checkNode(node: TSESTree.Node): void {
       switch (node.type) {
         case AST_NODE_TYPES.ThrowStatement:
           context.report({ node, messageId: 'noThrowInRefine' });
@@ -53,12 +49,10 @@ export function buildNoThrowInRefineCreate(
         case AST_NODE_TYPES.FunctionExpression:
         case AST_NODE_TYPES.ArrowFunctionExpression:
         case AST_NODE_TYPES.FunctionDeclaration:
-          return;
-        default:
-          if ('body' in node && Array.isArray(node.body)) {
-            node.body.forEach(checkNode);
-          }
           break;
+        // `BlockStatement` is the only statement carrying a list of statements,
+        // and it has its own case above — nothing else to descend into.
+        // no default
       }
     }
 

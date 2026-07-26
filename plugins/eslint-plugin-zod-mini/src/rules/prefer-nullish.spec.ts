@@ -42,6 +42,21 @@ ruleTester.run(preferNullish.name, preferNullish, {
         optional(nullable(string()));
       `,
     },
+    {
+      name: 'computed wrapper access yields no walkable chain',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z['optional'](z.nullable(z.string()));
+      `,
+    },
+    {
+      name: 'wrapper argument passed through a variable',
+      code: dedent`
+        import * as z from 'zod/mini';
+        const inner = z.nullable(z.string());
+        z.optional(inner);
+      `,
+    },
   ],
   invalid: [
     {

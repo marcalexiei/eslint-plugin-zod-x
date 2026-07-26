@@ -115,6 +115,13 @@ ruleTester.run(noConflictingChecks.name, noConflictingChecks, {
       `,
       options: [{ checkConfusingCases: false }],
     },
+    {
+      name: 'chain methods that are not checks are skipped',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().describe('a description');
+      `,
+    },
   ],
   invalid: [
     {
@@ -324,6 +331,54 @@ ruleTester.run(noConflictingChecks.name, noConflictingChecks, {
         z.string().lowercase().uppercase().min(5).max(2);
       `,
       errors: [{ messageId: 'impossibleCase' }, { messageId: 'confusingCombination' }],
+    },
+    {
+      name: 'repeated equal multipleOf values',
+      code: dedent`
+        import * as z from 'zod';
+        z.number().multipleOf(2).multipleOf(2);
+      `,
+      errors: [{ messageId: 'redundantCheck' }],
+    },
+    {
+      name: 'multipleOf implying a later smaller multiple',
+      code: dedent`
+        import * as z from 'zod';
+        z.number().multipleOf(6).multipleOf(3);
+      `,
+      errors: [{ messageId: 'redundantCheck' }],
+    },
+    {
+      name: 'bigint multipleOf implied by a larger multiple',
+      code: dedent`
+        import * as z from 'zod';
+        z.bigint().multipleOf(3n).multipleOf(6n);
+      `,
+      errors: [{ messageId: 'redundantCheck' }],
+    },
+    {
+      name: 'bigint multipleOf implying a later smaller multiple',
+      code: dedent`
+        import * as z from 'zod';
+        z.bigint().multipleOf(6n).multipleOf(3n);
+      `,
+      errors: [{ messageId: 'redundantCheck' }],
+    },
+    {
+      name: 'explicit lower bound against an upper bound implied by a sign check',
+      code: dedent`
+        import * as z from 'zod';
+        z.number().gt(5).negative();
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
+      name: 'exclusive upper bound wins over an equal inclusive one',
+      code: dedent`
+        import * as z from 'zod';
+        z.number().lte(5).lt(5);
+      `,
+      errors: [{ messageId: 'redundantCheck' }],
     },
   ],
 });

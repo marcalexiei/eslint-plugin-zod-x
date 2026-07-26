@@ -32,6 +32,32 @@ ruleTester.run(noNumberSchemaWithIsInt.name, noNumberSchemaWithIsInt, {
         const n = z.number();
       `,
     },
+    {
+      name: 'computed access with an `isInt` variable is not the deprecated property',
+      code: dedent`
+        import * as z from 'zod';
+        declare const isInt: string;
+        void z.number()[isInt];
+      `,
+    },
+    {
+      name: 'private field named `isInt`',
+      code: dedent`
+        class Counter {
+          #isInt = true;
+          read() {
+            return this.#isInt;
+          }
+        }
+      `,
+    },
+    {
+      name: '`isInt` on a non-number zod schema',
+      code: dedent`
+        import * as z from 'zod';
+        void z.string().isInt;
+      `,
+    },
   ],
   invalid: [
     {

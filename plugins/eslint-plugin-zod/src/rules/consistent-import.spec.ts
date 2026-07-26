@@ -351,6 +351,27 @@ ruleTester.run(`${consistentImport.name} namespace`, consistentImport, {
         const bSchema = myZod.boolean();
       `,
     },
+    {
+      name: 'two sources needing a generated alias get distinct names',
+      code: dedent`
+        import { string } from 'zod';
+        import { number } from 'zod/v3';
+        const aSchema = string();
+        const bSchema = number();
+      `,
+      errors: [
+        { messageId: 'changeImportSyntax', line: 1 },
+        { messageId: 'changeImportSyntax', line: 2 },
+        { messageId: 'convertUsage', line: 3 },
+        { messageId: 'convertUsage', line: 4 },
+      ],
+      output: dedent`
+        import * as z from 'zod';
+        import * as z1 from 'zod/v3';
+        const aSchema = z.string();
+        const bSchema = z1.number();
+      `,
+    },
   ],
 });
 

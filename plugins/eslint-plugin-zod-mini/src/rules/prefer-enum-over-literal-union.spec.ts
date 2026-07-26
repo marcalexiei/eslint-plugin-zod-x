@@ -64,6 +64,28 @@ ruleTester.run(preferEnumOverLiteralUnion.name, preferEnumOverLiteralUnion, {
         });
       `,
     },
+    {
+      name: 'computed union access yields no walkable chain',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z['union']([z.literal('foo'), z.literal('bar')]);
+      `,
+    },
+    {
+      name: 'members passed through a variable instead of an array literal',
+      code: dedent`
+        import * as z from 'zod/mini';
+        const members = [z.literal('foo'), z.literal('bar')] as const;
+        z.union(members);
+      `,
+    },
+    {
+      name: 'sparse member array',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.union([z.literal('foo'), , z.literal('bar')]);
+      `,
+    },
   ],
   invalid: [
     {

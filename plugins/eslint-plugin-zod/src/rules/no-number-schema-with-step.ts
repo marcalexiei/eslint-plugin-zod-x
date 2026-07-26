@@ -1,4 +1,5 @@
 import { createZodSchemaImportTrack, zodImportScope } from '@eslint-zod/utils';
+import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
@@ -41,14 +42,16 @@ export const noNumberSchemaWithStep = createZodPluginRule({
         }
 
         const { callee } = node;
+        // A named import aliased to `step` (`import { number as step }`) also
+        // yields a chain item called `step`, but its callee is a bare
+        // identifier with no property to rename.
         if (callee.type !== AST_NODE_TYPES.MemberExpression) {
           return;
         }
-        if (callee.property.type !== AST_NODE_TYPES.Identifier) {
-          return;
-        }
 
-        const { property } = callee;
+        // `collectZodChainMethods` only names a member-expression call when its
+        // property is an identifier, so reaching here guarantees the narrowing.
+        const property = callee.property as TSESTree.Identifier;
 
         context.report({
           node,

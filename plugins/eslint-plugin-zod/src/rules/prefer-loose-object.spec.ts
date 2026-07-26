@@ -159,5 +159,14 @@ ruleTester.run(preferLooseObject.name, preferLooseObject, {
       `,
       errors: [{ messageId: 'preferLooseObject' }],
     },
+    {
+      name: 'computed object access is reported but not fixed — the chain walker cannot name it',
+      code: dedent`
+        import * as z from 'zod';
+        z['object']({ a: z.string() }).passthrough();
+      `,
+      output: null,
+      errors: [{ messageId: 'preferLooseObject' }],
+    },
   ],
 });
