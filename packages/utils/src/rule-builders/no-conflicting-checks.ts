@@ -548,8 +548,12 @@ export function buildNoConflictingChecksCreate(
           zodSchemaMeta.node,
         ).entries()) {
           const canonical = canonicalizeZodConstraintName(constraint, baseType);
-          const descriptor = canonical === null ? undefined : getZodCheckDescriptor(canonical);
-          if (canonical === null || !descriptor) {
+          if (canonical === null) {
+            continue;
+          }
+
+          const descriptor = getZodCheckDescriptor(canonical);
+          if (descriptor === null) {
             continue;
           }
           checks.push({

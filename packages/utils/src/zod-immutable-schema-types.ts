@@ -8,7 +8,7 @@
  * `array`, `record`, `map`, `set`, `tuple`, …) are intentionally absent —
  * `readonly` is meaningful there.
  */
-export const ZOD_IMMUTABLE_SCHEMA_TYPES = [
+export const ZOD_IMMUTABLE_SCHEMA_TYPES = Object.freeze([
   // primitives / scalars
   'bigint',
   'boolean',
@@ -64,4 +64,4 @@ export const ZOD_IMMUTABLE_SCHEMA_TYPES = [
   'uuidv6',
   'uuidv7',
   'xid',
-];
+]);

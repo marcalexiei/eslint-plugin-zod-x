@@ -8,7 +8,7 @@ interface Options<TSource extends string> {
   sources: Array<TSource>;
 }
 
-export function buildConsistentImportSourceCreate<TSources extends Array<string>>(
+export function buildConsistentImportSourceCreate<TSources extends ReadonlyArray<string>>(
   scope: ZodImportScope<TSources>,
 ): (
   context: Readonly<TSESLint.RuleContext<MessageIds, [Options<TSources[number]>]>>,

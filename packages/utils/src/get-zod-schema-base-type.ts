@@ -60,9 +60,9 @@ const BASE_TYPES = new Map<string, ZodSchemaBaseType>([
 
 /**
  * Maps a schema factory name (the `schemaType` of `detectZodSchemaRootNode`)
- * to its base type category, or `undefined` for factories the caller should
- * not reason about (`union`, `tuple`, `enum`, `custom`, wrappers, …).
+ * to its base type category, or `null` for factories the caller should not
+ * reason about (`union`, `tuple`, `enum`, `custom`, wrappers, …).
  */
-export function getZodSchemaBaseType(schemaType: string): ZodSchemaBaseType | undefined {
-  return BASE_TYPES.get(schemaType);
+export function getZodSchemaBaseType(schemaType: string): ZodSchemaBaseType | null {
+  return BASE_TYPES.get(schemaType) ?? null;
 }

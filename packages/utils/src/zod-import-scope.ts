@@ -13,12 +13,14 @@ import type { ZodSchemaImportTracker } from './track-zod-schema-imports.js';
  * scope.isAllowed('zod/mini'); // false
  * ```
  */
-export class ZodImportScope<TSources extends Array<string> = Array<string>> {
+export class ZodImportScope<TSources extends ReadonlyArray<string> = ReadonlyArray<string>> {
   /** The list of import source strings recognised by this scope. */
   readonly sources: TSources;
 
   constructor(sources: TSources) {
-    this.sources = sources;
+    // Copy before freezing: freezing the caller's array in place would be a
+    // side effect on their value.
+    this.sources = Object.freeze([...sources]) as unknown as TSources;
   }
 
   /** Returns `true` if `source` is one of the scope's recognised import sources. */

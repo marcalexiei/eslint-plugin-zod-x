@@ -197,11 +197,11 @@ const CHAINED_CANONICAL = new Map<ZodSchemaBaseType, Map<string, string>>([
 
 /**
  * Looks up what a check means by its canonical name (see
- * {@link canonicalizeZodConstraintName}). Returns `undefined` for names the
+ * {@link canonicalizeZodConstraintName}). Returns `null` for names the
  * vocabulary does not model — callers should skip those rather than guess.
  */
-export function getZodCheckDescriptor(canonicalName: string): ZodCheckDescriptor | undefined {
-  return CHECK_DESCRIPTORS.get(canonicalName);
+export function getZodCheckDescriptor(canonicalName: string): ZodCheckDescriptor | null {
+  return CHECK_DESCRIPTORS.get(canonicalName) ?? null;
 }
 
 /**

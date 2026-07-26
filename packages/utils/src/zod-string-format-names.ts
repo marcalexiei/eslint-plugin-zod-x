@@ -8,7 +8,7 @@
  * (`z.iso.date()`, …) are intentionally NOT here — their factory resolves to
  * the `iso` namespace, and their check names are dotted.
  */
-export const ZOD_STRING_FORMAT_NAMES = [
+export const ZOD_STRING_FORMAT_NAMES = Object.freeze([
   'base64',
   'base64url',
   'cidrv4',
@@ -36,4 +36,4 @@ export const ZOD_STRING_FORMAT_NAMES = [
   'uuidv6',
   'uuidv7',
   'xid',
-];
+]);
