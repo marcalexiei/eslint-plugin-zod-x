@@ -2,10 +2,8 @@ import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 import type { TSESTree } from '@typescript-eslint/utils';
 import { describe, expect, it } from 'vitest';
 
-import {
-  detectZodSchemaRootNode,
-  isZodNumberSchemaCallExpression,
-} from './detect-zod-schema-root-node.js';
+import { detectZodSchemaRootNode, isZodSchemaOfType } from './detect-zod-schema-root-node.js';
+import type { ZodImports } from './detect-zod-schema-root-node.js';
 
 // --- minimal AST mock helpers ---
 
@@ -73,17 +71,18 @@ function setOutermostParent(node: TSESTree.CallExpression): void {
   };
 }
 
-const zodNamespaces = new Set(['z']);
-const zodNamedImports = new Map<string, string>([
+const namespaces = new Set(['z']);
+const named = new Map<string, string>([
   ['string', 'string'],
   ['number', 'number'],
   ['array', 'array'],
 ]);
+const imports: ZodImports = { namespaces, named };
 
 describe('detectZodSchemaRootNode', () => {
   it('returns null for non-CallExpression nodes', () => {
     const node = makeIdent('z') as unknown as TSESTree.Node;
-    expect(detectZodSchemaRootNode(node, zodNamespaces, zodNamedImports)).toBeNull();
+    expect(detectZodSchemaRootNode(node, imports)).toBeNull();
   });
 
   it('returns null when the call is not the outermost in a chain', () => {
@@ -94,26 +93,25 @@ describe('detectZodSchemaRootNode', () => {
     const minME = minCall.callee as TSESTree.MemberExpression;
     (numberCall as unknown as Record<string, unknown>).parent = minME;
 
-    expect(detectZodSchemaRootNode(numberCall, zodNamespaces, zodNamedImports)).toBeNull();
+    expect(detectZodSchemaRootNode(numberCall, imports)).toBeNull();
   });
 
-  it('returns null for calls not in zodNamespaces or zodNamedImports', () => {
+  it('returns null for calls not in namespaces or named imports', () => {
     const call = makeCall(makeME(makeIdent('notZod'), 'string'));
     setOutermostParent(call);
-    expect(detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports)).toBeNull();
+    expect(detectZodSchemaRootNode(call, imports)).toBeNull();
   });
 
   it('detects namespace style: z.string()', () => {
     const call = makeCall(makeME(makeIdent('z'), 'string'));
     setOutermostParent(call);
 
-    const result = detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports);
+    const result = detectZodSchemaRootNode(call, imports);
 
     expect(result).not.toBeNull();
     expect(result?.schemaDecl).toBe('namespace');
     expect(result?.schemaType).toBe('string');
     expect(result?.methods).toStrictEqual(['string']);
-    expect(result?.node).toBe(call);
   });
 
   it('detects namespace style with chain: z.number().min(1)', () => {
@@ -123,24 +121,22 @@ describe('detectZodSchemaRootNode', () => {
     ]);
     setOutermostParent(minCall);
 
-    const result = detectZodSchemaRootNode(minCall, zodNamespaces, zodNamedImports);
+    const result = detectZodSchemaRootNode(minCall, imports);
 
     expect(result?.schemaDecl).toBe('namespace');
     expect(result?.schemaType).toBe('number');
     expect(result?.methods).toStrictEqual(['number', 'min']);
-    expect(result?.node).toBe(minCall);
   });
 
   it('detects named import style: string()', () => {
     const call = makeCall(makeIdent('string'));
     setOutermostParent(call);
 
-    const result = detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports);
+    const result = detectZodSchemaRootNode(call, imports);
 
     expect(result?.schemaDecl).toBe('named');
     expect(result?.schemaType).toBe('string');
     expect(result?.methods).toStrictEqual([]);
-    expect(result?.node).toBe(call);
   });
 
   it('detects named import chain: string().optional()', () => {
@@ -148,7 +144,7 @@ describe('detectZodSchemaRootNode', () => {
     const optCall = makeCall(makeME(stringCall, 'optional'));
     setOutermostParent(optCall);
 
-    const result = detectZodSchemaRootNode(optCall, zodNamespaces, zodNamedImports);
+    const result = detectZodSchemaRootNode(optCall, imports);
 
     expect(result?.schemaDecl).toBe('named');
     expect(result?.schemaType).toBe('string');
@@ -156,11 +152,11 @@ describe('detectZodSchemaRootNode', () => {
   });
 
   it('resolves aliased named import to original name: nativeEnum as zodNativeEnum', () => {
-    const zodNamedImportsWithAlias = new Map([['zodNativeEnum', 'nativeEnum']]);
+    const aliased: ZodImports = { namespaces, named: new Map([['zodNativeEnum', 'nativeEnum']]) };
     const call = makeCall(makeIdent('zodNativeEnum'));
     setOutermostParent(call);
 
-    const result = detectZodSchemaRootNode(call, zodNamespaces, zodNamedImportsWithAlias);
+    const result = detectZodSchemaRootNode(call, aliased);
 
     expect(result?.schemaDecl).toBe('named');
     expect(result?.schemaType).toBe('nativeEnum');
@@ -172,7 +168,7 @@ describe('detectZodSchemaRootNode', () => {
     const outerCall = makeCall(customCall);
     (customCall as unknown as Record<string, unknown>).parent = outerCall;
 
-    expect(detectZodSchemaRootNode(customCall, zodNamespaces, zodNamedImports)).toBeNull();
+    expect(detectZodSchemaRootNode(customCall, imports)).toBeNull();
   });
 
   describe('computed property access', () => {
@@ -180,7 +176,7 @@ describe('detectZodSchemaRootNode', () => {
       const call = makeCall(makeComputedME(makeIdent('z'), makeLiteral('string')));
       setOutermostParent(call);
 
-      const result = detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports);
+      const result = detectZodSchemaRootNode(call, imports);
 
       expect(result?.schemaDecl).toBe('namespace');
       expect(result?.schemaType).toBe('string');
@@ -190,7 +186,7 @@ describe('detectZodSchemaRootNode', () => {
       const call = makeCall(makeComputedME(makeIdent('z'), makeTemplateLiteral('string')));
       setOutermostParent(call);
 
-      const result = detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports);
+      const result = detectZodSchemaRootNode(call, imports);
 
       expect(result?.schemaDecl).toBe('namespace');
       expect(result?.schemaType).toBe('string');
@@ -202,14 +198,14 @@ describe('detectZodSchemaRootNode', () => {
       );
       setOutermostParent(call);
 
-      expect(detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports)).toBeNull();
+      expect(detectZodSchemaRootNode(call, imports)).toBeNull();
     });
 
     it('returns null for a null literal property: z[null]()', () => {
       const call = makeCall(makeComputedME(makeIdent('z'), makeLiteral(null)));
       setOutermostParent(call);
 
-      expect(detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports)).toBeNull();
+      expect(detectZodSchemaRootNode(call, imports)).toBeNull();
     });
 
     it('returns null for a non-static property: z[a + b]()', () => {
@@ -222,7 +218,7 @@ describe('detectZodSchemaRootNode', () => {
       const call = makeCall(makeComputedME(makeIdent('z'), binary));
       setOutermostParent(call);
 
-      expect(detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports)).toBeNull();
+      expect(detectZodSchemaRootNode(call, imports)).toBeNull();
     });
 
     it('returns null when the leftmost node is not an identifier: (a + b).string()', () => {
@@ -235,35 +231,38 @@ describe('detectZodSchemaRootNode', () => {
       const call = makeCall(makeME(binary, 'string'));
       setOutermostParent(call);
 
-      expect(detectZodSchemaRootNode(call, zodNamespaces, zodNamedImports)).toBeNull();
+      expect(detectZodSchemaRootNode(call, imports)).toBeNull();
     });
   });
 });
 
-describe('isZodNumberSchemaCallExpression', () => {
+describe('isZodSchemaOfType', () => {
   it('returns false for non-CallExpression', () => {
-    expect(isZodNumberSchemaCallExpression(makeIdent('z'), zodNamespaces, zodNamedImports)).toBe(
-      false,
-    );
+    expect(isZodSchemaOfType(makeIdent('z'), 'number', imports)).toBe(false);
   });
 
   it('returns true for z.number()', () => {
     const call = makeCall(makeME(makeIdent('z'), 'number'));
-    expect(isZodNumberSchemaCallExpression(call, zodNamespaces, zodNamedImports)).toBe(true);
+    expect(isZodSchemaOfType(call, 'number', imports)).toBe(true);
   });
 
   it('returns true for z.number().min(1) (inner call)', () => {
     const numberCall = makeCall(makeME(makeIdent('z'), 'number'));
-    expect(isZodNumberSchemaCallExpression(numberCall, zodNamespaces, zodNamedImports)).toBe(true);
+    expect(isZodSchemaOfType(numberCall, 'number', imports)).toBe(true);
   });
 
-  it('returns false for z.string()', () => {
+  it('returns false when the factory is a different schema type', () => {
     const call = makeCall(makeME(makeIdent('z'), 'string'));
-    expect(isZodNumberSchemaCallExpression(call, zodNamespaces, zodNamedImports)).toBe(false);
+    expect(isZodSchemaOfType(call, 'number', imports)).toBe(false);
+  });
+
+  it('matches any schema type, not just number', () => {
+    const call = makeCall(makeME(makeIdent('z'), 'string'));
+    expect(isZodSchemaOfType(call, 'string', imports)).toBe(true);
   });
 
   it('returns true for named import number()', () => {
     const call = makeCall(makeIdent('number'));
-    expect(isZodNumberSchemaCallExpression(call, zodNamespaces, zodNamedImports)).toBe(true);
+    expect(isZodSchemaOfType(call, 'number', imports)).toBe(true);
   });
 });

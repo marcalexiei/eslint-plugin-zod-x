@@ -9,10 +9,6 @@ export {
 } from './zod-import-scope.js';
 
 // schema detection & navigation
-export {
-  detectZodSchemaRootNode,
-  isZodNumberSchemaCallExpression,
-} from './detect-zod-schema-root-node.js';
 export type { DetectData, DetectResult } from './detect-zod-schema-root-node.js';
 export { findParentSchemaMatchingCondition } from './find-parent-schema-matching-condition.js';
 export { getZodSchemaBaseType } from './get-zod-schema-base-type.js';

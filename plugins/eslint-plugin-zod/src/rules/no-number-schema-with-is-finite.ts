@@ -23,6 +23,7 @@ export const noNumberSchemaWithIsFinite = createZodPluginRule({
   defaultOptions: [],
   create: buildDeprecatedSchemaPropertyCreate({
     scope: zodImportScope,
+    schemaType: 'number',
     propertyName: 'isFinite',
     messageId: 'deprecated',
   }),

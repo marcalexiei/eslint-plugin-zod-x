@@ -31,9 +31,7 @@ export const preferMeta = createZodPluginRule({
           return;
         }
 
-        const describe = collectZodChainMethods(zodSchemaMeta.node).find(
-          (it) => it.name === 'describe',
-        );
+        const describe = collectZodChainMethods(node).find((it) => it.name === 'describe');
 
         if (!describe) {
           return;

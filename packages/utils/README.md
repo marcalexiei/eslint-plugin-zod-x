@@ -38,16 +38,14 @@ AST parsing, import tracking, traversal, and fixer helpers.
 
 - `ZodImportScope` — the class defining which import sources a plugin considers in-scope; `scope.createTracker()` is how rules get a per-file import tracker
 - `zodImportScope`, `zodMiniImportScope`, `zodCoreImportScope` — pre-built `ZodImportScope` instances
-- `trackZodSchemaImports(scope)` — the standalone form of `scope.createTracker()`; the returned tracker exposes `collectZodChainMethods`, `collectZodSchemaConstraints`, `detectZodSchemaRootNode`, and the import-lookup helpers
+- `trackZodSchemaImports(scope)` — the standalone form of `scope.createTracker()`; the returned tracker exposes `detectZodSchemaRootNode`, `isZodSchemaOfType`, `collectZodChainMethods`, `collectZodSchemaConstraints`, and the import-lookup helpers. Schema detection is reachable **only** through a tracker — the raw forms need the tracker's private import maps
 - types `ZodSchemaImportTracker`, `ZodChainItem`
 
 **Schema detection & navigation**
 
-- `detectZodSchemaRootNode(node, namespaces, named)` — find the outermost Zod call in a chain
-- `isZodNumberSchemaCallExpression(node, namespaces, named)` — detect `z.number()…` chains
 - `findParentSchemaMatchingCondition(node, options)` — search up the AST for a matching ancestor schema call
 - `getZodSchemaBaseType(schemaType)` — map a schema factory name to its base type category; returns type `ZodSchemaBaseType`
-- types `DetectData`, `DetectResult` — what `detectZodSchemaRootNode` returns
+- types `DetectData`, `DetectResult` — what the tracker's `detectZodSchemaRootNode` returns
 - types `ZodSchemaConstraint`, `ZodChainedConstraint`, `ZodCheckArgumentConstraint` — the normalized constraints produced by the tracker's `collectZodSchemaConstraints`
 
 **Fixer helpers**
@@ -104,6 +102,6 @@ The `consistent-import` builder additionally re-exports the import-syntax helper
 
 Rule shapes that recur across several rules, parameterized by the names they differ in. Unlike rule builders these are not tied to one rule name, and a single plugin may use one several times.
 
-- `buildDeprecatedSchemaPropertyCreate(options)` — flag a deprecated property access on a number schema (`z.number().isInt`); also exports `DeprecatedSchemaPropertyOptions`
+- `buildDeprecatedSchemaPropertyCreate(options)` — flag a deprecated property access on a schema of a given `schemaType` (`z.number().isInt`); also exports `DeprecatedSchemaPropertyOptions`
 - `buildDeprecatedSchemaMethodCreate(options)` — flag a deprecated method anywhere in a schema chain (`.isOptional()`); also exports `DeprecatedSchemaMethodOptions`
 - `buildPreferDedicatedFactoryCreate(options)` — prefer a dedicated factory over a general one plus a chained modifier (`z.looseObject()` over `z.object().passthrough()`); also exports `PreferDedicatedFactoryOptions`

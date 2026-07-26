@@ -31,7 +31,7 @@ export const noNativeEnum = createZodPluginRule({
           return;
         }
 
-        const methods = collectZodChainMethods(zodSchemaMeta.node);
+        const methods = collectZodChainMethods(node);
         const [{ node: rootMethodNode }] = methods;
 
         context.report({

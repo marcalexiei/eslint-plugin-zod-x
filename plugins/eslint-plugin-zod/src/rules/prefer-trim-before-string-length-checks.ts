@@ -36,16 +36,16 @@ export const preferTrimBeforeStringLengthChecks = createZodPluginRule({
 
         // Skip string schema used as record key — trim on record keys causes data loss
         if (
-          findParentSchemaMatchingCondition(zodSchemaMeta.node, {
+          findParentSchemaMatchingCondition(node, {
             schemaName: 'record',
             condition: (callParent) =>
-              callParent.arguments.length > 0 && callParent.arguments[0] === zodSchemaMeta.node,
+              callParent.arguments.length > 0 && callParent.arguments[0] === node,
           })
         ) {
           return;
         }
 
-        const methods = collectZodChainMethods(zodSchemaMeta.node);
+        const methods = collectZodChainMethods(node);
 
         const trimIndex = methods.findIndex((m) => m.name === 'trim');
         if (trimIndex === -1) {

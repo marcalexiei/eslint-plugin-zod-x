@@ -33,16 +33,16 @@ export const preferStringSchemaWithTrim = createZodPluginRule({
         // because transforms on record keys cause data loss
         // https://github.com/marcalexiei/eslint-zod/issues/242
         if (
-          findParentSchemaMatchingCondition(zodSchemaMeta.node, {
+          findParentSchemaMatchingCondition(node, {
             schemaName: 'record',
             condition: (callParent) =>
-              callParent.arguments.length > 0 && callParent.arguments[0] === zodSchemaMeta.node,
+              callParent.arguments.length > 0 && callParent.arguments[0] === node,
           })
         ) {
           return;
         }
 
-        const methods = collectZodChainMethods(zodSchemaMeta.node);
+        const methods = collectZodChainMethods(node);
 
         if (methods.some((it) => it.name === 'trim')) {
           return;

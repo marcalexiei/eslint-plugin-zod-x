@@ -78,7 +78,7 @@ export function buildNoUnnecessaryReadonlyCreate(
         if (!argumentMeta) {
           return 'unknown';
         }
-        const argumentChain = collectZodChainMethods(argumentMeta.node);
+        const argumentChain = collectZodChainMethods(argument);
         return classifyChain(argumentMeta.schemaType, argumentChain, argumentChain.length);
       }
       return 'unknown';
@@ -95,7 +95,7 @@ export function buildNoUnnecessaryReadonlyCreate(
         return 'unknown';
       }
 
-      const chain = collectZodChainMethods(meta.node);
+      const chain = collectZodChainMethods(node);
       return classifyChain(meta.schemaType, chain, chain.length);
     }
 
@@ -107,7 +107,7 @@ export function buildNoUnnecessaryReadonlyCreate(
           return;
         }
 
-        const methods = collectZodChainMethods(zodSchemaMeta.node);
+        const methods = collectZodChainMethods(node);
 
         // Wrapper form: `z.readonly(inner)` (`zod/mini`).
         if (zodSchemaMeta.schemaType === 'readonly') {
@@ -127,7 +127,7 @@ export function buildNoUnnecessaryReadonlyCreate(
         }
 
         // Chained form: `schema.readonly()` (`zod`).
-        const readonlyConstraints = collectZodSchemaConstraints(zodSchemaMeta.node).filter(
+        const readonlyConstraints = collectZodSchemaConstraints(node).filter(
           (it) => it.origin === 'chained' && it.name === 'readonly',
         );
 

@@ -3,11 +3,8 @@ import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { collectZodSchemaConstraints } from './collect-zod-schema-constraints.js';
 import type { ZodSchemaConstraint } from './collect-zod-schema-constraints.js';
-import {
-  detectZodSchemaRootNode,
-  isZodNumberSchemaCallExpression,
-} from './detect-zod-schema-root-node.js';
-import type { DetectResult } from './detect-zod-schema-root-node.js';
+import { detectZodSchemaRootNode, isZodSchemaOfType } from './detect-zod-schema-root-node.js';
+import type { DetectResult, ZodImports } from './detect-zod-schema-root-node.js';
 import type { ZodImportScope } from './zod-import-scope.js';
 
 /** One call in a zod chain: the method's name and the call expression carrying it. */
@@ -79,10 +76,10 @@ export interface ZodSchemaImportTracker {
   collectZodSchemaConstraints: (node: TSESTree.CallExpression) => Array<ZodSchemaConstraint>;
 
   /**
-   * True if `node` is a `z.number()…` (or `number()…`) zod call chain, including inner
+   * True if `node` is a zod call chain built from `schemaType`, including inner
    * calls such as the object of `z.number().min(0).isInt`.
    */
-  isZodNumberSchemaCallExpression: (node: TSESTree.Node) => boolean;
+  isZodSchemaOfType: (node: TSESTree.Node, schemaType: string) => boolean;
 }
 
 /**
@@ -90,9 +87,11 @@ export interface ZodSchemaImportTracker {
  * reach it through {@link ZodImportScope.createTracker}.
  */
 export function trackZodSchemaImports(scope: ZodImportScope): ZodSchemaImportTracker {
-  const zodNamespaces = new Set<string>();
-  // localName → original export name
-  const zodNamedImports = new Map<string, string>();
+  const imports: ZodImports = {
+    namespaces: new Set<string>(),
+    // localName → original export name
+    named: new Map<string, string>(),
+  };
   // original export name → localName (last import wins)
   const zodNamedImportsByOriginal = new Map<string, string>();
 
@@ -154,7 +153,7 @@ export function trackZodSchemaImports(scope: ZodImportScope): ZodSchemaImportTra
         switch (spec.type) {
           case AST_NODE_TYPES.ImportDefaultSpecifier:
           case AST_NODE_TYPES.ImportNamespaceSpecifier:
-            zodNamespaces.add(spec.local.name);
+            imports.namespaces.add(spec.local.name);
             break;
 
           case AST_NODE_TYPES.ImportSpecifier: {
@@ -164,9 +163,9 @@ export function trackZodSchemaImports(scope: ZodImportScope): ZodSchemaImportTra
             const originalName = 'name' in spec.imported ? spec.imported.name : spec.local.name;
 
             if (originalName === 'z') {
-              zodNamespaces.add(spec.local.name);
+              imports.namespaces.add(spec.local.name);
             } else {
-              zodNamedImports.set(spec.local.name, originalName);
+              imports.named.set(spec.local.name, originalName);
               zodNamedImportsByOriginal.set(originalName, spec.local.name);
             }
 
@@ -178,26 +177,23 @@ export function trackZodSchemaImports(scope: ZodImportScope): ZodSchemaImportTra
       }
     },
 
-    isZodNamespace: (name) => zodNamespaces.has(name),
+    isZodNamespace: (name) => imports.namespaces.has(name),
 
-    getNamedImportOriginal: (localName) => zodNamedImports.get(localName),
+    getNamedImportOriginal: (localName) => imports.named.get(localName),
 
     getNamedImportLocal: (originalName) => zodNamedImportsByOriginal.get(originalName),
 
-    detectZodSchemaRootNode: (node) =>
-      detectZodSchemaRootNode(node, zodNamespaces, zodNamedImports),
+    detectZodSchemaRootNode: (node) => detectZodSchemaRootNode(node, imports),
 
     collectZodChainMethods,
 
     collectZodSchemaConstraints: (node) =>
       collectZodSchemaConstraints({
         methods: collectZodChainMethods(node),
-        detectZodSchemaRootNode: (argument) =>
-          detectZodSchemaRootNode(argument, zodNamespaces, zodNamedImports),
+        detectZodSchemaRootNode: (argument) => detectZodSchemaRootNode(argument, imports),
       }),
 
-    isZodNumberSchemaCallExpression: (node) =>
-      isZodNumberSchemaCallExpression(node, zodNamespaces, zodNamedImports),
+    isZodSchemaOfType: (node, schemaType) => isZodSchemaOfType(node, schemaType, imports),
   };
 
   return result;

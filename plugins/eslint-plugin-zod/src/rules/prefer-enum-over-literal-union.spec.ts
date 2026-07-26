@@ -22,6 +22,14 @@ ruleTester.run(preferEnumOverLiteralUnion.name, preferEnumOverLiteralUnion, {
       `,
     },
     {
+      name: 'union with a member that is not a call (identifier reference)',
+      code: dedent`
+        import * as z from 'zod';
+        const Other = z.string();
+        z.union([z.literal('foo'), Other])
+      `,
+    },
+    {
       name: 'union with a non-literal element',
       code: dedent`
         import * as z from 'zod';

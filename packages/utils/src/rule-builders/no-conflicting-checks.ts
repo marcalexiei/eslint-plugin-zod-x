@@ -512,7 +512,7 @@ export function buildNoConflictingChecksCreate(
           return;
         }
 
-        const chain = collectZodChainMethods(zodSchemaMeta.node);
+        const chain = collectZodChainMethods(node);
         // `detectZodSchemaRootNode` resolves computed-member factories
         // (`z['uuid']()`) that `collectZodChainMethods` cannot navigate,
         // leaving `chain` empty. Bail rather than deref `chain[0]`.
@@ -544,9 +544,7 @@ export function buildNoConflictingChecksCreate(
           });
         }
 
-        for (const [index, constraint] of collectZodSchemaConstraints(
-          zodSchemaMeta.node,
-        ).entries()) {
+        for (const [index, constraint] of collectZodSchemaConstraints(node).entries()) {
           const canonical = canonicalizeZodConstraintName(constraint, baseType);
           if (canonical === null) {
             continue;
