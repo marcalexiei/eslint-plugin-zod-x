@@ -21,6 +21,7 @@ import { z } from 'zod';
 
 z.number().step(0.1);
 z.number().min(0).step(2, 'error');
+z.number().step(0.1).min(0);
 ```
 
 ### Valid
@@ -30,6 +31,7 @@ import { z } from 'zod';
 
 z.number().multipleOf(0.1);
 z.number().min(0).multipleOf(2, 'error');
+z.number().multipleOf(0.1).min(0);
 ```
 
 ## When Not To Use It

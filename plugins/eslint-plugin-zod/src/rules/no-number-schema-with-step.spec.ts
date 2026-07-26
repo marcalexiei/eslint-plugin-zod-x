@@ -35,6 +35,13 @@ ruleTester.run(noNumberSchemaWithStep.name, noNumberSchemaWithStep, {
         step();
       `,
     },
+    {
+      name: 'number factory aliased to `step`, with a trailing method',
+      code: dedent`
+        import { number as step } from 'zod';
+        step().min(0);
+      `,
+    },
   ],
   invalid: [
     {
@@ -59,6 +66,18 @@ ruleTester.run(noNumberSchemaWithStep.name, noNumberSchemaWithStep, {
       output: dedent`
         import * as z from 'zod';
         z.number().min(0).multipleOf(0.1, 'err');
+      `,
+    },
+    {
+      name: 'z.number().step(0.1).min(0) — renames `step`, not the outermost call',
+      code: dedent`
+        import * as z from 'zod';
+        z.number().step(0.1).min(0);
+      `,
+      errors: [{ messageId: 'useMultipleOf' }],
+      output: dedent`
+        import * as z from 'zod';
+        z.number().multipleOf(0.1).min(0);
       `,
     },
     {

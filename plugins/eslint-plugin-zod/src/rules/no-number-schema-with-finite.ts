@@ -26,7 +26,7 @@ export const noNumberSchemaWithFinite = createZodPluginRule({
       schemaType: 'number',
       onSchema(node): void {
         const methods = collectZodChainMethods(node);
-        const finiteIndex = methods.findIndex((m) => m.name === 'finite' && m.node === node);
+        const finiteIndex = methods.findIndex((m) => m.name === 'finite');
         if (finiteIndex === -1) {
           return;
         }
