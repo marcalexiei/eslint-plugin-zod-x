@@ -36,18 +36,12 @@ export function buildNoTransformInRecordKeyCreate(
   options: NoTransformInRecordKeyOptions,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
+    const { createSchemaVisitor, detectZodSchemaRootNode, collectZodChainMethods } =
       scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'record') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'record',
+      onSchema(node): void {
         const keySchemaArg = node.arguments.at(0);
 
         if (!keySchemaArg) {
@@ -66,6 +60,6 @@ export function buildNoTransformInRecordKeyCreate(
           });
         }
       },
-    };
+    });
   };
 }

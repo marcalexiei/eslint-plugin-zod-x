@@ -9,17 +9,10 @@ export function buildRequireErrorMessageCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      scope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-        if (!zodSchemaMeta) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      onSchema(node): void {
         const refines = collectZodChainMethods(node).filter(
           (it) => it.name === 'refine' || it.name === 'custom',
         );
@@ -114,6 +107,6 @@ export function buildRequireErrorMessageCreate(
           }
         }
       },
-    };
+    });
   };
 }

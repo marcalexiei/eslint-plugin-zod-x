@@ -20,19 +20,11 @@ export const noNumberSchemaWithFinite = createZodPluginRule({
   defaultOptions: [],
 
   create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'number') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'number',
+      onSchema(node): void {
         const methods = collectZodChainMethods(node);
         const finiteIndex = methods.findIndex((m) => m.name === 'finite' && m.node === node);
         if (finiteIndex === -1) {
@@ -51,6 +43,6 @@ export const noNumberSchemaWithFinite = createZodPluginRule({
           },
         });
       },
-    };
+    });
   },
 });

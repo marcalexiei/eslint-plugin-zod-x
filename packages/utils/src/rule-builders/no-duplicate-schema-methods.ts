@@ -9,17 +9,10 @@ export function buildNoDuplicateSchemaMethodsCreate(
   context: Readonly<TSESLint.RuleContext<'noDuplicateSchemaMethod', []>>,
 ) => TSESLint.RuleListener {
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      scope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-        if (!zodSchemaMeta) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      onSchema(node): void {
         const chainMethods = collectZodChainMethods(node);
         const seen = new Set<string>();
 
@@ -39,6 +32,6 @@ export function buildNoDuplicateSchemaMethodsCreate(
           }
         }
       },
-    };
+    });
   };
 }

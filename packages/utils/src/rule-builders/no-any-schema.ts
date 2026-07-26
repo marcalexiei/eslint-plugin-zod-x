@@ -9,18 +9,11 @@ export function buildNoAnySchemaCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      scope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'any') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'any',
+      onSchema(node): void {
         const { callee } = node;
 
         if (callee.type === AST_NODE_TYPES.Identifier) {
@@ -63,6 +56,6 @@ export function buildNoAnySchemaCreate(
           });
         }
       },
-    };
+    });
   };
 }

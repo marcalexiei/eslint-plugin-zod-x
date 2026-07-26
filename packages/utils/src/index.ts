@@ -1,6 +1,10 @@
 // import tracking & scopes
 export { trackZodSchemaImports } from './track-zod-schema-imports.js';
-export type { ZodChainItem, ZodSchemaImportTracker } from './track-zod-schema-imports.js';
+export type {
+  ZodChainItem,
+  ZodSchemaImportTracker,
+  ZodSchemaVisitorOptions,
+} from './track-zod-schema-imports.js';
 export {
   ZodImportScope,
   zodCoreImportScope,
@@ -9,7 +13,7 @@ export {
 } from './zod-import-scope.js';
 
 // schema detection & navigation
-export type { DetectData, DetectResult } from './detect-zod-schema-root-node.js';
+export type { ZodSchemaMeta } from './detect-zod-schema-root-node.js';
 export { findParentSchemaMatchingCondition } from './find-parent-schema-matching-condition.js';
 export { getZodSchemaBaseType } from './get-zod-schema-base-type.js';
 export type { ZodSchemaBaseType } from './get-zod-schema-base-type.js';

@@ -17,23 +17,16 @@ export const noPromiseSchema = createZodPluginRule({
   },
   defaultOptions: [],
   create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode } = zodImportScope.createTracker();
+    const { createSchemaVisitor } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'promise') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'promise',
+      onSchema(node) {
         context.report({
           node,
           messageId: 'noPromiseSchema',
         });
       },
-    };
+    });
   },
 });

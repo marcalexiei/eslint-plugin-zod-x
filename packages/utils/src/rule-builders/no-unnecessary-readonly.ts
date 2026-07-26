@@ -49,7 +49,7 @@ export function buildNoUnnecessaryReadonlyCreate(
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
   return function create(context) {
     const {
-      importDeclarationListener,
+      createSchemaVisitor,
       detectZodSchemaRootNode,
       collectZodChainMethods,
       collectZodSchemaConstraints,
@@ -99,14 +99,8 @@ export function buildNoUnnecessaryReadonlyCreate(
       return classifyChain(meta.schemaType, chain, chain.length);
     }
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-        if (!zodSchemaMeta) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      onSchema(node, zodSchemaMeta): void {
         const methods = collectZodChainMethods(node);
 
         // Wrapper form: `z.readonly(inner)` (`zod/mini`).
@@ -148,6 +142,6 @@ export function buildNoUnnecessaryReadonlyCreate(
           }
         }
       },
-    };
+    });
   };
 }

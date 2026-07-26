@@ -31,19 +31,11 @@ export function buildPreferDedicatedFactoryCreate<TMessageIds extends string>(
   const { scope, factoryName, modifierMethods, replacementFactoryName, messageId } = options;
 
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      scope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== factoryName) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: factoryName,
+      onSchema(node, zodSchemaMeta): void {
         const methods = collectZodChainMethods(node);
         const modifierMethod = methods.find((it) => modifierMethods.includes(it.name));
 
@@ -92,6 +84,6 @@ export function buildPreferDedicatedFactoryCreate<TMessageIds extends string>(
           },
         });
       },
-    };
+    });
   };
 }

@@ -42,17 +42,10 @@ export const arrayStyle = createZodPluginRule<[Options], MessageIds>({
   create(context, [{ style }]) {
     const { sourceCode } = context;
 
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-        if (!zodSchemaMeta) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      onSchema(node, zodSchemaMeta): void {
         const { schemaDecl, schemaType } = zodSchemaMeta;
 
         if (style === 'method') {
@@ -119,6 +112,6 @@ export const arrayStyle = createZodPluginRule<[Options], MessageIds>({
           });
         }
       },
-    };
+    });
   },
 });

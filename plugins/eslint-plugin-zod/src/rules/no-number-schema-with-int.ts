@@ -20,20 +20,12 @@ export const noNumberSchemaWithInt = createZodPluginRule({
   create(context) {
     const { sourceCode } = context;
 
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        // Only care about number schemas
-        if (zodSchemaMeta?.schemaType !== 'number') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      // Only care about number schemas
+      schemaType: 'number',
+      onSchema(node, zodSchemaMeta): void {
         // Collect the full chain from the outermost call (left-to-right)
         const methods = collectZodChainMethods(node);
 
@@ -66,6 +58,6 @@ export const noNumberSchemaWithInt = createZodPluginRule({
           },
         });
       },
-    };
+    });
   },
 });

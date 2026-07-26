@@ -19,18 +19,10 @@ export const preferMeta = createZodPluginRule({
   },
   defaultOptions: [],
   create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (!zodSchemaMeta) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      onSchema(node): void {
         const describe = collectZodChainMethods(node).find((it) => it.name === 'describe');
 
         if (!describe) {
@@ -56,6 +48,6 @@ export const preferMeta = createZodPluginRule({
           },
         });
       },
-    };
+    });
   },
 });

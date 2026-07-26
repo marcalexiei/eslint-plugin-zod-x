@@ -9,19 +9,11 @@ export function buildNoCoerceBooleanCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      scope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'coerce') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'coerce',
+      onSchema(node, zodSchemaMeta): void {
         // The method invoked on `coerce`. For namespace style (`z.coerce.boolean()`)
         // the chain is `['coerce', 'boolean', ...]`; for a named `coerce` import
         // (`coerce.boolean()`) the chain is `['boolean', ...]`.
@@ -67,6 +59,6 @@ export function buildNoCoerceBooleanCreate(
           ],
         });
       },
-    };
+    });
   };
 }

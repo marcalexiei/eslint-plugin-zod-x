@@ -57,22 +57,12 @@ export function buildPreferTupleOverArrayLengthCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
   return function create(context) {
-    const {
-      importDeclarationListener,
-      detectZodSchemaRootNode,
-      collectZodChainMethods,
-      collectZodSchemaConstraints,
-    } = scope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods, collectZodSchemaConstraints } =
+      scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'array') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'array',
+      onSchema(node, zodSchemaMeta): void {
         const methods = collectZodChainMethods(node);
         const constraints = collectZodSchemaConstraints(node);
 
@@ -206,6 +196,6 @@ export function buildPreferTupleOverArrayLengthCreate(
           },
         });
       },
-    };
+    });
   };
 }

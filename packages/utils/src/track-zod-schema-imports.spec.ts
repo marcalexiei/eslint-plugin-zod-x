@@ -193,3 +193,97 @@ describe('collectZodChainMethods', () => {
     expect(methods.map((m) => m.name)).toStrictEqual(['string', 'optional']);
   });
 });
+
+describe('createSchemaVisitor', () => {
+  /** `z.<factory>()` as an outermost call, ready to feed to the visitor. */
+  function makeSchemaCall(factory: string): TSESTree.CallExpression {
+    const call = makeCall(makeME(makeIdent('z'), factory));
+    (call as unknown as Record<string, unknown>).parent = {
+      type: AST_NODE_TYPES.ExpressionStatement,
+    };
+    return call;
+  }
+
+  /** Runs `visitor` over an `import * as z from 'zod'` plus the given calls. */
+  function visit(
+    visitor: ReturnType<ReturnType<typeof zodImportScope.createTracker>['createSchemaVisitor']>,
+    calls: Array<TSESTree.CallExpression>,
+  ): void {
+    visitor.ImportDeclaration?.(mockImportDecl('zod', [mockNamespaceSpec('z')]));
+    for (const call of calls) {
+      visitor.CallExpression?.(call);
+    }
+  }
+
+  it('wires the import listener itself, so detection works without extra setup', () => {
+    const seen: Array<string> = [];
+    const visitor = zodImportScope.createTracker().createSchemaVisitor({
+      onSchema: (_node, meta) => {
+        seen.push(meta.schemaType);
+      },
+    });
+
+    visit(visitor, [makeSchemaCall('string'), makeSchemaCall('number')]);
+
+    expect(seen).toStrictEqual(['string', 'number']);
+  });
+
+  it('filters on a single schemaType', () => {
+    const seen: Array<TSESTree.CallExpression> = [];
+    const visitor = zodImportScope.createTracker().createSchemaVisitor({
+      schemaType: 'string',
+      onSchema: (node) => {
+        seen.push(node);
+      },
+    });
+
+    const stringCall = makeSchemaCall('string');
+    visit(visitor, [stringCall, makeSchemaCall('number')]);
+
+    expect(seen).toStrictEqual([stringCall]);
+  });
+
+  it('filters on a list of schemaTypes', () => {
+    const seen: Array<string> = [];
+    const visitor = zodImportScope.createTracker().createSchemaVisitor({
+      schemaType: ['string', 'number'],
+      onSchema: (_node, meta) => {
+        seen.push(meta.schemaType);
+      },
+    });
+
+    visit(visitor, [makeSchemaCall('string'), makeSchemaCall('boolean'), makeSchemaCall('number')]);
+
+    expect(seen).toStrictEqual(['string', 'number']);
+  });
+
+  it('ignores calls that are not zod schemas', () => {
+    const seen: Array<string> = [];
+    const visitor = zodImportScope.createTracker().createSchemaVisitor({
+      onSchema: (_node, meta) => {
+        seen.push(meta.schemaType);
+      },
+    });
+
+    const notZod = makeCall(makeME(makeIdent('lodash'), 'map'));
+    (notZod as unknown as Record<string, unknown>).parent = {
+      type: AST_NODE_TYPES.ExpressionStatement,
+    };
+    visit(visitor, [notZod]);
+
+    expect(seen).toStrictEqual([]);
+  });
+
+  it('respects the tracker scope: a zod/mini tracker ignores `zod` imports', () => {
+    const seen: Array<string> = [];
+    const visitor = zodMiniImportScope.createTracker().createSchemaVisitor({
+      onSchema: (_node, meta) => {
+        seen.push(meta.schemaType);
+      },
+    });
+
+    visit(visitor, [makeSchemaCall('string')]);
+
+    expect(seen).toStrictEqual([]);
+  });
+});

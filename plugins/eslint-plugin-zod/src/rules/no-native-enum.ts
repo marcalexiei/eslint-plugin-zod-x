@@ -18,19 +18,11 @@ export const noNativeEnum = createZodPluginRule({
   },
   defaultOptions: [],
   create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'nativeEnum') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'nativeEnum',
+      onSchema(node) {
         const methods = collectZodChainMethods(node);
         const [{ node: rootMethodNode }] = methods;
 
@@ -49,6 +41,6 @@ export const noNativeEnum = createZodPluginRule({
           },
         });
       },
-    };
+    });
   },
 });

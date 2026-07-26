@@ -8,17 +8,10 @@ export function buildRequireBrandTypeParameterCreate(
   scope: ZodImportScope,
 ): (context: Readonly<TSESLint.RuleContext<MessageIds, []>>) => TSESLint.RuleListener {
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      scope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-        if (!zodSchemaMeta) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      onSchema(node): void {
         const methods = collectZodChainMethods(node);
 
         const brandMethod = methods.find((it) => it.name === 'brand');
@@ -50,6 +43,6 @@ export function buildRequireBrandTypeParameterCreate(
           ],
         });
       },
-    };
+    });
   };
 }

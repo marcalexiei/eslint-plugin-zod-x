@@ -47,17 +47,10 @@ export const noOptionalAndDefaultTogether = createZodPluginRule<[Options], Messa
   create(context, [{ preferredMethod }]) {
     const { sourceCode } = context;
 
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        if (!detectZodSchemaRootNode(node)) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      onSchema(node): void {
         // Collect all methods in the chain
         const methods = collectZodChainMethods(node);
 
@@ -107,6 +100,6 @@ export const noOptionalAndDefaultTogether = createZodPluginRule<[Options], Messa
           },
         });
       },
-    };
+    });
   },
 });

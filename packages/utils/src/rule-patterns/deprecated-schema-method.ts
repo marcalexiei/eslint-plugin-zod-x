@@ -26,17 +26,10 @@ export function buildDeprecatedSchemaMethodCreate<TMessageIds extends string>(
   const { scope, methodName, messageId } = options;
 
   return function create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode } = scope.createTracker();
+    const { createSchemaVisitor } = scope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-        if (!zodSchemaMeta) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      onSchema(node, zodSchemaMeta): void {
         const { methods } = zodSchemaMeta;
 
         const methodIndex = methods.indexOf(methodName);
@@ -51,6 +44,6 @@ export function buildDeprecatedSchemaMethodCreate<TMessageIds extends string>(
 
         context.report({ node, messageId });
       },
-    };
+    });
   };
 }

@@ -2,7 +2,7 @@ import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 /** What {@link detectZodSchemaRootNode} learned about a zod call chain. */
-export interface DetectData {
+export interface ZodSchemaMeta {
   /**
    * How the schema is declared:
    * - `namespace` -> `z.string()`
@@ -20,8 +20,6 @@ export interface DetectData {
    */
   methods: Array<string>;
 }
-
-export type DetectResult = DetectData | null;
 
 /**
  * The zod imports a file has in scope, as accumulated by a tracker. Passed
@@ -78,7 +76,10 @@ function isOutermostCallExpression(node: TSESTree.CallExpression): boolean {
  *  { schemaDecl, schemaType, methods, node } if successful
  *  null otherwise
  */
-function parseZodCallExpression(call: TSESTree.CallExpression, imports: ZodImports): DetectResult {
+function parseZodCallExpression(
+  call: TSESTree.CallExpression,
+  imports: ZodImports,
+): ZodSchemaMeta | null {
   let cur: TSESTree.Node = call.callee;
 
   // Collect names in right-to-left order, then reverse at the end
@@ -173,7 +174,10 @@ export function isZodSchemaOfType(
  * @param node - The AST node to analyze (typically a `CallExpression` from an ESLint visitor)
  * @param imports - The file's zod imports, from a tracker
  */
-export function detectZodSchemaRootNode(node: TSESTree.Node, imports: ZodImports): DetectResult {
+export function detectZodSchemaRootNode(
+  node: TSESTree.Node,
+  imports: ZodImports,
+): ZodSchemaMeta | null {
   if (node.type !== AST_NODE_TYPES.CallExpression) {
     return null;
   }

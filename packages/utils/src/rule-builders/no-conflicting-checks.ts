@@ -148,12 +148,8 @@ export function buildNoConflictingChecksCreate(
       ...context.options.at(0),
     };
 
-    const {
-      importDeclarationListener,
-      detectZodSchemaRootNode,
-      collectZodChainMethods,
-      collectZodSchemaConstraints,
-    } = scope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods, collectZodSchemaConstraints } =
+      scope.createTracker();
 
     function describe(check: AnalyzedCheck): string {
       const args = check.node.arguments
@@ -504,14 +500,8 @@ export function buildNoConflictingChecksCreate(
       }
     }
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-        if (!zodSchemaMeta) {
-          return;
-        }
-
+    return createSchemaVisitor({
+      onSchema(node, zodSchemaMeta): void {
         const chain = collectZodChainMethods(node);
         // `detectZodSchemaRootNode` resolves computed-member factories
         // (`z['uuid']()`) that `collectZodChainMethods` cannot navigate,
@@ -606,6 +596,6 @@ export function buildNoConflictingChecksCreate(
         analyzeCasing(applicable);
         analyzeMultiples(applicable);
       },
-    };
+    });
   };
 }

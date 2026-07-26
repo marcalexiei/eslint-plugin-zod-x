@@ -16,10 +16,25 @@ Follow this file inventory exactly — the `index.spec.ts` consistency specs fai
 
 ## 1. Rule builder (shared rules only)
 
-1. `packages/utils/src/rule-builders/<rule-name>.ts` — export `build<PascalCaseRuleName>Create(scope: ZodImportScope)`. Guard the visitor with `scope.isAllowed(sourceValue)`. Get the tracker from `scope.createTracker()` inside `create`, and prefer `collectZodSchemaConstraints` so one builder handles both chained (`zod`) and `.check(...)` (`zod-mini`) styles.
-2. **No exports-map entry to add** — `./rule-builders/*` is a single wildcard entry, so dropping the file in is enough. The flip side: everything in that directory is public, so a helper that is not a builder belongs at `src/` root instead.
-3. If the rule reasons about check names, canonicalize through `canonicalizeZodConstraintName(constraint, baseType)` rather than writing a spelling table — chained names are type-dependent and the shared vocabulary already covers them. Add missing entries to `packages/utils/src/zod-check-vocabulary.ts`.
-4. New generic helpers (fixers, constant lists) go in their own `packages/utils/src/<helper>.ts` with a co-located `.spec.ts`, re-exported from `packages/utils/src/index.ts`.
+1. `packages/utils/src/rule-builders/<rule-name>.ts` — export `build<PascalCaseRuleName>Create(scope: ZodImportScope)`. Get the tracker from `scope.createTracker()` inside `create` and return `createSchemaVisitor(...)` (see below), and prefer `collectZodSchemaConstraints` so one builder handles both chained (`zod`) and `.check(...)` (`zod-mini`) styles.
+2. **Return `createSchemaVisitor`, don't hand-wire listeners.** It wires `ImportDeclaration`, detects the schema root and filters on `schemaType`, so the body starts at the interesting part:
+
+   ```ts
+   const { createSchemaVisitor, collectZodChainMethods } = scope.createTracker();
+
+   return createSchemaVisitor({
+     schemaType: 'string', // omit for any schema; a readonly tuple narrows `meta.schemaType`
+     onSchema(node, meta) {
+       /* … */
+     },
+   });
+   ```
+
+   Spread it (`{ ...createSchemaVisitor({ … }), 'Program:exit'() {} }`) to add visitor keys. Use `importDeclarationListener` directly **only** when the rule's primary listener is not `CallExpression` — the three current cases are `consistent-schema-var-name` (`VariableDeclarator`), `consistent-schema-output-type-style` (`TSTypeReference`), and the `deprecated-schema-property` pattern (`MemberExpression`).
+
+3. **No exports-map entry to add** — `./rule-builders/*` is a single wildcard entry, so dropping the file in is enough. The flip side: everything in that directory is public, so a helper that is not a builder belongs at `src/` root instead.
+4. If the rule reasons about check names, canonicalize through `canonicalizeZodConstraintName(constraint, baseType)` rather than writing a spelling table — chained names are type-dependent and the shared vocabulary already covers them. Add missing entries to `packages/utils/src/zod-check-vocabulary.ts`.
+5. New generic helpers (fixers, constant lists) go in their own `packages/utils/src/<helper>.ts` with a co-located `.spec.ts`, re-exported from `packages/utils/src/index.ts`.
 
 ## 1b. Rule pattern (when the shape recurs)
 

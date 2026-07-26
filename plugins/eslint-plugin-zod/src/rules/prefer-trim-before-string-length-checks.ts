@@ -22,18 +22,11 @@ export const preferTrimBeforeStringLengthChecks = createZodPluginRule({
   },
   defaultOptions: [],
   create(context) {
-    const { importDeclarationListener, detectZodSchemaRootNode, collectZodChainMethods } =
-      zodImportScope.createTracker();
+    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
 
-    return {
-      ImportDeclaration: importDeclarationListener,
-      CallExpression(node): void {
-        const zodSchemaMeta = detectZodSchemaRootNode(node);
-
-        if (zodSchemaMeta?.schemaType !== 'string') {
-          return;
-        }
-
+    return createSchemaVisitor({
+      schemaType: 'string',
+      onSchema(node, zodSchemaMeta): void {
         // Skip string schema used as record key — trim on record keys causes data loss
         if (
           findParentSchemaMatchingCondition(node, {
@@ -82,6 +75,6 @@ export const preferTrimBeforeStringLengthChecks = createZodPluginRule({
           },
         });
       },
-    };
+    });
   },
 });

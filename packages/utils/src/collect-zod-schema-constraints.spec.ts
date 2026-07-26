@@ -3,7 +3,7 @@ import type { TSESTree } from '@typescript-eslint/utils';
 import { describe, expect, it } from 'vitest';
 
 import { collectZodSchemaConstraints } from './collect-zod-schema-constraints.js';
-import type { DetectResult } from './detect-zod-schema-root-node.js';
+import type { ZodSchemaMeta } from './detect-zod-schema-root-node.js';
 
 // --- minimal AST mock helpers ---
 
@@ -30,7 +30,9 @@ function makeCall(
  * lowercase letter except the ones listed in `unknownNames`, mirroring how the
  * real detector only recognizes imported zod names.
  */
-function makeDetector(unknownNames: Array<string> = []): (node: TSESTree.Node) => DetectResult {
+function makeDetector(
+  unknownNames: Array<string> = [],
+): (node: TSESTree.Node) => ZodSchemaMeta | null {
   return (node) => {
     if (node.type !== AST_NODE_TYPES.CallExpression) {
       return null;

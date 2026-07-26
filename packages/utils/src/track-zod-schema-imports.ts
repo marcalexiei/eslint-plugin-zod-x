@@ -1,16 +1,31 @@
-import type { TSESTree } from '@typescript-eslint/utils';
+import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { collectZodSchemaConstraints } from './collect-zod-schema-constraints.js';
 import type { ZodSchemaConstraint } from './collect-zod-schema-constraints.js';
 import { detectZodSchemaRootNode, isZodSchemaOfType } from './detect-zod-schema-root-node.js';
-import type { DetectResult, ZodImports } from './detect-zod-schema-root-node.js';
+import type { ZodImports, ZodSchemaMeta } from './detect-zod-schema-root-node.js';
 import type { ZodImportScope } from './zod-import-scope.js';
 
 /** One call in a zod chain: the method's name and the call expression carrying it. */
 export interface ZodChainItem {
   name: string;
   node: TSESTree.CallExpression;
+}
+
+/** Options for {@link ZodSchemaImportTracker.createSchemaVisitor}. */
+export interface ZodSchemaVisitorOptions<TSchemaType extends string> {
+  /**
+   * Only run `onSchema` for these factories — one name (`'string'`) or a list
+   * (`ZOD_OBJECT_METHODS`). Omit to receive every zod schema.
+   */
+  schemaType?: TSchemaType | ReadonlyArray<TSchemaType>;
+
+  /** Called with each matching schema root and its detection metadata. */
+  onSchema: (
+    node: TSESTree.CallExpression,
+    meta: ZodSchemaMeta & { schemaType: TSchemaType },
+  ) => void;
 }
 
 export interface ZodSchemaImportTracker {
@@ -27,6 +42,27 @@ export interface ZodSchemaImportTracker {
    * ```
    */
   importDeclarationListener: (node: TSESTree.ImportDeclaration) => void;
+
+  /**
+   * Builds the `{ ImportDeclaration, CallExpression }` visitor almost every
+   * rule needs: it wires `importDeclarationListener`, detects the schema root
+   * and applies the `schemaType` filter, so `onSchema` only sees matches.
+   *
+   * Prefer this over hand-wiring the two listeners — forgetting
+   * `ImportDeclaration` silently disables detection for the whole file.
+   * Spread it to add more visitor keys.
+   *
+   * @example
+   * ```ts
+   * return tracker.createSchemaVisitor({
+   *   schemaType: 'string',
+   *   onSchema(node, meta) { ... },
+   * });
+   * ```
+   */
+  createSchemaVisitor: <TSchemaType extends string = string>(
+    options: ZodSchemaVisitorOptions<TSchemaType>,
+  ) => TSESLint.RuleListener;
 
   /**
    * Returns true if the given name was imported as a zod namespace
@@ -54,7 +90,7 @@ export interface ZodSchemaImportTracker {
   /**
    * Check if given node is a zod schema
    */
-  detectZodSchemaRootNode: (node: TSESTree.Node) => DetectResult;
+  detectZodSchemaRootNode: (node: TSESTree.Node) => ZodSchemaMeta | null;
 
   /**
    * Walks up a chain of method calls and returns each call with its node.
@@ -142,39 +178,64 @@ export function trackZodSchemaImports(scope: ZodImportScope): ZodSchemaImportTra
     return methods;
   }
 
-  const result: ZodSchemaImportTracker = {
-    // to be inserted into rule.create()
-    importDeclarationListener(node): void {
-      if (!scope.isAllowed(node.source.value)) {
-        return;
-      }
+  // to be inserted into rule.create()
+  function importDeclarationListener(node: TSESTree.ImportDeclaration): void {
+    if (!scope.isAllowed(node.source.value)) {
+      return;
+    }
 
-      for (const spec of node.specifiers) {
-        switch (spec.type) {
-          case AST_NODE_TYPES.ImportDefaultSpecifier:
-          case AST_NODE_TYPES.ImportNamespaceSpecifier:
+    for (const spec of node.specifiers) {
+      switch (spec.type) {
+        case AST_NODE_TYPES.ImportDefaultSpecifier:
+        case AST_NODE_TYPES.ImportNamespaceSpecifier:
+          imports.namespaces.add(spec.local.name);
+          break;
+
+        case AST_NODE_TYPES.ImportSpecifier: {
+          // If the user imports `z` via a named import, it acts as a namespace.
+          // Therefore, it must be recorded in the appropriate set.
+          // We check the imported identifier because the user may alias it.
+          const originalName = 'name' in spec.imported ? spec.imported.name : spec.local.name;
+
+          if (originalName === 'z') {
             imports.namespaces.add(spec.local.name);
-            break;
-
-          case AST_NODE_TYPES.ImportSpecifier: {
-            // If the user imports `z` via a named import, it acts as a namespace.
-            // Therefore, it must be recorded in the appropriate set.
-            // We check the imported identifier because the user may alias it.
-            const originalName = 'name' in spec.imported ? spec.imported.name : spec.local.name;
-
-            if (originalName === 'z') {
-              imports.namespaces.add(spec.local.name);
-            } else {
-              imports.named.set(spec.local.name, originalName);
-              zodNamedImportsByOriginal.set(originalName, spec.local.name);
-            }
-
-            break;
+          } else {
+            imports.named.set(spec.local.name, originalName);
+            zodNamedImportsByOriginal.set(originalName, spec.local.name);
           }
 
-          // no default
+          break;
         }
+
+        // no default
       }
+    }
+  }
+
+  const result: ZodSchemaImportTracker = {
+    importDeclarationListener,
+
+    createSchemaVisitor<TSchemaType extends string>({
+      schemaType,
+      onSchema,
+    }: ZodSchemaVisitorOptions<TSchemaType>): TSESLint.RuleListener {
+      const allowed: ReadonlyArray<string> | undefined =
+        typeof schemaType === 'string' ? [schemaType] : schemaType;
+
+      return {
+        ImportDeclaration: importDeclarationListener,
+        CallExpression(node): void {
+          const meta = detectZodSchemaRootNode(node, imports);
+          if (!meta) {
+            return;
+          }
+          if (allowed && !allowed.includes(meta.schemaType)) {
+            return;
+          }
+          // `includes` cannot narrow, and with no filter `TSchemaType` is `string`.
+          onSchema(node, meta as ZodSchemaMeta & { schemaType: TSchemaType });
+        },
+      };
     },
 
     isZodNamespace: (name) => imports.namespaces.has(name),
