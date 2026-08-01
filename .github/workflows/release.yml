@@ -38,7 +38,7 @@ jobs:
     steps:
       - name: Setup release helper
         id: release-helper
-        uses: marcalexiei/github-actions/setup-github-app-user-bot@35654007fc916287603cd114516a3d1295f62689 # v2.0.0
+        uses: marcalexiei/github-actions/setup-github-app-user-bot@d5a5561c7caea4f18642f3967aad095af51c3905 # v2.1.0
         with:
           app-id: ${{ vars.RELEASE_HELPER_APP_ID }}
           private-key: ${{ secrets.RELEASE_HELPER_PRIVATE_KEY }}
