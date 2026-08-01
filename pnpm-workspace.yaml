@@ -5,7 +5,7 @@ packages:
 catalogs:
   deps:
     # typescript-eslint ecosystem (keep versions aligned)
-    '@typescript-eslint/utils': '^8.62.0'
+    '@typescript-eslint/utils': '^8.65.0'
 
   dev:
     # typescript-eslint ecosystem (keep versions aligned)
