@@ -1,4 +1,8 @@
-import { buildZodChainReplacementFix, zodImportScope } from '@eslint-zod/utils';
+import {
+  buildZodChainReplacementFix,
+  getZodChainedMethodNames,
+  zodImportScope,
+} from '@eslint-zod/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
 
@@ -27,13 +31,17 @@ export const noNumberSchemaWithSafe = createZodPluginRule({
     return createSchemaVisitor({
       schemaType: 'number',
       onSchema(node, zodSchemaMeta): void {
-        const methods = collectZodChainMethods(node);
-        const safeIndex = methods.findIndex((m) => m.name === 'safe');
-        if (safeIndex === -1) {
+        // Detect on the names alone: they exclude the factory, so an aliased
+        // named import (`import { number as safe }`) is not mistaken for a
+        // `.safe()` call, and a computed factory (`z['number']().safe()`) is
+        // still caught even though the chain walker cannot name it.
+        if (!getZodChainedMethodNames(zodSchemaMeta).includes('safe')) {
           return;
         }
 
-        const numberIndex = methods.findIndex((m) => m.name === 'number');
+        const methods = collectZodChainMethods(node);
+        // Skip index 0 — that item is the `number()` factory itself.
+        const safeIndex = methods.findIndex((m, index) => index > 0 && m.name === 'safe');
 
         context.report({
           node,
@@ -41,8 +49,8 @@ export const noNumberSchemaWithSafe = createZodPluginRule({
           fix(fixer) {
             // For named imports (e.g., `number().safe()`), we cannot safely auto-fix
             // because replacing the entire chain would require access to the namespace prefix.
-            // Report the error without a fix in this case.
-            if (zodSchemaMeta.schemaDecl === 'named') {
+            // A computed factory leaves `safeIndex` at -1 — also unfixable.
+            if (zodSchemaMeta.schemaDecl === 'named' || safeIndex === -1) {
               return null;
             }
 
@@ -50,7 +58,8 @@ export const noNumberSchemaWithSafe = createZodPluginRule({
               sourceCode,
               fixer,
               methods,
-              fromIndex: numberIndex,
+              // The factory is always the first chain item.
+              fromIndex: 0,
               toIndex: safeIndex,
               toMethodName: 'int',
             });

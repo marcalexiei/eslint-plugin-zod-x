@@ -83,6 +83,13 @@ ruleTester.run(preferEnumOverLiteralUnion.name, preferEnumOverLiteralUnion, {
         z.union([z.literal('foo'), , z.literal('bar')]);
       `,
     },
+    {
+      name: 'argument-less `z.literal()` — invalid zod, valid JS, must not crash',
+      code: dedent`
+        import * as z from 'zod';
+        z.union([z.literal(), z.literal('bar')]);
+      `,
+    },
   ],
   invalid: [
     {

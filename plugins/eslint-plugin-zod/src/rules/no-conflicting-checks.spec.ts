@@ -100,6 +100,27 @@ ruleTester.run(noConflictingChecks.name, noConflictingChecks, {
       `,
     },
     {
+      name: 'uuid narrowed to a specific version is a refinement, not a conflict',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().uuid().uuidv4();
+      `,
+    },
+    {
+      name: 'guid narrowed to uuid is a refinement, not a conflict',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().guid().uuid();
+      `,
+    },
+    {
+      name: 'top-level uuid factory narrowed to a version is a refinement',
+      code: dedent`
+        import * as z from 'zod';
+        z.uuid().uuidv4();
+      `,
+    },
+    {
       name: 'impossible cases can be disabled',
       code: dedent`
         import * as z from 'zod';
@@ -217,6 +238,14 @@ ruleTester.run(noConflictingChecks.name, noConflictingChecks, {
       code: dedent`
         import * as z from 'zod';
         z.string().ipv4().ipv6();
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
+      name: 'two different uuid versions — neither narrows the other',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().uuidv4().uuidv7();
       `,
       errors: [{ messageId: 'impossibleCase' }],
     },

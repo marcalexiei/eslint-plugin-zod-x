@@ -41,9 +41,10 @@ export function buildPreferEnumOverLiteralUnionCreate(
             return null;
           }
 
-          const [literalArgument] = s.arguments;
+          // `z.literal()` with no argument is invalid zod but valid JS.
+          const literalArgument = s.arguments.at(0);
           if (
-            literalArgument.type === AST_NODE_TYPES.Literal &&
+            literalArgument?.type === AST_NODE_TYPES.Literal &&
             // Literal could be also a number
             typeof literalArgument.value === 'string'
           ) {

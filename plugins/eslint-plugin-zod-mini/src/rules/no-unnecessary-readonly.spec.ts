@@ -88,6 +88,13 @@ ruleTester.run(noUnnecessaryReadonly.name, noUnnecessaryReadonly, {
         z.readonly();
       `,
     },
+    {
+      name: 'computed readonly wrapper — the chain walker cannot name it',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z['readonly'](z.string());
+      `,
+    },
   ],
   invalid: [
     {

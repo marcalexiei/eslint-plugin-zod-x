@@ -1,3 +1,5 @@
+import { ZOD_STRING_FORMAT_NAMES } from './zod-string-format-names.js';
+
 /**
  * Zod schema factories whose parsed output is already immutable, so wrapping
  * them in `readonly` has no effect on the inferred type (and no runtime
@@ -35,33 +37,11 @@ export const ZOD_IMMUTABLE_SCHEMA_TYPES = Object.freeze([
   'uint32',
   'uint64',
 
-  // top-level string formats (all parse to `string`);
+  // top-level string formats (all parse to `string`) — spread rather than
+  // hand-copied, so a new format cannot be added to one table and forgotten
+  // in the other
+  ...ZOD_STRING_FORMAT_NAMES,
+
   // `iso` covers member factories such as `z.iso.date()`
-  'base64',
-  'base64url',
-  'cidrv4',
-  'cidrv6',
-  'cuid',
-  'cuid2',
-  'e164',
-  'email',
-  'emoji',
-  'guid',
-  'hash',
-  'hex',
-  'hostname',
-  'httpUrl',
-  'ipv4',
-  'ipv6',
   'iso',
-  'jwt',
-  'ksuid',
-  'nanoid',
-  'ulid',
-  'url',
-  'uuid',
-  'uuidv4',
-  'uuidv6',
-  'uuidv7',
-  'xid',
 ]);

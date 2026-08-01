@@ -51,6 +51,33 @@ const FORMAT_LENGTH_RANGES = new Map<string, [number, number]>([
   ['iso.date', [10, 10]],
 ]);
 
+/**
+ * String formats that are narrowings of another format: every value matching
+ * the key also matches each listed name. Combining two of them is a valid
+ * refinement (`z.string().uuid().uuidv4()`), not a contradiction, so
+ * {@link areFormatsCompatible} exempts these pairs.
+ *
+ * Only the GUID/UUID family overlaps — `guid` accepts any `8-4-4-4-12` hex
+ * shape, `uuid` additionally requires a valid variant/version nibble, and
+ * `uuidv4`/`uuidv6`/`uuidv7` pin that version. Every other format pair is
+ * mutually exclusive.
+ */
+const FORMAT_SUPERSETS = new Map<string, ReadonlyArray<string>>([
+  ['uuid', ['guid']],
+  ['uuidv4', ['uuid', 'guid']],
+  ['uuidv6', ['uuid', 'guid']],
+  ['uuidv7', ['uuid', 'guid']],
+]);
+
+/** True when two format checks can both hold for the same value. */
+function areFormatsCompatible(a: string, b: string): boolean {
+  return (
+    a === b ||
+    (FORMAT_SUPERSETS.get(a)?.includes(b) ?? false) ||
+    (FORMAT_SUPERSETS.get(b)?.includes(a) ?? false)
+  );
+}
+
 type LiteralValue = string | number | bigint | boolean;
 
 interface AnalyzedCheck {
@@ -322,12 +349,12 @@ export function buildNoConflictingChecksCreate(
       }
     }
 
-    /** Any two distinct exclusive string formats can never both match. */
+    /** Any two mutually exclusive string formats can never both match. */
     function analyzeFormats(checks: Array<AnalyzedCheck>): void {
       const formats = checks.filter((check) => check.descriptor.format);
       const [first] = formats;
       for (const format of formats.slice(1)) {
-        if (format.canonical !== first.canonical) {
+        if (!areFormatsCompatible(first.canonical, format.canonical)) {
           reportImpossiblePair(first, format);
         }
       }

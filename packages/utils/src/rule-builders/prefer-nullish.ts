@@ -43,14 +43,21 @@ export function buildPreferNullishCreate(
       wrapperCall: TSESTree.CallExpression,
       schemaDecl: 'namespace' | 'named',
     ): TSESLint.RuleFix | null {
-      // `wrapperCall` is the leftmost item of a walked chain, so its callee is
-      // `<ns>.<factory>` for a namespace schema and a bare identifier for a
-      // named one — `collectZodChainMethods` cannot produce any other shape.
       const { callee } = wrapperCall;
 
       if (schemaDecl === 'namespace') {
+        // A namespace schema is detected only when its factory is a member of
+        // the namespace, so this call is always `<ns>.<factory>(…)`.
         const { property } = callee as TSESTree.MemberExpression;
         return fixer.replaceText(property, 'nullish');
+      }
+
+      // A named-import schema is normally called bare (`optional(…)`), but the
+      // import can also be used as an object (`optional.foo(…)`), and that
+      // still parses as a `named` schema. Replacing the whole callee there
+      // would delete the member call, so decline the fix instead.
+      if (callee.type !== AST_NODE_TYPES.Identifier) {
+        return null;
       }
 
       const nullishLocalName = getNamedImportLocal('nullish');

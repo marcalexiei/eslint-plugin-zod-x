@@ -119,5 +119,14 @@ ruleTester.run(noNativeEnum.name, noNativeEnum, {
       errors: [{ messageId: 'useEnum' }],
       output: null,
     },
+    {
+      name: 'computed factory — reported but not fixed, and must not crash',
+      code: dedent`
+        import * as z from 'zod';
+        z['nativeEnum'](Color);
+      `,
+      errors: [{ messageId: 'useEnum' }],
+      output: null,
+    },
   ],
 });

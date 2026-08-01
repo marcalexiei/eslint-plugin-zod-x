@@ -192,6 +192,66 @@ describe('collectZodChainMethods', () => {
 
     expect(methods.map((m) => m.name)).toStrictEqual(['string', 'optional']);
   });
+
+  describe('unwalkable chains return nothing rather than a partial chain', () => {
+    /** `z['string']` — detection resolves the literal key, the walker cannot. */
+    function makeComputedME(
+      object: TSESTree.Expression,
+      propertyName: string,
+    ): TSESTree.MemberExpression {
+      return {
+        type: AST_NODE_TYPES.MemberExpression,
+        object,
+        property: {
+          type: AST_NODE_TYPES.Literal,
+          value: propertyName,
+        } as unknown as TSESTree.Literal,
+        computed: true,
+      } as unknown as TSESTree.MemberExpression;
+    }
+
+    it("returns [] for a computed factory: z['string']()", () => {
+      const tracker = zodImportScope.createTracker();
+
+      const computedCall = makeCall(makeComputedME(makeIdent('z'), 'string'));
+
+      expect(tracker.collectZodChainMethods(computedCall)).toStrictEqual([]);
+    });
+
+    it("drops the whole chain, not just the factory: z['string']().transform(f).readonly()", () => {
+      const tracker = zodImportScope.createTracker();
+
+      const computedCall = makeCall(makeComputedME(makeIdent('z'), 'string'));
+      const transformCall = makeCall(makeME(computedCall, 'transform'));
+      const readonlyCall = makeCall(makeME(transformCall, 'readonly'));
+
+      // A partial `['transform', 'readonly']` would no longer start at the
+      // factory, silently misaligning every index-based lookup.
+      expect(tracker.collectZodChainMethods(readonlyCall)).toStrictEqual([]);
+    });
+
+    it('returns [] for a computed member mid-chain: z.string()["min"](1)', () => {
+      const tracker = zodImportScope.createTracker();
+
+      const stringCall = makeCall(makeME(makeIdent('z'), 'string'));
+      const minCall = makeCall(makeComputedME(stringCall, 'min'));
+
+      expect(tracker.collectZodChainMethods(minCall)).toStrictEqual([]);
+    });
+
+    it('returns [] for a computed member with a variable key: z[factory]()', () => {
+      const tracker = zodImportScope.createTracker();
+
+      const dynamicCall = makeCall({
+        type: AST_NODE_TYPES.MemberExpression,
+        object: makeIdent('z'),
+        property: makeIdent('factory'),
+        computed: true,
+      } as unknown as TSESTree.MemberExpression);
+
+      expect(tracker.collectZodChainMethods(dynamicCall)).toStrictEqual([]);
+    });
+  });
 });
 
 describe('createSchemaVisitor', () => {

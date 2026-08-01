@@ -126,6 +126,14 @@ ruleTester.run(noCoerceBoolean.name, noCoerceBoolean, {
       errors: [{ messageId: 'noCoerceBoolean', suggestions: [] }],
     },
     {
+      name: 'computed coerced factory — reported without a suggestion, and must not crash',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.coerce['boolean']();
+      `,
+      errors: [{ messageId: 'noCoerceBoolean', suggestions: [] }],
+    },
+    {
       name: 'with chained optional',
       code: dedent`
         import * as z from 'zod/mini';

@@ -104,5 +104,26 @@ ruleTester.run(noNumberSchemaWithStep.name, noNumberSchemaWithStep, {
         z.number().multipleOf(2);
       `,
     },
+    {
+      name: 'computed factory — reported but not fixed, the chain walker cannot name it',
+      code: dedent`
+        import * as z from 'zod';
+        z['number']().step(2);
+      `,
+      errors: [{ messageId: 'useMultipleOf' }],
+      output: null,
+    },
+    {
+      name: 'number factory aliased to `step`, chaining a real `.step()`',
+      code: dedent`
+        import { number as step } from 'zod';
+        step().step(5);
+      `,
+      errors: [{ messageId: 'useMultipleOf' }],
+      output: dedent`
+        import { number as step } from 'zod';
+        step().multipleOf(5);
+      `,
+    },
   ],
 });

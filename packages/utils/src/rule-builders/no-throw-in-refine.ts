@@ -60,10 +60,12 @@ export function buildNoThrowInRefineCreate(
           return;
         }
 
-        const [callback] = refineMethod.node.arguments;
+        // `.refine()` with no argument is invalid zod but valid JS, so the
+        // argument list can legitimately be empty here.
+        const callback = refineMethod.node.arguments.at(0);
         if (
-          callback.type === AST_NODE_TYPES.ArrowFunctionExpression ||
-          callback.type === AST_NODE_TYPES.FunctionExpression
+          callback?.type === AST_NODE_TYPES.ArrowFunctionExpression ||
+          callback?.type === AST_NODE_TYPES.FunctionExpression
         ) {
           checkNode(callback.body);
         }

@@ -45,12 +45,14 @@ export const preferStringSchemaWithTrim = createZodPluginRule({
           node,
           messageId: 'addTrim',
           fix(fixer) {
-            if (zodSchemaMeta.schemaDecl === 'named') {
+            // Empty for a computed factory (`z['string']()`), which detection
+            // still resolves — report it, just without a fix.
+            const factoryCall = methods.at(0);
+            if (zodSchemaMeta.schemaDecl === 'named' || !factoryCall) {
               return null;
             }
 
-            const lastMethod = methods.at(0)!;
-            return fixer.insertTextAfter(lastMethod.node, '.trim()');
+            return fixer.insertTextAfter(factoryCall.node, '.trim()');
           },
         });
       },

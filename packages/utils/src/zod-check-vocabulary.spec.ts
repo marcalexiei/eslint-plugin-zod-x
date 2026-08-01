@@ -139,4 +139,13 @@ describe('vocabulary tables agree with each other', () => {
       expect(ZOD_STRING_FORMAT_NAMES).toContain(replacementMethodName);
     }
   });
+
+  it('treats every top-level string format as an immutable schema type', () => {
+    // All of them parse to `string`, so `.readonly()` is a no-op on each.
+    // Asserted as a set relation rather than by eye: the immutable table used
+    // to hand-copy this list and had already dropped `mac`.
+    for (const formatName of ZOD_STRING_FORMAT_NAMES) {
+      expect(ZOD_IMMUTABLE_SCHEMA_TYPES).toContain(formatName);
+    }
+  });
 });
