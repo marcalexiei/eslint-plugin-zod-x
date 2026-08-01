@@ -28,7 +28,7 @@
     "@changesets/cli": "2.31.1",
     "@marcalexiei/eslint-config": "7.0.0",
     "@marcalexiei/prettier-config": "catalog:dev",
-    "@types/node": "24.13.2",
+    "@types/node": "26.1.1",
     "@vitest/coverage-v8": "catalog:dev",
     "@vitest/eslint-plugin": "1.6.24",
     "eslint": "10.8.0",
@@ -38,7 +38,7 @@
     "eslint-plugin-n": "18.2.2",
     "knip": "6.29.0",
     "prettier": "3.9.6",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "typescript-eslint": "catalog:dev",
     "vitest": "catalog:dev"
   },
