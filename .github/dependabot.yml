@@ -6,9 +6,20 @@ updates:
     schedule:
       interval: 'monthly'
     open-pull-requests-limit: 10
+    groups:
+      github-actions:
+        applies-to: 'version-updates'
+        patterns:
+          - '*'
     cooldown:
       default-days: 7
 
+  # NOTE: groups intentionally omit `dependency-type`.
+  # Dependabot classifies every pnpm catalog entry (pnpm-workspace.yaml) as
+  # `production` regardless of how the referencing package.json declares it,
+  # so a `dependency-type: development` filter silently excludes all of them
+  # and each one lands in its own PR. See dependabot-core#14824.
+  # The patterns below are explicit name lists, so the filter added nothing.
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
@@ -17,25 +28,24 @@ updates:
     groups:
       dev-changeset:
         applies-to: 'version-updates'
-        dependency-type: 'development'
         patterns:
           - '@changesets/*'
 
       dev-format:
         applies-to: 'version-updates'
-        dependency-type: 'development'
         patterns:
           - '@marcalexiei/prettier-config'
           - 'prettier'
 
       dev-code-checks:
         applies-to: 'version-updates'
-        dependency-type: 'development'
         patterns:
           - '@marcalexiei/eslint-config'
           - '@types/*'
           - '@typescript-eslint/rule-tester'
           - '@typescript-eslint/utils'
+          # keep `@vitest/coverage-v8` in the same PR as `vitest`
+          - '@vitest/coverage-v8'
           - '@vitest/eslint-plugin'
           - 'dedent'
           - 'eslint'
