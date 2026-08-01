@@ -13,7 +13,7 @@ catalogs:
     typescript-eslint: '8.62.1'
 
     # build & test toolchain
-    tsdown: '0.22.3'
+    tsdown: '0.22.14'
     # keep `@vitest/coverage-v8` aligned with `vitest`
     '@vitest/coverage-v8': '4.1.9'
     vitest: '4.1.9'
