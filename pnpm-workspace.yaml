@@ -5,23 +5,23 @@ packages:
 catalogs:
   deps:
     # typescript-eslint ecosystem (keep versions aligned)
-    '@typescript-eslint/utils': '^8.62.0'
+    '@typescript-eslint/utils': '^8.65.0'
 
   dev:
     # typescript-eslint ecosystem (keep versions aligned)
-    '@typescript-eslint/rule-tester': '8.62.1'
-    typescript-eslint: '8.62.1'
+    '@typescript-eslint/rule-tester': '8.65.0'
+    typescript-eslint: '8.65.0'
 
     # build & test toolchain
-    tsdown: '0.22.3'
+    tsdown: '0.22.14'
     # keep `@vitest/coverage-v8` aligned with `vitest`
-    '@vitest/coverage-v8': '4.1.9'
-    vitest: '4.1.9'
+    '@vitest/coverage-v8': '4.1.10'
+    vitest: '4.1.10'
 
     # plugin dev utilities
     '@marcalexiei/prettier-config': '2.0.0'
     dedent: '1.7.2'
-    eslint-doc-generator: '3.6.0'
+    eslint-doc-generator: '3.7.0'
     prettier: '3.9.4'
 
 allowBuilds:
