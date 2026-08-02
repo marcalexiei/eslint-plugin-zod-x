@@ -1,6 +1,5 @@
-import { zodImportScope } from '@eslint-zod/utils';
+import { getZodChainedMethodNames, zodImportScope } from '@eslint-zod/utils';
 import type { TSESTree } from '@typescript-eslint/utils';
-import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
 
@@ -24,32 +23,38 @@ export const noNumberSchemaWithStep = createZodPluginRule({
 
     return createSchemaVisitor({
       schemaType: 'number',
-      onSchema(node): void {
-        const methods = collectZodChainMethods(node);
-        const stepIndex = methods.findIndex((m) => m.name === 'step');
-        if (stepIndex === -1) {
+      onSchema(node, zodSchemaMeta): void {
+        // Detect on the names alone: they exclude the factory, so an aliased
+        // named import (`import { number as step }`) is not mistaken for a
+        // `.step()` call, and a computed factory (`z['number']().step(5)`) is
+        // still caught even though the chain walker cannot name it.
+        if (!getZodChainedMethodNames(zodSchemaMeta).includes('step')) {
           return;
         }
+
+        const methods = collectZodChainMethods(node);
+        // Skip index 0 — that item is the `number()` factory itself.
+        const stepIndex = methods.findIndex((m, index) => index > 0 && m.name === 'step');
 
         // Rename the `step` call's own property, not the chain's outermost one:
         // in `z.number().step(5).min(0)` the outermost callee is `.min`.
-        const { callee } = methods[stepIndex].node;
-        // A named import aliased to `step` (`import { number as step }`) also
-        // yields a chain item called `step`, but its callee is a bare
-        // identifier with no property to rename.
-        if (callee.type !== AST_NODE_TYPES.MemberExpression) {
-          return;
-        }
-
-        // `collectZodChainMethods` only names a member-expression call when its
-        // property is an identifier, so reaching here guarantees the narrowing.
-        const property = callee.property as TSESTree.Identifier;
+        // Past index 0 the callee is always a plain-identifier member
+        // expression — that is the only shape `collectZodChainMethods` names.
+        const property =
+          stepIndex === -1
+            ? null
+            : (
+                methods[stepIndex].node.callee as TSESTree.MemberExpression & {
+                  property: TSESTree.Identifier;
+                }
+              ).property;
 
         context.report({
           node,
           messageId: 'useMultipleOf',
           fix(fixer) {
-            return fixer.replaceText(property, 'multipleOf');
+            // A computed factory leaves no nameable `.step()` node to rename.
+            return property === null ? null : fixer.replaceText(property, 'multipleOf');
           },
         });
       },

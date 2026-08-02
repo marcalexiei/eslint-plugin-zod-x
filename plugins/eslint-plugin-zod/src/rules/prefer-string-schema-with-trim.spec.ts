@@ -132,5 +132,14 @@ ruleTester.run(preferStringSchemaWithTrim.name, preferStringSchemaWithTrim, {
         const schema = z.record(z.string(), z.string().trim());
       `,
     },
+    {
+      name: 'computed factory — reported but not fixed, and must not crash',
+      code: dedent`
+        import * as z from 'zod';
+        z['string']();
+      `,
+      errors: [{ messageId: 'addTrim' }],
+      output: null,
+    },
   ],
 });

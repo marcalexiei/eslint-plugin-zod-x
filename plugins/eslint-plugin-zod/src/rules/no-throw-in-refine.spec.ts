@@ -52,6 +52,13 @@ ruleTester.run(noThrowInRefine.name, noThrowInRefine, {
         z.string().refine((val) => function () { throw new Error("nested"); });
       `,
     },
+    {
+      name: 'argument-less `.refine()` — invalid zod, valid JS, must not crash',
+      code: dedent`
+        import * as z from 'zod';
+        z.string().refine();
+      `,
+    },
   ],
   invalid: [
     {

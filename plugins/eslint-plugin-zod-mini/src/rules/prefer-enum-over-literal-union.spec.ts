@@ -88,6 +88,13 @@ ruleTester.run(preferEnumOverLiteralUnion.name, preferEnumOverLiteralUnion, {
       `,
     },
     {
+      name: 'argument-less `z.literal()` — invalid zod, valid JS, must not crash',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.union([z.literal(), z.literal('bar')]);
+      `,
+    },
+    {
       name: 'sparse member array',
       code: dedent`
         import * as z from 'zod/mini';

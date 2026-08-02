@@ -18,6 +18,13 @@ ruleTester.run(noNumberSchemaWithFinite.name, noNumberSchemaWithFinite, {
       name: 'unrelated to zod',
       code: 'n.finite()',
     },
+    {
+      name: 'number factory aliased to `finite`, with a trailing method',
+      code: dedent`
+        import { number as finite } from 'zod';
+        finite().min(0);
+      `,
+    },
   ],
   invalid: [
     {
@@ -67,6 +74,15 @@ ruleTester.run(noNumberSchemaWithFinite.name, noNumberSchemaWithFinite, {
         import { number } from 'zod';
         number();
       `,
+    },
+    {
+      name: 'computed factory — reported but not fixed, the chain walker cannot name it',
+      code: dedent`
+        import * as z from 'zod';
+        z['number']().finite();
+      `,
+      errors: [{ messageId: 'removeFinite' }],
+      output: null,
     },
   ],
 });

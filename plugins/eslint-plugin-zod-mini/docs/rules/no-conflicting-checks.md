@@ -72,7 +72,14 @@ z.number().check(z.gt(0), z.multipleOf(2));
 z.number().check(z.gte(5), z.lte(5)); // exactly 5 — valid
 z.string().check(z.startsWith('a'), z.startsWith('abc')); // compatible prefixes
 z.union([z.uuid(), z.email()]); // either format — intentional
+z.string().check(z.uuid(), z.uuidv4()); // narrowing a uuid to one version
+z.string().check(z.guid(), z.uuid()); // every uuid is a guid
 ```
+
+Two formats only conflict when neither accepts a subset of the other. The
+GUID/UUID family nests — `guid` ⊇ `uuid` ⊇ `uuidv4`/`uuidv6`/`uuidv7` — so
+combining them narrows rather than contradicts. Two different UUID versions
+(`z.uuidv4(), z.uuidv7()`) still conflict, as does any other format pair.
 
 ## Limitations
 

@@ -68,7 +68,14 @@ z.number().int().gt(0).multipleOf(2); // positive even integers
 z.number().multipleOf(3).multipleOf(5); // multiples of 15 — intentional
 z.string().startsWith('a').startsWith('abc'); // 'a' is a prefix of 'abc'
 z.string().min(5).includes('@'); // compatible
+z.string().uuid().uuidv4(); // narrowing a uuid to one version
+z.string().guid().uuid(); // every uuid is a guid
 ```
+
+Two formats only conflict when neither accepts a subset of the other. The
+GUID/UUID family nests — `guid` ⊇ `uuid` ⊇ `uuidv4`/`uuidv6`/`uuidv7` — so
+combining them narrows rather than contradicts. Two different UUID versions
+(`uuidv4().uuidv7()`) still conflict, as does any other format pair.
 
 ## Limitations
 

@@ -98,7 +98,15 @@ export interface ZodSchemaImportTracker {
    * needed: it only names plain-identifier properties, so every item is safe
    * to rewrite, while `methods` also covers computed members (`z['uuid']()`).
    *
-   * Returns an empty array if the expression isn't a navigable zod chain.
+   * The result is all-or-nothing: either every call from the factory to the
+   * outermost one is named — so `chain[0]` is the factory and `chain[i]`
+   * lines up with `collectZodSchemaConstraints`' `chainIndex` — or the array
+   * is empty. It is never a partial chain missing its leading calls.
+   *
+   * Returns an empty array if the expression isn't a navigable zod chain,
+   * which includes zod schemas built through a computed member
+   * (`z['string']().min(1)`): those are still *detected*, so a rule that
+   * reports on `onSchema` must handle an empty chain rather than index it.
    */
   collectZodChainMethods: (node: TSESTree.CallExpression) => Array<ZodChainItem>;
 
@@ -150,6 +158,7 @@ export function trackZodSchemaImports(scope: ZodImportScope): ZodSchemaImportTra
       // Match: z.number(), z.int(), z.min(), etc.
       if (
         callee.type === AST_NODE_TYPES.MemberExpression &&
+        !callee.computed &&
         callee.property.type === AST_NODE_TYPES.Identifier
       ) {
         methods.unshift({
@@ -171,7 +180,15 @@ export function trackZodSchemaImports(scope: ZodImportScope): ZodSchemaImportTra
         break;
       }
 
-      break;
+      // Unnameable callee — a computed member (`z['string']()`) or a complex
+      // expression. Detection still resolves those (`detectZodSchemaRootNode`
+      // reads literal keys), so returning what we walked so far would hand
+      // callers a chain that silently drops leading methods and no longer
+      // starts at the factory. Return nothing instead, so `chain[0]` is always
+      // the factory and `chain[i]` always lines up with the constraint list.
+      const unwalkable: Array<ZodChainItem> = [];
+      chainCache.set(node, unwalkable);
+      return unwalkable;
     }
 
     chainCache.set(node, methods);

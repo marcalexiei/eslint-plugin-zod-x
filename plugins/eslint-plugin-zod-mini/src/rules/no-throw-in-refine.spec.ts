@@ -57,6 +57,13 @@ ruleTester.run(noThrowInRefine.name, noThrowInRefine, {
       `,
     },
     {
+      name: 'argument-less `z.refine()` — invalid zod, valid JS, must not crash',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.string().check(z.refine());
+      `,
+    },
+    {
       name: 'named imports',
       code: dedent`
         import { refine, string } from 'zod/mini';

@@ -56,6 +56,13 @@ ruleTester.run(noUnnecessaryReadonly.name, noUnnecessaryReadonly, {
         string().readonly();
       `,
     },
+    {
+      name: 'computed factory with a type-changing method — the chain walker cannot see `.transform()`',
+      code: dedent`
+        import * as z from 'zod';
+        z['string']().transform((s) => [s]).readonly();
+      `,
+    },
   ],
   invalid: [
     {

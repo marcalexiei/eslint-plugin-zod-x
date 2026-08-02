@@ -36,18 +36,21 @@ export function buildPreferDedicatedFactoryCreate<TMessageIds extends string>(
     return createSchemaVisitor({
       schemaType: factoryName,
       onSchema(node, zodSchemaMeta): void {
-        const methods = collectZodChainMethods(node);
-        const modifierMethod = methods.find((it) => modifierMethods.includes(it.name));
-
-        if (!modifierMethod) {
+        if (!zodSchemaMeta.methods.some((name) => modifierMethods.includes(name))) {
           return;
         }
 
+        const methods = collectZodChainMethods(node);
+        // Empty when the chain runs through a computed member
+        // (`z['object']({}).passthrough()`): detection named the modifier but
+        // the walker cannot, so report on the schema and offer no fix.
+        const modifierMethod = methods.find((it) => modifierMethods.includes(it.name));
+
         context.report({
-          node: modifierMethod.node,
+          node: modifierMethod?.node ?? node,
           messageId,
           fix(fixer) {
-            if (zodSchemaMeta.schemaDecl === 'named') {
+            if (!modifierMethod || zodSchemaMeta.schemaDecl === 'named') {
               return null;
             }
 
@@ -55,15 +58,14 @@ export function buildPreferDedicatedFactoryCreate<TMessageIds extends string>(
               return null;
             }
 
-            const factoryMethod = methods.find((it) => it.name === factoryName);
-            if (!factoryMethod) {
-              return null;
-            }
-
             const { sourceCode } = context;
 
-            // Named declarations returned above, so both calls are `<ns>.<name>(…)`
-            // member expressions — a bare identifier callee is unreachable here.
+            // The chain is walkable (`modifierMethod` came from it) and starts
+            // at the factory, which the visitor already filtered to
+            // `factoryName`. Named declarations returned above, so both calls
+            // are `<ns>.<name>(…)` member expressions — a bare identifier
+            // callee is unreachable here.
+            const [factoryMethod] = methods;
             const factoryCallee = factoryMethod.node.callee as TSESTree.MemberExpression;
             const modifierCallee = modifierMethod.node.callee as TSESTree.MemberExpression;
 

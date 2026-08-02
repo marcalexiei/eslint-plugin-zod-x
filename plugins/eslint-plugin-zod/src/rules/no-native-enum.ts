@@ -23,8 +23,9 @@ export const noNativeEnum = createZodPluginRule({
     return createSchemaVisitor({
       schemaType: 'nativeEnum',
       onSchema(node) {
-        const methods = collectZodChainMethods(node);
-        const [{ node: rootMethodNode }] = methods;
+        // Empty for a computed factory (`z['nativeEnum'](Foo)`), which detection
+        // still resolves — report it, just without a fix.
+        const rootMethodNode = collectZodChainMethods(node).at(0)?.node;
 
         context.report({
           node,
@@ -33,7 +34,7 @@ export const noNativeEnum = createZodPluginRule({
             // For named imports (e.g., `nativeEnum().optional()`), we cannot safely auto-fix
             // because replacing the entire chain would require access to the namespace prefix.
             // Report the error without a fix in this case.
-            if (rootMethodNode.callee.type !== AST_NODE_TYPES.MemberExpression) {
+            if (rootMethodNode?.callee.type !== AST_NODE_TYPES.MemberExpression) {
               return null;
             }
 

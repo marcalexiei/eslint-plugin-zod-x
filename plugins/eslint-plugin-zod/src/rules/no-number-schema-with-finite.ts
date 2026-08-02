@@ -1,4 +1,8 @@
-import { buildZodChainRemoveMethodFix, zodImportScope } from '@eslint-zod/utils';
+import {
+  buildZodChainRemoveMethodFix,
+  getZodChainedMethodNames,
+  zodImportScope,
+} from '@eslint-zod/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
 
@@ -24,17 +28,28 @@ export const noNumberSchemaWithFinite = createZodPluginRule({
 
     return createSchemaVisitor({
       schemaType: 'number',
-      onSchema(node): void {
-        const methods = collectZodChainMethods(node);
-        const finiteIndex = methods.findIndex((m) => m.name === 'finite');
-        if (finiteIndex === -1) {
+      onSchema(node, zodSchemaMeta): void {
+        // Detect on the names alone: they exclude the factory, so an aliased
+        // named import (`import { number as finite }`) is not mistaken for a
+        // `.finite()` call, and a computed factory (`z['number']().finite()`)
+        // is still caught even though the chain walker cannot name it.
+        if (!getZodChainedMethodNames(zodSchemaMeta).includes('finite')) {
           return;
         }
+
+        const methods = collectZodChainMethods(node);
+        // Skip index 0 — that item is the `number()` factory itself.
+        const finiteIndex = methods.findIndex((m, index) => index > 0 && m.name === 'finite');
 
         context.report({
           node,
           messageId: 'removeFinite',
           fix(fixer) {
+            // A computed factory leaves `finiteIndex` at -1 — unfixable.
+            if (finiteIndex === -1) {
+              return null;
+            }
+
             return buildZodChainRemoveMethodFix({
               fixer,
               methods,

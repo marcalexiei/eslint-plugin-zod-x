@@ -15,6 +15,7 @@ export {
 // schema detection & navigation
 export type { ZodSchemaMeta } from './detect-zod-schema-root-node.js';
 export { findParentSchemaMatchingCondition } from './find-parent-schema-matching-condition.js';
+export { getZodChainedMethodNames } from './get-zod-chained-method-names.js';
 export { getZodSchemaBaseType } from './get-zod-schema-base-type.js';
 export type { ZodSchemaBaseType } from './get-zod-schema-base-type.js';
 export type {

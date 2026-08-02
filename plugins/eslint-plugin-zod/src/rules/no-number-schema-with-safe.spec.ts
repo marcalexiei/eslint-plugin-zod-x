@@ -35,6 +35,13 @@ ruleTester.run(noNumberSchemaWithSafe.name, noNumberSchemaWithSafe, {
         z.number().min(0);
       `,
     },
+    {
+      name: 'named import aliased to `safe` — the factory is not a `.safe()` call',
+      code: dedent`
+        import { number as safe } from 'zod';
+        safe().min(0);
+      `,
+    },
   ],
   invalid: [
     {
@@ -93,6 +100,15 @@ ruleTester.run(noNumberSchemaWithSafe.name, noNumberSchemaWithSafe, {
         import { z } from 'zod';
         z.int();
       `,
+    },
+    {
+      name: 'computed factory — reported but not fixed, the chain walker cannot name it',
+      code: dedent`
+        import * as z from 'zod';
+        z['number']().safe();
+      `,
+      errors: [{ messageId: 'useInt' }],
+      output: null,
     },
   ],
 });
