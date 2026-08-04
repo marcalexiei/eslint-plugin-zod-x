@@ -72,6 +72,11 @@ This rule provides automatic fixes that will:
 - Replace `z.describe(x)` with `z.meta({ description: x })`
 - Preserve the description value, including variables and template literals
 
+The rule reports without a fix when it cannot rewrite the call safely:
+
+- a named import (`import { describe } from 'zod/mini'`), which would need `meta` imported too
+- a computed key (`z['describe'](x)`), where the method name is a string literal rather than a property to rename
+
 ## When Not To Use It
 
 If you're maintaining a codebase that needs to support both Zod 3 and newer versions simultaneously, you might want to disable this rule. However, for new code or projects using recent versions of Zod Mini, it's recommended to use `z.meta()`.

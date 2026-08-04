@@ -32,11 +32,21 @@ export const preferMeta = createZodMiniPluginRule({
               return null;
             }
 
-            const { callee } = node;
+            // A namespace schema is detected only when its factory is a member
+            // of the namespace, so this call is always `<ns>.<factory>(…)`.
+            const callee = node.callee as TSESTree.MemberExpression;
+
+            // …but the key may be computed (`z['describe'](…)`), which
+            // detection still resolves. The property is then the string
+            // literal, so renaming it would emit `z[meta](…)`.
+            if (callee.computed) {
+              return null;
+            }
+
             const [describeArg] = node.arguments;
 
             return [
-              fixer.replaceText((callee as TSESTree.MemberExpression).property, 'meta'),
+              fixer.replaceText(callee.property, 'meta'),
               fixer.replaceText(
                 describeArg,
                 `{ description: ${context.sourceCode.getText(describeArg)} }`,

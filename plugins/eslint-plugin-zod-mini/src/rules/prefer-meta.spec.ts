@@ -81,6 +81,15 @@ ruleTester.run(preferMeta.name, preferMeta, {
       output: null,
     },
     {
+      name: 'computed factory — reported without a fix, renaming the key would emit `z[meta]`',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.string().check(z['describe']("desc"));
+      `,
+      errors: [{ messageId: 'preferMeta' }],
+      output: null,
+    },
+    {
       name: 'named z import',
       code: dedent`
         import { z } from 'zod/mini';
