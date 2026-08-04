@@ -1,5 +1,42 @@
 # eslint-plugin-zod
 
+## 4.9.1
+
+### Patch Changes
+
+- [#376](https://github.com/marcalexiei/eslint-zod/pull/376) [`b1f666a`](https://github.com/marcalexiei/eslint-zod/commit/b1f666a0c86b7cfb335d60307aa0b9aa697bb1dd) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: `consistent-import` alias collision between two zod sources
+
+  Every rewritten import group received the alias `z`, so a file importing from both `zod` and `zod/v3` was fixed into two `import * as z` declarations.
+  Each group now gets a distinct alias.
+
+- [#383](https://github.com/marcalexiei/eslint-zod/pull/383) [`6b4122e`](https://github.com/marcalexiei/eslint-zod/commit/6b4122ebe44bdd245afdea04661c3947094ee01d) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: `no-number-schema-with-safe`, `-finite` and `-step` missed the deprecated method mid-chain
+
+  All three required the deprecated call to be the last one in the chain, so `z.number().safe().min(0)` went unreported while `z.number().safe()` was flagged.
+  `-step` additionally renamed the chain's outermost property, which would have rewritten `.min()` instead of `.step()`.
+
+- [#379](https://github.com/marcalexiei/eslint-zod/pull/379) [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: `no-conflicting-checks` now recognises every deprecated chained string format
+
+  `.ipv4()`, `.guid()`, `.ksuid()`, `.uuidv4()`, `.xid()` and others were missing
+  from the rule's table, so conflicts involving them went unreported.
+
+- [#400](https://github.com/marcalexiei/eslint-zod/pull/400) [`fb49a63`](https://github.com/marcalexiei/eslint-zod/commit/fb49a639c3bee68268861b6c44ea9626c0cac6c6) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: `no-conflicting-checks` no longer flags a narrowed string format as impossible
+
+  `z.string().uuid().uuidv4()` and `z.string().guid().uuid()` are refinements, not
+  contradictions — the GUID/UUID family nests. Two different UUID versions still
+  conflict.
+
+  Also fixes `no-number-schema-with-safe`/`-step`/`-finite` matching the factory of
+  an aliased import (`import { number as safe }`), and stops `no-native-enum` and
+  `prefer-string-schema-with-trim` crashing on a computed factory.
+
+- [#376](https://github.com/marcalexiei/eslint-zod/pull/376) [`b1f666a`](https://github.com/marcalexiei/eslint-zod/commit/b1f666a0c86b7cfb335d60307aa0b9aa697bb1dd) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: `no-any-schema` crash on a computed factory call
+
+  The rule threw on `z['any']()`.
+  It now reports the schema without a rename suggestion.
+
+- Updated dependencies [[`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50), [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50), [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50), [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50), [`fb49a63`](https://github.com/marcalexiei/eslint-zod/commit/fb49a639c3bee68268861b6c44ea9626c0cac6c6), [`b1f666a`](https://github.com/marcalexiei/eslint-zod/commit/b1f666a0c86b7cfb335d60307aa0b9aa697bb1dd), [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50), [`b1f666a`](https://github.com/marcalexiei/eslint-zod/commit/b1f666a0c86b7cfb335d60307aa0b9aa697bb1dd), [`fb49a63`](https://github.com/marcalexiei/eslint-zod/commit/fb49a639c3bee68268861b6c44ea9626c0cac6c6), [`4d8edae`](https://github.com/marcalexiei/eslint-zod/commit/4d8edae60e525cd1816f87600d1f825b3146fa35)]:
+  - @eslint-zod/utils@3.0.0
+
 ## 4.9.0
 
 ### Minor Changes

@@ -1,5 +1,82 @@
 # @eslint-zod/utils
 
+## 3.0.0
+
+### Major Changes
+
+- [#379](https://github.com/marcalexiei/eslint-zod/pull/379) [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat!: replace `createZodSchemaImportTrack(scope)` with `scope.createTracker()`
+
+  Migration: `const { trackZodSchemaImports } = createZodSchemaImportTrack(scope)`
+
+  - `trackZodSchemaImports()` becomes `scope.createTracker()`.
+
+  The `ZOD_*` vocabulary tables are now `ReadonlyArray<string>` rather than `Array<string>`, and `ZodImportScope` accepts a `ReadonlyArray<string>` of sources.
+
+- [#400](https://github.com/marcalexiei/eslint-zod/pull/400) [`fb49a63`](https://github.com/marcalexiei/eslint-zod/commit/fb49a639c3bee68268861b6c44ea9626c0cac6c6) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix!: `collectZodChainMethods` returns `[]` instead of a partial chain
+
+  When the walk hits a call it cannot name (`z['string']()`), the whole chain is
+  dropped rather than truncated, so `chain[0]` is always the factory and `chain[i]`
+  always matches `collectZodSchemaConstraints`' `chainIndex`. Rules that index the
+  chain must handle the empty case — detection stays permissive.
+
+- [#379](https://github.com/marcalexiei/eslint-zod/pull/379) [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat!: schema detection is reachable only through a tracker
+
+  `detectZodSchemaRootNode` and `isZodNumberSchemaCallExpression` are no longer
+  root exports — their 2nd and 3rd parameters were the tracker's private import
+  maps, which no consumer can obtain. Use `scope.createTracker()`.
+
+  - `isZodNumberSchemaCallExpression` becomes `isZodSchemaOfType(node, schemaType)`
+  - the detection result no longer carries `node`: it always returned the node you
+    passed in
+  - `ZodImportScope`, `ZodSchemaMeta`, `ZodSchemaImportTracker` and `ZodChainItem`
+    are now exported — all were already referenced by the public API
+
+### Minor Changes
+
+- [#379](https://github.com/marcalexiei/eslint-zod/pull/379) [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `canonicalizeZodConstraintName` and `getZodCheckDescriptor`
+
+  One source of truth for what a Zod check is called and what it means, so rules no longer keep private spelling tables.
+  Also adds `ZOD_STRING_FORMAT_METHODS`.
+
+- [#379](https://github.com/marcalexiei/eslint-zod/pull/379) [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add rule patterns — `@eslint-zod/utils/rule-patterns/*`
+
+  Recurring rule shapes parameterized by the names they differ in:
+
+  - `buildDeprecatedSchemaPropertyCreate`
+  - `buildDeprecatedSchemaMethodCreate`
+  - `buildPreferDedicatedFactoryCreate`
+
+- [#400](https://github.com/marcalexiei/eslint-zod/pull/400) [`fb49a63`](https://github.com/marcalexiei/eslint-zod/commit/fb49a639c3bee68268861b6c44ea9626c0cac6c6) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `getZodChainedMethodNames(meta)`
+
+  The methods chained onto a schema, factory removed — `meta.methods` includes it
+  for a namespace schema but not for a named import, so `methods.includes('safe')`
+  also matches `import { number as safe }`.
+
+  Also fixes rule-builder crashes on `z.coerce['boolean']()`, `z.string().refine()`
+  and `z.literal()`; restores `prefer-nullish`'s guard against autofixing
+  `optional.foo(nullable(1))`; and makes `ZOD_IMMUTABLE_SCHEMA_TYPES` spread
+  `ZOD_STRING_FORMAT_NAMES`, which had drifted (`mac` was missing).
+
+- [#382](https://github.com/marcalexiei/eslint-zod/pull/382) [`4d8edae`](https://github.com/marcalexiei/eslint-zod/commit/4d8edae60e525cd1816f87600d1f825b3146fa35) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat: add `tracker.createSchemaVisitor({ schemaType, onSchema })`
+
+  Builds the `{ ImportDeclaration, CallExpression }` visitor a schema rule returns, with detection and the `schemaType` filter applied.
+  Replaces the hand-wired preamble, where omitting `ImportDeclaration` silently disabled detection for the whole file.
+
+### Patch Changes
+
+- [#379](https://github.com/marcalexiei/eslint-zod/pull/379) [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: declare `types` conditions in the exports map
+
+  - collapses the per-builder subpath entries into a `rule-builders/*` wildcard
+  - adds `"sideEffects": false`.
+
+- [#376](https://github.com/marcalexiei/eslint-zod/pull/376) [`b1f666a`](https://github.com/marcalexiei/eslint-zod/commit/b1f666a0c86b7cfb335d60307aa0b9aa697bb1dd) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: `buildNoAnySchemaCreate` crash on an empty schema chain
+
+  The builder destructured the first chain item unconditionally, throwing when a computed factory call produced no walkable chain.
+
+- [#376](https://github.com/marcalexiei/eslint-zod/pull/376) [`b1f666a`](https://github.com/marcalexiei/eslint-zod/commit/b1f666a0c86b7cfb335d60307aa0b9aa697bb1dd) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: `buildConsistentImportCreate` generating the same namespace alias for every group
+
+  The alias counter was only incremented inside the branch that required it to be non-zero, so it never advanced past `z`.
+
 ## 2.5.0
 
 ### Minor Changes
