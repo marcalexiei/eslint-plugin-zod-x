@@ -1,5 +1,36 @@
 # eslint-plugin-zod-mini
 
+## 1.6.1
+
+### Patch Changes
+
+- [#401](https://github.com/marcalexiei/eslint-zod/pull/401) [`d240d10`](https://github.com/marcalexiei/eslint-zod/commit/d240d10df0a203d4a796e763562810923b41474a) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: `prefer-meta` autofix corrupting a computed `z['describe'](…)` call
+
+  The fixer renamed the callee's property to `meta` without checking that it was an identifier, so a computed key was rewritten into the undeclared identifier `meta`: `z['describe']('x')` became `z[meta]({ description: 'x' })`.
+  Such a call is now reported without a fix.
+
+- [#376](https://github.com/marcalexiei/eslint-zod/pull/376) [`b1f666a`](https://github.com/marcalexiei/eslint-zod/commit/b1f666a0c86b7cfb335d60307aa0b9aa697bb1dd) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: `no-any-schema` crash on a computed factory call
+
+  The rule threw on `z['any']()`.
+  It now reports the schema without a rename suggestion.
+
+- [#376](https://github.com/marcalexiei/eslint-zod/pull/376) [`b1f666a`](https://github.com/marcalexiei/eslint-zod/commit/b1f666a0c86b7cfb335d60307aa0b9aa697bb1dd) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: `consistent-import` alias collision between two zod sources
+
+  Every rewritten import group received the alias `z`, so a file importing from both `zod/mini` and `zod/v4-mini` was fixed into two `import * as z` declarations.
+  Each group now gets a distinct alias.
+
+- [#400](https://github.com/marcalexiei/eslint-zod/pull/400) [`fb49a63`](https://github.com/marcalexiei/eslint-zod/commit/fb49a639c3bee68268861b6c44ea9626c0cac6c6) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix: `no-conflicting-checks` no longer flags a narrowed string format as impossible
+
+  `z.string().check(z.uuid(), z.uuidv4())` is a refinement, not a contradiction —
+  the GUID/UUID family nests. Two different UUID versions still conflict.
+
+  Also stops `no-coerce-boolean`, `no-throw-in-refine` and
+  `prefer-enum-over-literal-union` crashing on `z.coerce['boolean']()`,
+  `z.string().check(z.refine())` and `z.literal()`.
+
+- Updated dependencies [[`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50), [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50), [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50), [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50), [`fb49a63`](https://github.com/marcalexiei/eslint-zod/commit/fb49a639c3bee68268861b6c44ea9626c0cac6c6), [`b1f666a`](https://github.com/marcalexiei/eslint-zod/commit/b1f666a0c86b7cfb335d60307aa0b9aa697bb1dd), [`dfa974b`](https://github.com/marcalexiei/eslint-zod/commit/dfa974b3bde278fee13f5e0fc2b2f8f7fffc4e50), [`b1f666a`](https://github.com/marcalexiei/eslint-zod/commit/b1f666a0c86b7cfb335d60307aa0b9aa697bb1dd), [`fb49a63`](https://github.com/marcalexiei/eslint-zod/commit/fb49a639c3bee68268861b6c44ea9626c0cac6c6), [`4d8edae`](https://github.com/marcalexiei/eslint-zod/commit/4d8edae60e525cd1816f87600d1f825b3146fa35)]:
+  - @eslint-zod/utils@3.0.0
+
 ## 1.6.0
 
 ### Minor Changes
