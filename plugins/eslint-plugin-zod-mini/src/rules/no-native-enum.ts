@@ -1,9 +1,9 @@
-import { zodImportScope } from '@eslint-zod/utils';
+import { zodMiniImportScope } from '@eslint-zod/utils';
 import { buildNoNativeEnumCreate } from '@eslint-zod/utils/rule-builders/no-native-enum';
 
-import { createZodPluginRule } from '../utils/create-plugin-rule.js';
+import { createZodMiniPluginRule } from '../utils/create-plugin-rule.js';
 
-export const noNativeEnum = createZodPluginRule({
+export const noNativeEnum = createZodMiniPluginRule({
   name: 'no-native-enum',
   meta: {
     type: 'problem',
@@ -17,5 +17,5 @@ export const noNativeEnum = createZodPluginRule({
     schema: [],
   },
   defaultOptions: [],
-  create: buildNoNativeEnumCreate(zodImportScope),
+  create: buildNoNativeEnumCreate(zodMiniImportScope),
 });
