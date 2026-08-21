@@ -30,14 +30,14 @@
     "@marcalexiei/prettier-config": "catalog:dev",
     "@types/node": "24.13.2",
     "@vitest/coverage-v8": "catalog:dev",
-    "@vitest/eslint-plugin": "1.6.24",
-    "eslint": "10.8.0",
+    "@vitest/eslint-plugin": "1.6.27",
+    "eslint": "10.8.1",
     "eslint-import-resolver-typescript": "4.4.5",
-    "eslint-plugin-eslint-plugin": "7.6.0",
+    "eslint-plugin-eslint-plugin": "7.6.2",
     "eslint-plugin-import-x": "4.17.1",
-    "eslint-plugin-n": "18.2.2",
-    "knip": "6.29.0",
-    "prettier": "3.9.6",
+    "eslint-plugin-n": "18.3.0",
+    "knip": "6.32.2",
+    "prettier": "catalog:dev",
     "typescript": "6.0.3",
     "typescript-eslint": "catalog:dev",
     "vitest": "catalog:dev"
@@ -46,5 +46,5 @@
   "engines": {
     "node": "^20 || ^22 || >=24"
   },
-  "packageManager": "pnpm@11.10.0+sha512.0b7f8b98060031904c017e3a41eb187a16d40eeb829b95c4f8cb03681761fc4ab53dd219115b9b447f4dce1a05a214764461e7d3703392a9f32f9511ce8c86c8"
+  "packageManager": "pnpm@11.22.0+sha512.1ff870c4c6133dfd88fb2afc46dd13d47f09c9794b438c6fdb47ca98caf3bc16381ee0be93a091b8e3824cf01f889f46d7d9e20910fb0be1ab0fb5baa80dd621"
 }
