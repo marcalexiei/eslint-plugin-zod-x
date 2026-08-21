@@ -43,14 +43,6 @@ jobs:
           app-id: ${{ vars.RELEASE_HELPER_APP_ID }}
           private-key: ${{ secrets.RELEASE_HELPER_PRIVATE_KEY }}
 
-      - name: Configure git user for GitHub App
-        env:
-          BOT_NAME: ${{ steps.release-helper.outputs.bot-name }}
-          BOT_EMAIL: ${{ steps.release-helper.outputs.bot-email }}
-        run: |
-          git config --global user.name "$BOT_NAME"
-          git config --global user.email "$BOT_EMAIL"
-
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -61,14 +53,13 @@ jobs:
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
+        uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
         with:
-          commit: 'chore: release'
-          title: 'chore: release'
-          publish: 'pnpm release'
-          setupGitUser: false
-        env:
-          GITHUB_TOKEN: ${{ steps.release-helper.outputs.token }}
+          github-token: ${{ steps.release-helper.outputs.token }}
+          commit-message: 'chore: release'
+          pr-title: 'chore: release'
+          pr-base-branch: main
+          publish-script: 'pnpm release'
 
   on-ci-fail:
     name: 'Failure'
