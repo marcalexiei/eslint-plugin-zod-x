@@ -87,6 +87,8 @@ Each rule shared between `eslint-plugin-zod` and `eslint-plugin-zod-mini` (some 
 - `buildNoConflictingChecksCreate(scope)` — also exports the `NoConflictingChecksOptions` and `NoConflictingChecksMessageIds` contracts
 - `buildNoDuplicateSchemaMethodsCreate(scope, excludedMethods)`
 - `buildNoEmptyCustomSchemaCreate(scope)`
+- `buildNoNativeEnumCreate(scope)`
+- `buildNoPromiseSchemaCreate(scope)`
 - `buildNoThrowInRefineCreate(scope)`
 - `buildNoTransformInRecordKeyCreate(scope, options)` — also exports the `NoTransformInRecordKeyOptions` contract and the `FindTransformNodeHelpers` type its `findTransformNode` strategy receives
 - `buildNoUnknownSchemaCreate(scope)`

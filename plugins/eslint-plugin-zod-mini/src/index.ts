@@ -11,6 +11,8 @@ import { noCoerceBoolean } from './rules/no-coerce-boolean.js';
 import { noConflictingChecks } from './rules/no-conflicting-checks.js';
 import { noDuplicateSchemaMethods } from './rules/no-duplicate-schema-methods.js';
 import { noEmptyCustomSchema } from './rules/no-empty-custom-schema.js';
+import { noNativeEnum } from './rules/no-native-enum.js';
+import { noPromiseSchema } from './rules/no-promise-schema.js';
 import { noThrowInRefine } from './rules/no-throw-in-refine.js';
 import { noTransformInRecordKey } from './rules/no-transform-in-record-key.js';
 import { noUnknownSchema } from './rules/no-unknown-schema.js';
@@ -52,6 +54,8 @@ const eslintPluginZodMini = {
     'no-conflicting-checks': noConflictingChecks,
     'no-duplicate-schema-methods': noDuplicateSchemaMethods,
     'no-empty-custom-schema': noEmptyCustomSchema,
+    'no-native-enum': noNativeEnum,
+    'no-promise-schema': noPromiseSchema,
     'no-throw-in-refine': noThrowInRefine,
     'no-transform-in-record-key': noTransformInRecordKey,
     'no-unknown-schema': noUnknownSchema,
@@ -83,6 +87,8 @@ const recommendedConfig = {
     'zod-mini/no-coerce-boolean': 'error',
     'zod-mini/no-duplicate-schema-methods': 'error',
     'zod-mini/no-empty-custom-schema': 'error',
+    'zod-mini/no-native-enum': 'error',
+    'zod-mini/no-promise-schema': 'error',
     'zod-mini/no-throw-in-refine': 'error',
     'zod-mini/prefer-enum-over-literal-union': 'error',
     'zod-mini/prefer-meta': 'error',
