@@ -10,11 +10,25 @@ pnpm monorepo containing three ESLint plugins and a shared utilities package for
 | `eslint-plugin-zod-mini` | `plugins/eslint-plugin-zod-mini/` | yes       |
 | `eslint-plugin-zod-core` | `plugins/eslint-plugin-zod-core/` | yes       |
 | `@eslint-zod/utils`      | `packages/utils/`                 | yes       |
-| `@eslint-zod/test-utils` | `packages/test-utils/`            | no        |
+| `@eslint-zod/tooling`    | `packages/tooling/`               | no        |
 
 `eslint-plugin-zod-core` targets `zod/v4/core` (the low-level package used by library authors). It is intentionally small — most schema-authoring rules do not apply to it.
 
-`@eslint-zod/test-utils` is a private workspace package with data helpers for the plugins' `index.spec.ts` consistency specs (rule/doc file listings, config entries). Helpers return data only — all `describe`/`it` blocks and `expect` assertions stay in each plugin's own spec. It is consumed source-only via the `@eslint-zod/source` condition and never built or published; changes to it need no changeset.
+`@eslint-zod/tooling` is a private workspace package holding everything tool-related that would otherwise be duplicated per package: one directory per tool, and one export per entry.
+
+| Export                                     | File                                | Contents                                                        |
+| ------------------------------------------ | ----------------------------------- | --------------------------------------------------------------- |
+| `@eslint-zod/tooling/vitest`               | `src/vitest/index.js`               | `definePluginTestProject(name)`                                 |
+| `@eslint-zod/tooling/vitest/spec-helpers`  | `src/vitest/spec-helpers.ts`        | data helpers for the plugins' `index.spec.ts` consistency specs |
+| `@eslint-zod/tooling/tsdown`               | `src/tsdown/index.ts`               | `definePluginTsdownConfig(overrides?)`                          |
+| `@eslint-zod/tooling/eslint-doc-generator` | `src/eslint-doc-generator/index.ts` | `eslintDocGeneratorConfig`                                      |
+
+Every one of those tools is invoked per package, so each package keeps its own config file — reduced to a call or a re-export. Two constraints shape the package, both learned from CI:
+
+- **A tool entry has no relative imports.** Each tool loads the per-package config file, sees a bare import, externalizes it and hands the file to Node — which resolves neither a `.js` specifier pointing at a `.ts` file nor a directory sibling. Keep an entry's whole implementation in its own file; a file that is only referenced, never imported (`rule-tester-setup.ts`, loaded by Vitest as a setup file), may sit beside it.
+- **The Vitest entry is plain JavaScript.** The test matrix includes Node 20, which cannot strip types, so `vitest.config.ts` loading a `.ts` entry fails with `ERR_UNKNOWN_FILE_EXTENSION`. `src/vitest/index.d.ts` gives it types and `index.js` annotates its implementation against that declaration (`@type {typeof import('./index.js').…}`), so drift between the two is a type error. `allowJs`/`checkJs` are set in this package only. The other tools never run on Node 20 — tsdown's own `engines` require `^22.18 || >=24.11`, and pnpm needs ≥22.13 — so their entries stay TypeScript. Anything that is not tool config (the spec helpers) belongs in its own `.ts` file with its own export.
+
+Every entry uses **named exports only** — the per-package config file is where the tool's expected `export default` is written. The spec helpers return data only: all `describe`/`it` blocks and `expect` assertions stay in each plugin's own spec. The package is consumed source-only and is never built or published; changes to it need no changeset.
 
 `@eslint-zod/utils` is a dependency of each plugin — consumers do not need to install it directly.
 
@@ -182,7 +196,7 @@ Follow the **`add-rule` skill** (`.claude/skills/add-rule/SKILL.md`) — it cove
 
 ## Docs generation
 
-`eslint-doc-generator` is configured per-plugin (`.eslint-doc-generatorrc.js` in each plugin directory). It does not traverse past `package.json` boundaries, so a root-level config alone is not sufficient. The root README is a hand-maintained monorepo overview — it has no auto-generated sections.
+`eslint-doc-generator` is configured per-plugin (`.eslint-doc-generatorrc.ts` in each plugin directory). It does not traverse past `package.json` boundaries, so a root-level config alone is not sufficient — each plugin's file only re-exports the shared config from `@eslint-zod/tooling/eslint-doc-generator`. The root README is a hand-maintained monorepo overview — it has no auto-generated sections.
 
 ### Rule doc layout
 

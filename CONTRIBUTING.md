@@ -15,6 +15,8 @@ This is a pnpm monorepo with three published ESLint plugins and a shared utiliti
 | `eslint-plugin-zod-core` | `plugins/eslint-plugin-zod-core/` |
 | `@eslint-zod/utils`      | `packages/utils/`                 |
 
+One private package supports them: `@eslint-zod/tooling` (`packages/tooling/`), with a directory per tool — `vitest` (project config, plus the plugin-consistency spec helpers under `vitest/spec-helpers`), `tsdown`, and `eslint-doc-generator`. Each package's own config file calls one of those exports. The Vitest entry is plain JavaScript on purpose: the test matrix runs Node 20, which cannot load TypeScript.
+
 `@eslint-zod/utils` contains AST helpers (exported from `@eslint-zod/utils`) and shared rule `create` factories (exported per-file from `@eslint-zod/utils/rule-builders/<rule-name>`). Rule metadata lives entirely per-plugin.
 
 Several rules exist in **different** plugins with the same name and intent but adapted to each plugin's API style.

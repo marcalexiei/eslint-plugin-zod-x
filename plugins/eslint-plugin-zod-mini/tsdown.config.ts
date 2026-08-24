@@ -1,11 +1,3 @@
-import { defineConfig } from 'tsdown';
+import { definePluginTsdownConfig } from '@eslint-zod/tooling/tsdown';
 
-export default defineConfig({
-  entry: ['src/index.ts'],
-  format: ['esm', 'cjs'],
-  dts: true,
-  clean: true,
-  outDir: 'dist',
-  target: 'node20',
-  unbundle: true,
-});
+export default definePluginTsdownConfig();

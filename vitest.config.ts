@@ -11,7 +11,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html'],
       reportsDirectory: './coverage',
-      // `packages/test-utils` is test infrastructure, so it is not included.
+      // `packages/tooling` is test/build infrastructure, so it is not included.
       include: [
         //
         'plugins/*/src/**/*.ts',

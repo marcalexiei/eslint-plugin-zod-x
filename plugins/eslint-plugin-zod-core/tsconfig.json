@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
-  "exclude": ["dist"],
+  "exclude": ["dist/**"],
   "compilerOptions": {
     "composite": true,
     "noEmit": false,
@@ -9,7 +9,7 @@
   },
   "references": [
     {
-      "path": "../../packages/test-utils"
+      "path": "../../packages/tooling"
     },
     {
       "path": "../../packages/utils"

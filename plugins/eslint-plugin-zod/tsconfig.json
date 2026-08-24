@@ -9,7 +9,7 @@
   },
   "references": [
     {
-      "path": "../../packages/test-utils"
+      "path": "../../packages/tooling"
     },
     {
       "path": "../../packages/utils"

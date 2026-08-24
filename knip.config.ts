@@ -24,7 +24,7 @@ export default {
       // in src/index.ts — it doesn't need to be a devDependency
       ignoreDependencies: ['eslint'],
     },
-    'packages/test-utils': {},
+    'packages/tooling': {},
     'packages/utils': {},
   },
 } satisfies KnipConfig;

@@ -6,5 +6,10 @@
     "noEmit": false,
     "outDir": "dist/ts",
     "emitDeclarationOnly": true
-  }
+  },
+  "references": [
+    {
+      "path": "../tooling"
+    }
+  ]
 }

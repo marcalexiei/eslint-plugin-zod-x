@@ -1,0 +1,27 @@
+{
+  "name": "@eslint-zod/tooling",
+  "version": "0.0.0",
+  "description": "Internal (unpublished) shared build, test & docs tooling configs",
+  "private": true,
+  "license": "MIT",
+  "author": "Marco Pasqualetti @marcalexiei",
+  "type": "module",
+  "exports": {
+    "./eslint-doc-generator": "./src/eslint-doc-generator/index.ts",
+    "./tsdown": "./src/tsdown/index.ts",
+    "./vitest": "./src/vitest/index.js",
+    "./vitest/spec-helpers": "./src/vitest/spec-helpers.ts"
+  },
+  "dependencies": {
+    "@marcalexiei/prettier-config": "catalog:dev",
+    "@typescript-eslint/rule-tester": "catalog:dev",
+    "@typescript-eslint/utils": "catalog:deps",
+    "eslint-doc-generator": "catalog:dev",
+    "prettier": "catalog:dev",
+    "tsdown": "catalog:dev",
+    "vitest": "catalog:dev"
+  },
+  "engines": {
+    "node": "^20 || ^22 || >=24"
+  }
+}
