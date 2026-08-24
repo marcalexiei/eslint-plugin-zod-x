@@ -34,6 +34,7 @@ import { preferMetaLast } from './rules/prefer-meta-last.js';
 import { preferMeta } from './rules/prefer-meta.js';
 import { preferNullish } from './rules/prefer-nullish.js';
 import { preferStrictObject } from './rules/prefer-strict-object.js';
+import { preferStringLengthOverMinMax } from './rules/prefer-string-length-over-min-max.js';
 import { preferStringSchemaWithTrim } from './rules/prefer-string-schema-with-trim.js';
 import { preferTopLevelStringFormats } from './rules/prefer-top-level-string-formats.js';
 import { preferTrimBeforeStringLengthChecks } from './rules/prefer-trim-before-string-length-checks.js';
@@ -94,6 +95,7 @@ const eslintPluginZod = {
     'prefer-meta-last': preferMetaLast,
     'prefer-nullish': preferNullish,
     'prefer-strict-object': preferStrictObject,
+    'prefer-string-length-over-min-max': preferStringLengthOverMinMax,
     'prefer-top-level-string-formats': preferTopLevelStringFormats,
     'prefer-string-schema-with-trim': preferStringSchemaWithTrim,
     'prefer-trim-before-string-length-checks': preferTrimBeforeStringLengthChecks,

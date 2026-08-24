@@ -166,6 +166,36 @@ Every change must be properly tested and documented:
 - Update this file when architecture, utilities, or conventions change
 - Add a changeset for every user-facing change (see **Changesets** below)
 
+## Code style
+
+Comments are short — one line where one line does. A rule builder or pattern gets a JSDoc block of a few lines saying what it does and when it bails; everything else is a single line explaining a non-obvious decision. Do not restate what the code says, do not narrate each branch, and do not carry a design discussion in the source — that belongs in the rule doc or the changeset.
+
+## Ecosystem conventions
+
+For questions about ESLint plugin conventions rather than about this codebase — what a config name means, what belongs in `all`, how a rule should be named — follow what typescript-eslint does instead of deriving a repo-specific policy. Users arrive with that mental model already installed, and diverging from it costs them for no gain.
+
+Verify from the installed package rather than from memory:
+
+```bash
+# what `all` actually contains, and what it omits
+P=$(dirname "$(find node_modules/.pnpm -maxdepth 5 -path '*@typescript-eslint/eslint-plugin/package.json' | head -1)")
+node -e "
+const p = require('$PWD/$P/dist/index.js');
+const all = require('$PWD/$P/dist/configs/eslintrc/all.js').rules;
+const rules = Object.keys(p.rules);
+const inAll = Object.keys(all).filter((r) => r.startsWith('@typescript-eslint/'));
+console.log('rules', rules.length, '| in all', inAll.length, '| deprecated', rules.filter((r) => p.rules[r].meta.deprecated).length);
+"
+# → rules 134 | in all 125 | deprecated 9
+```
+
+Filter to `@typescript-eslint/`-prefixed keys as above: `all.rules` also carries 24 core rules set to `'off'` (the base rules of the extension rules), so a bare `Object.keys(all).length` reads 149 and looks like more rules than the plugin has.
+
+Two conclusions already drawn this way, so they need no re-deriving:
+
+- **`all` means every non-deprecated rule, with no conflict-based carve-outs.** typescript-eslint's `all` is machine-generated and holds 125 of its 134 rules; the 9 exclusions are exactly its deprecated ones. Two rules that overlap both belong in `all` — document the overlap in each rule's docs and keep the overlapping one out of every curated config instead.
+- **Rules are named `prefer-<preferred>-over-<replaced>`**, with the subject named in every member of a family (`prefer-tuple-over-array-length`, `prefer-string-length-over-min-max`) so the rule list reads without opening docs. Qualify the subject even where it is technically unambiguous — a family that qualifies some members and not others has to be explained.
+
 ## Changesets
 
 This repo uses [Changesets](https://github.com/changesets/changesets) for versioning. Every feature, fix, or breaking change that affects a published package requires a changeset file.
@@ -188,7 +218,7 @@ This repo uses [Changesets](https://github.com/changesets/changesets) for versio
 
 **One changeset per package:** write a separate changeset file for each affected package rather than listing several packages in one file. This lets each entry describe the change in terms specific to that package (e.g. the exact methods a plugin targets, or the new export name in `@eslint-zod/utils`). A new rule shared across both plugins therefore needs three changesets: one for `eslint-plugin-zod`, one for `eslint-plugin-zod-mini`, and one for `@eslint-zod/utils` (when a rule builder export is added).
 
-**Summary style:** match the existing changelog entries — use a conventional-commits prefix (`feat:`, `fix:`, `refactor:`) and a concise description. Add a blank line and a second paragraph for extra context when needed. Tailor the detail to the package: a plugin changeset should name the specific methods/behavior it targets, while the `@eslint-zod/utils` changeset should describe the new builder/export.
+**Summary style:** a conventional-commits title (`feat:`, `fix:`, `refactor:`) plus **at most one short sentence** of context — these become changelog entries, not documentation, so the rule doc carries the detail. Tailor that sentence to the package: a plugin changeset names the behavior it targets, the `@eslint-zod/utils` one names the new builder/export.
 
 ## Adding a new rule
 
