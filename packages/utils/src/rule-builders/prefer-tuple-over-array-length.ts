@@ -3,6 +3,7 @@ import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { buildZodConstraintsRemoveFix } from '../build-zod-constraints-remove-fix.js';
 import type { ZodSchemaConstraint } from '../collect-zod-schema-constraints.js';
+import { readIntegerLiteralValue } from '../read-integer-literal-value.js';
 import { canonicalizeZodConstraintName } from '../zod-check-vocabulary.js';
 import type { ZodImportScope } from '../zod-import-scope.js';
 
@@ -28,20 +29,6 @@ interface LengthCandidate {
   constraint: ZodSchemaConstraint;
   /** The AST node of the count argument (e.g. the `2` in `.length(2)`). */
   countArgument: TSESTree.Node | null;
-}
-
-/** Reads a non-negative integer literal, or `null` when the node isn't one. */
-function readIntegerLiteralValue(node: TSESTree.Node | null): number | null {
-  if (node?.type !== AST_NODE_TYPES.Literal) {
-    return null;
-  }
-
-  const { value } = node;
-  if (typeof value !== 'number' || !Number.isInteger(value) || value < 0) {
-    return null;
-  }
-
-  return value;
 }
 
 /**
