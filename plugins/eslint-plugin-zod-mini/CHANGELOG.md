@@ -1,5 +1,27 @@
 # eslint-plugin-zod-mini
 
+## 1.7.0
+
+### Minor Changes
+
+- [#403](https://github.com/marcalexiei/eslint-zod/pull/403) [`5dae17b`](https://github.com/marcalexiei/eslint-zod/commit/5dae17b12d64a49f12c9ebc9b1b7ec3f9fef1370) - feat: add `no-native-enum` and `no-promise-schema` rules
+
+  Flag the deprecated `z.nativeEnum()` (autofixed to `z.enum()` for namespace calls) and `z.promise()`. Both enabled in `recommended`.
+
+- [#407](https://github.com/marcalexiei/eslint-zod/pull/407) [`6929124`](https://github.com/marcalexiei/eslint-zod/commit/6929124167701b011f021a51d6e6d0cac3601c06) - feat: add `prefer-string-length-over-min-max` rule
+
+  Collapses `z.minLength(n)` and `z.maxLength(n)` with the same value on a string schema to `z.length(n)`.
+  Not enabled in `recommended`.
+
+### Patch Changes
+
+- [#404](https://github.com/marcalexiei/eslint-zod/pull/404) [`cb7b394`](https://github.com/marcalexiei/eslint-zod/commit/cb7b3948e769dc78ea99669e44f0e3a463bc5c18) - chore: migrate to `changesets` v3
+
+  Changelog entries no longer carry a `Thanks @…!` attribution; the pull request and commit links are unchanged.
+
+- Updated dependencies [[`6929124`](https://github.com/marcalexiei/eslint-zod/commit/6929124167701b011f021a51d6e6d0cac3601c06), [`5dae17b`](https://github.com/marcalexiei/eslint-zod/commit/5dae17b12d64a49f12c9ebc9b1b7ec3f9fef1370), [`cb7b394`](https://github.com/marcalexiei/eslint-zod/commit/cb7b3948e769dc78ea99669e44f0e3a463bc5c18)]:
+  - @eslint-zod/utils@3.1.0
+
 ## 1.6.1
 
 ### Patch Changes

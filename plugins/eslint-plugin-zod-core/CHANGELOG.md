@@ -1,5 +1,16 @@
 # eslint-plugin-zod-core
 
+## 1.0.11
+
+### Patch Changes
+
+- [#404](https://github.com/marcalexiei/eslint-zod/pull/404) [`cb7b394`](https://github.com/marcalexiei/eslint-zod/commit/cb7b3948e769dc78ea99669e44f0e3a463bc5c18) - chore: migrate to `changesets` v3
+
+  Changelog entries no longer carry a `Thanks @…!` attribution; the pull request and commit links are unchanged.
+
+- Updated dependencies [[`6929124`](https://github.com/marcalexiei/eslint-zod/commit/6929124167701b011f021a51d6e6d0cac3601c06), [`5dae17b`](https://github.com/marcalexiei/eslint-zod/commit/5dae17b12d64a49f12c9ebc9b1b7ec3f9fef1370), [`cb7b394`](https://github.com/marcalexiei/eslint-zod/commit/cb7b3948e769dc78ea99669e44f0e3a463bc5c18)]:
+  - @eslint-zod/utils@3.1.0
+
 ## 1.0.10
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @eslint-zod/utils
 
+## 3.1.0
+
+### Minor Changes
+
+- [#407](https://github.com/marcalexiei/eslint-zod/pull/407) [`6929124`](https://github.com/marcalexiei/eslint-zod/commit/6929124167701b011f021a51d6e6d0cac3601c06) - feat: add the `collapse-equal-bounds` rule pattern
+
+  `buildCollapseEqualBoundsCreate(options)` collapses an equal lower/upper bound pair into the exact check of the same domain (`length`, `size`).
+
+- [#403](https://github.com/marcalexiei/eslint-zod/pull/403) [`5dae17b`](https://github.com/marcalexiei/eslint-zod/commit/5dae17b12d64a49f12c9ebc9b1b7ec3f9fef1370) - feat: add `no-native-enum` and `no-promise-schema` rule builders
+
+  `buildNoNativeEnumCreate(scope)` and `buildNoPromiseSchemaCreate(scope)`, one per `rule-builders/` subpath.
+
+### Patch Changes
+
+- [#404](https://github.com/marcalexiei/eslint-zod/pull/404) [`cb7b394`](https://github.com/marcalexiei/eslint-zod/commit/cb7b3948e769dc78ea99669e44f0e3a463bc5c18) - chore: migrate to `changesets` v3
+
+  Changelog entries no longer carry a `Thanks @…!` attribution; the pull request and commit links are unchanged.
+
 ## 3.0.0
 
 ### Major Changes
