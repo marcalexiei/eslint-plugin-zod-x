@@ -1,7 +1,7 @@
 {
   "files": [],
   "references": [
-    { "path": "packages/test-utils" },
+    { "path": "packages/tooling" },
     { "path": "packages/utils" },
     { "path": "plugins/eslint-plugin-zod" },
     { "path": "plugins/eslint-plugin-zod-mini" },

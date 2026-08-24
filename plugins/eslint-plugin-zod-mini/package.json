@@ -48,12 +48,10 @@
     "@typescript-eslint/utils": "catalog:deps"
   },
   "devDependencies": {
-    "@eslint-zod/test-utils": "workspace:*",
-    "@marcalexiei/prettier-config": "catalog:dev",
+    "@eslint-zod/tooling": "workspace:*",
     "@typescript-eslint/rule-tester": "catalog:dev",
     "dedent": "catalog:dev",
     "eslint-doc-generator": "catalog:dev",
-    "prettier": "catalog:dev",
     "tsdown": "catalog:dev",
     "vitest": "catalog:dev"
   },

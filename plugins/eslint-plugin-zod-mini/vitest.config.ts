@@ -1,16 +1,3 @@
-import { defineProject } from 'vitest/config';
+import { definePluginTestProject } from '@eslint-zod/tooling/vitest';
 
-export default defineProject({
-  resolve: {
-    conditions: ['@eslint-zod/source'],
-  },
-  ssr: {
-    resolve: {
-      conditions: ['@eslint-zod/source'],
-    },
-  },
-  test: {
-    name: 'zod-mini',
-    setupFiles: ['./tests/setup.ts'],
-  },
-});
+export default definePluginTestProject('zod-mini');

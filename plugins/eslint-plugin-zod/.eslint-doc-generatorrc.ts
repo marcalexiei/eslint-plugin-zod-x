@@ -1,11 +1,3 @@
-import prettierConfig from '@marcalexiei/prettier-config';
-import type { GenerateOptions } from 'eslint-doc-generator';
-import * as prettier from 'prettier';
+import { eslintDocGeneratorConfig } from '@eslint-zod/tooling/eslint-doc-generator';
 
-export default {
-  postprocess: (content): Promise<string> =>
-    prettier.format(content, {
-      parser: 'markdown',
-      ...prettierConfig,
-    }),
-} satisfies GenerateOptions;
+export default eslintDocGeneratorConfig;

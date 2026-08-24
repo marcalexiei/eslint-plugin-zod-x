@@ -82,7 +82,7 @@ export default defineConfig(
             './plugins/eslint-plugin-zod',
             './plugins/eslint-plugin-zod-mini',
             './plugins/eslint-plugin-zod-core',
-            './packages/test-utils',
+            './packages/tooling',
             './packages/utils',
           ],
         },

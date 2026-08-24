@@ -75,6 +75,7 @@
     "esquery": "^1.6.0"
   },
   "devDependencies": {
+    "@eslint-zod/tooling": "workspace:*",
     "@types/esquery": "1.5.4",
     "tsdown": "catalog:dev",
     "vitest": "catalog:dev"

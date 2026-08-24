@@ -7,7 +7,7 @@ import {
   getRegisteredRuleNames,
   getRuleDocReferences,
   getRuleFileNames,
-} from '@eslint-zod/test-utils';
+} from '@eslint-zod/tooling/vitest/spec-helpers';
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
 import plugin from './index.js';

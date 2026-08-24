@@ -5,6 +5,8 @@
     "composite": true,
     "noEmit": false,
     "outDir": "dist/ts",
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "allowJs": true,
+    "checkJs": true
   }
 }
