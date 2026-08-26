@@ -3,8 +3,13 @@ import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 /**
  * Supported import syntaxes for the `consistent-import` rule:
- * - `'namespace'` → `import * as z from 'zod'` / `import z from 'zod'`
+ * - `'namespace'` → `import * as z from 'zod'`
  * - `'named'` → `import { z } from 'zod'`
+ *
+ * A default import (`import z from 'zod'`) is not a syntax of its own:
+ * it satisfies neither option and is rewritten to whichever one is configured.
+ *
+ * @see https://github.com/marcalexiei/eslint-zod/issues/409
  */
 export const IMPORT_SYNTAXES = ['namespace', 'named'] as const;
 export type ImportSyntax = (typeof IMPORT_SYNTAXES)[number];

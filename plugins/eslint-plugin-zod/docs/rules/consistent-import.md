@@ -11,10 +11,12 @@
 ## Rule details
 
 This rule enforces a single, consistent import style for Zod across a codebase.
-Zod can be imported either via:
+Zod's API can be reached through three import forms, two of which the rule can enforce:
 
 - **Namespace import**: `import * as z from 'zod'`
 - **Named import**: `import { z } from 'zod'`
+- **Default import**: `import z from 'zod'` — always rewritten to the configured syntax
+  (see [Why there is no `default` syntax](#why-there-is-no-default-syntax))
 
 The rule ensures that:
 
@@ -48,6 +50,20 @@ Because the rule is fully fixable, large codebases can be migrated automatically
 - **`named`**: `import { z } from 'zod'`
 
 The default is `namespace`, as it avoids named import collisions and makes usage explicit (`z.string()`, `z.object()`, etc.).
+
+### Why there is no `default` syntax
+
+`import z from 'zod'` works at runtime, but is deliberately not a third `syntax` choice
+([#409](https://github.com/marcalexiei/eslint-zod/issues/409)):
+
+- The [Zod docs](https://zod.dev/basics) use `import * as z from 'zod'` throughout.
+- It tree-shakes as badly as `named`: Zod's entrypoint does `export { z }; export default z;`, so both
+  are the same materialized namespace object, and only `import * as z` gives the bundler a live
+  namespace binding ([zod#4433](https://github.com/colinhacks/zod/issues/4433#issuecomment-2921500831)).
+- `zod/mini`, `zod/v4-mini` and `zod/v4/core` have no default export, so a shared option would have to
+  be forked per plugin — for a form with no advantage over `namespace`.
+
+It is therefore reported under either `syntax` and rewritten to it.
 
 ## Examples
 
@@ -83,6 +99,12 @@ z.string();
 ```
 
 ```ts
+import z from 'zod';
+
+z.string();
+```
+
+```ts
 import * as z from 'zod';
 import { ZodString } from 'zod';
 ```
@@ -113,6 +135,12 @@ z.string();
 ```
 
 ```ts
+import z from 'zod';
+
+z.string();
+```
+
+```ts
 import { z } from 'zod';
 import { ZodString } from 'zod';
 ```
@@ -122,6 +150,7 @@ import { ZodString } from 'zod';
 When fixing is applied, the rule will:
 
 - Rewrite the first Zod import to match the configured syntax.
+- Preserve the local name when rewriting: `import zod from 'zod'` becomes `import { z as zod } from 'zod'` under `named`.
 - Remove duplicate Zod imports.
 - Update all Zod usages to use the correct namespace or alias.
 - Preserve `import type` when the file only contains type imports.
