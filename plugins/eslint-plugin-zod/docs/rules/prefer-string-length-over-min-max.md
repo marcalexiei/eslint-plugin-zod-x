@@ -20,7 +20,7 @@ The rule fires only when both bounds carry the **same non-negative integer liter
 Length bounds on other base types are covered elsewhere:
 
 - **Arrays** belong to [`prefer-tuple-over-array-length`](./prefer-tuple-over-array-length.md), which rewrites `z.array(x).min(2).max(2)` to `z.tuple([x, x])` — that fixes the length at the type level, not just the spelling.
-- **Sets and maps** use `size` rather than `length` and are not handled by this rule.
+- **Sets and maps** use `size` rather than `length`, and belong to [`prefer-map-set-size-over-min-max`](./prefer-map-set-size-over-min-max.md).
 
 ## Why?
 
@@ -58,6 +58,9 @@ z.number().min(3).max(3);
 
 // An array with equal bounds is `prefer-tuple-over-array-length`'s subject
 z.array(z.string()).min(2).max(2);
+
+// A set with equal bounds is `prefer-map-set-size-over-min-max`'s subject
+z.set(z.string()).min(2).max(2);
 ```
 
 ## Autofix Behavior
@@ -90,4 +93,5 @@ Disable it if you deliberately spell exact lengths as a pair of bounds — for i
 ## Further Reading
 
 - [Zod – Strings](https://zod.dev/api?id=strings)
+- [`prefer-map-set-size-over-min-max`](./prefer-map-set-size-over-min-max.md) — the same equal-bounds case on sets and maps
 - [`prefer-tuple-over-array-length`](./prefer-tuple-over-array-length.md) — the same equal-bounds case on arrays

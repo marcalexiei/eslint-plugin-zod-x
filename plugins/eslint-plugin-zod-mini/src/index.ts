@@ -18,6 +18,7 @@ import { noTransformInRecordKey } from './rules/no-transform-in-record-key.js';
 import { noUnknownSchema } from './rules/no-unknown-schema.js';
 import { noUnnecessaryReadonly } from './rules/no-unnecessary-readonly.js';
 import { preferEnumOverLiteralUnion } from './rules/prefer-enum-over-literal-union.js';
+import { preferMapSetSizeOverMinMax } from './rules/prefer-map-set-size-over-min-max.js';
 import { preferMeta } from './rules/prefer-meta.js';
 import { preferNullish } from './rules/prefer-nullish.js';
 import { preferStringLengthOverMinMax } from './rules/prefer-string-length-over-min-max.js';
@@ -62,6 +63,7 @@ const eslintPluginZodMini = {
     'no-unknown-schema': noUnknownSchema,
     'no-unnecessary-readonly': noUnnecessaryReadonly,
     'prefer-enum-over-literal-union': preferEnumOverLiteralUnion,
+    'prefer-map-set-size-over-min-max': preferMapSetSizeOverMinMax,
     'prefer-meta': preferMeta,
     'prefer-nullish': preferNullish,
     'prefer-string-length-over-min-max': preferStringLengthOverMinMax,
