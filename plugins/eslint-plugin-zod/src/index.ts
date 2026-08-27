@@ -30,6 +30,7 @@ import { noUnknownSchema } from './rules/no-unknown-schema.js';
 import { noUnnecessaryReadonly } from './rules/no-unnecessary-readonly.js';
 import { preferEnumOverLiteralUnion } from './rules/prefer-enum-over-literal-union.js';
 import { preferLooseObject } from './rules/prefer-loose-object.js';
+import { preferMapSetSizeOverMinMax } from './rules/prefer-map-set-size-over-min-max.js';
 import { preferMetaLast } from './rules/prefer-meta-last.js';
 import { preferMeta } from './rules/prefer-meta.js';
 import { preferNullish } from './rules/prefer-nullish.js';
@@ -91,6 +92,7 @@ const eslintPluginZod = {
     'no-unnecessary-readonly': noUnnecessaryReadonly,
     'prefer-enum-over-literal-union': preferEnumOverLiteralUnion,
     'prefer-loose-object': preferLooseObject,
+    'prefer-map-set-size-over-min-max': preferMapSetSizeOverMinMax,
     'prefer-meta': preferMeta,
     'prefer-meta-last': preferMetaLast,
     'prefer-nullish': preferNullish,

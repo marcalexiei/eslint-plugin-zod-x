@@ -108,3 +108,5 @@ You may want to disable this rule if:
 
 - [Zod – Tuples](https://zod.dev/api?id=tuples)
 - [Zod – Arrays](https://zod.dev/api?id=arrays)
+- [`prefer-string-length-over-min-max`](./prefer-string-length-over-min-max.md) — the same equal-bounds case on strings
+- [`prefer-map-set-size-over-min-max`](./prefer-map-set-size-over-min-max.md) — the same equal-bounds case on sets and maps
