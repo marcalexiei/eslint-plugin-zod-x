@@ -156,5 +156,16 @@ ruleTester.run(preferTopLevelStringFormats.name, preferTopLevelStringFormats, {
       `,
     },
   ],
-  invalid,
+  invalid: [
+    ...invalid,
+    {
+      name: 'computed factory — reported but not fixed, the chain walker cannot name it',
+      code: dedent`
+        import * as z from 'zod';
+        z['string']().email();
+      `,
+      errors: [{ messageId: 'preferTopLevelStringFormat' }] as const,
+      output: null,
+    },
+  ],
 });

@@ -136,5 +136,14 @@ ruleTester.run(noNumberSchemaWithInt.name, noNumberSchemaWithInt, {
         z.object({ age: z.int() });
       `,
     },
+    {
+      name: 'computed factory — reported but not fixed, the chain walker cannot name it',
+      code: dedent`
+        import * as z from 'zod';
+        z['number']().int();
+      `,
+      errors: [{ messageId: 'removeNumber' }],
+      output: null,
+    },
   ],
 });

@@ -1,9 +1,6 @@
-import {
-  ZOD_STRING_FORMAT_METHODS,
-  buildZodChainReplacementFix,
-  zodImportScope,
-} from '@eslint-zod/utils';
+import { ZOD_STRING_FORMAT_METHODS, zodImportScope } from '@eslint-zod/utils';
 import type { ZodStringFormatMethodName } from '@eslint-zod/utils';
+import { buildPreferTopLevelFactoryCreate } from '@eslint-zod/utils/rule-patterns/prefer-top-level-factory';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
 
@@ -18,14 +15,6 @@ type MessageIds = 'preferTopLevelStringFormat';
 const ZOD_STRING_FORMAT_METHOD_NAMES = ZOD_STRING_FORMAT_METHODS.map(
   ({ sourceMethodName }) => sourceMethodName,
 );
-
-const ZOD_STRING_FORMAT_METHODS_BY_SOURCE = Object.fromEntries(
-  ZOD_STRING_FORMAT_METHODS.map((format) => [format.sourceMethodName, format]),
-) as Record<ZodStringFormatMethodName, (typeof ZOD_STRING_FORMAT_METHODS)[number]>;
-
-function isZodStringFormatMethodName(value: string): value is ZodStringFormatMethodName {
-  return ZOD_STRING_FORMAT_METHOD_NAMES.includes(value as ZodStringFormatMethodName);
-}
 
 export const preferTopLevelStringFormats = createZodPluginRule<[Options], MessageIds>({
   name: 'prefer-top-level-string-formats',
@@ -61,62 +50,12 @@ export const preferTopLevelStringFormats = createZodPluginRule<[Options], Messag
   },
   defaultOptions: [{}],
   create(context, [{ ignore = [] }]) {
-    const { sourceCode } = context;
-
-    const ignoredMethods = new Set<ZodStringFormatMethodName>(ignore);
-
-    const { createSchemaVisitor, collectZodChainMethods } = zodImportScope.createTracker();
-
-    return createSchemaVisitor({
-      schemaType: 'string',
-      onSchema(node, zodSchemaMeta): void {
-        const methods = collectZodChainMethods(node);
-
-        const stringIndex = methods.findIndex((method) => method.name === 'string');
-
-        if (stringIndex === -1) {
-          return;
-        }
-
-        const formatMethod = methods.find(
-          (method, index) =>
-            index > stringIndex &&
-            isZodStringFormatMethodName(method.name) &&
-            !ignoredMethods.has(method.name),
-        );
-
-        if (!formatMethod) {
-          return;
-        }
-
-        // The `find` predicate above already checked the name against the
-        // format list; TS just cannot carry a type guard through `find`.
-        const { replacementMethodName, sourceMethodName } =
-          ZOD_STRING_FORMAT_METHODS_BY_SOURCE[formatMethod.name as ZodStringFormatMethodName];
-
-        context.report({
-          node,
-          messageId: 'preferTopLevelStringFormat',
-          data: {
-            replacementMethod: replacementMethodName,
-            sourceMethod: sourceMethodName,
-          },
-          fix(fixer) {
-            if (zodSchemaMeta.schemaDecl === 'named') {
-              return null;
-            }
-
-            return buildZodChainReplacementFix({
-              sourceCode,
-              fixer,
-              methods,
-              fromIndex: stringIndex,
-              toIndex: methods.indexOf(formatMethod),
-              toMethodName: replacementMethodName,
-            });
-          },
-        });
-      },
-    });
+    return buildPreferTopLevelFactoryCreate<MessageIds, [Options]>({
+      scope: zodImportScope,
+      factoryName: 'string',
+      replacements: ZOD_STRING_FORMAT_METHODS,
+      messageId: 'preferTopLevelStringFormat',
+      ignore,
+    })(context);
   },
 });

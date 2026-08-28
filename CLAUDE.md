@@ -107,7 +107,7 @@ When part of a shared rule's behavior is genuinely plugin-specific (i.e. it cann
 
 ### Rule patterns
 
-A rule builder is keyed to one rule name and exists to share logic _between plugins_. When two or more rules have the same shape and differ only in the names they mention — a deprecated method, a factory to prefer — that shape belongs in `packages/utils/src/rule-patterns/` instead, even when all its callers live in one plugin. Sharing across plugins is not a requirement there; three patterns currently back six `eslint-plugin-zod` rules.
+A rule builder is keyed to one rule name and exists to share logic _between plugins_. When two or more rules have the same shape and differ only in the names they mention — a deprecated method, a factory to prefer — that shape belongs in `packages/utils/src/rule-patterns/` instead, even when all its callers live in one plugin. Sharing across plugins is not a requirement there; five patterns currently back twelve `eslint-plugin-zod` rules and two `eslint-plugin-zod-mini` ones.
 
 Do not extract a pattern when the rules differ in their _fix strategy_ rather than in names — `no-number-schema-with-step` (rename the property) and `no-number-schema-with-safe` (replace a run of methods) look alike but would need two implementations behind one switch, which dedupes nothing.
 
