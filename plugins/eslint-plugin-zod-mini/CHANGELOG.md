@@ -1,5 +1,16 @@
 # eslint-plugin-zod-mini
 
+## 1.8.0
+
+### Minor Changes
+
+- [#410](https://github.com/marcalexiei/eslint-zod/pull/410) [`29fcc59`](https://github.com/marcalexiei/eslint-zod/commit/29fcc596a4f1bcadb6464abe815c09298ad69fc0) - feat: add `prefer-map-set-size-over-min-max` rule, which collapses `z.minSize(n)` and `z.maxSize(n)` with the same value into `z.size(n)`
+
+### Patch Changes
+
+- Updated dependencies [[`3084477`](https://github.com/marcalexiei/eslint-zod/commit/30844770e85f0e2c03e851363a2c34576fd18728)]:
+  - @eslint-zod/utils@3.2.0
+
 ## 1.7.0
 
 ### Minor Changes
