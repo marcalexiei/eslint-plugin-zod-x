@@ -136,5 +136,14 @@ ruleTester.run(noStringSchemaWithUuid.name, noStringSchemaWithUuid, {
         z.object({ id: z.uuid() });
       `,
     },
+    {
+      name: 'computed factory — reported but not fixed, the chain walker cannot name it',
+      code: dedent`
+        import * as z from 'zod';
+        z['string']().uuid();
+      `,
+      errors: [{ messageId: 'useUuid' }],
+      output: null,
+    },
   ],
 });

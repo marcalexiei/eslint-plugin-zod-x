@@ -110,3 +110,4 @@ Rule shapes that recur across several rules, parameterized by the names they dif
 - `buildDeprecatedSchemaMethodCreate(options)` — flag a deprecated method anywhere in a schema chain (`.isOptional()`); also exports `DeprecatedSchemaMethodOptions`
 - `buildCollapseEqualBoundsCreate(options)` — collapse an equal lower/upper bound pair into the exact-form check of the same domain (`z.string().min(3).max(3)` → `z.string().length(3)`); also exports `CollapseEqualBoundsOptions` and `CollapsibleBoundDomain`
 - `buildPreferDedicatedFactoryCreate(options)` — prefer a dedicated factory over a general one plus a chained modifier (`z.looseObject()` over `z.object().passthrough()`); also exports `PreferDedicatedFactoryOptions`
+- `buildPreferTopLevelFactoryCreate(options)` — prefer a top-level factory over a deprecated method chained on a general one (`z.uuid()` over `z.string().uuid()`); also exports `PreferTopLevelFactoryOptions` and `TopLevelFactoryReplacement`

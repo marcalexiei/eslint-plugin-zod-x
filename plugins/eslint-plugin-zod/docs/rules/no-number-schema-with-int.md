@@ -28,6 +28,22 @@ const schema = z.int();
 const schemaWithOtherMethods = z.int().min(0).max(100);
 ```
 
+## Autofix Behavior
+
+The fix replaces the factory and the deprecated method in one go, keeping the methods in between:
+
+```ts
+// Before
+z.number().int().min(1);
+// After
+z.int().min(1);
+```
+
+The rule reports but does **not** fix two cases, because the replacement cannot be written safely:
+
+- A named import (`import { number } from 'zod'; number().int()`) — the fix would need a new import for the top-level factory
+- A chain reached through a computed member (`z['number']().int()`), which the chain walker cannot name
+
 ## When Not To Use It
 
 If you’re not concerned about using a legacy API, you can disable this rule.

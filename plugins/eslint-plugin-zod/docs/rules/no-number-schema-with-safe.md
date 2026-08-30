@@ -33,6 +33,22 @@ z.int();
 z.int().min(0);
 ```
 
+## Autofix Behavior
+
+The fix replaces the factory and the deprecated method in one go, keeping the methods in between:
+
+```ts
+// Before
+z.number().safe().min(1);
+// After
+z.int().min(1);
+```
+
+The rule reports but does **not** fix two cases, because the replacement cannot be written safely:
+
+- A named import (`import { number } from 'zod'; number().safe()`) — the fix would need a new import for the top-level factory
+- A chain reached through a computed member (`z['number']().safe()`), which the chain walker cannot name
+
 ## When Not To Use It
 
 If you are stuck on a Zod version where the deprecation does not apply, you can turn this rule off.
