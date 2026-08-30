@@ -1,5 +1,13 @@
 # @eslint-zod/utils
 
+## 3.2.0
+
+### Minor Changes
+
+- [#413](https://github.com/marcalexiei/eslint-zod/pull/413) [`3084477`](https://github.com/marcalexiei/eslint-zod/commit/30844770e85f0e2c03e851363a2c34576fd18728) - feat: add the `prefer-top-level-factory` rule pattern
+
+  `buildPreferTopLevelFactoryCreate(options)` rewrites a deprecated method chained on a factory into the top-level factory that replaces it (`z.string().uuid()` → `z.uuid()`), keeping the methods in between.
+
 ## 3.1.0
 
 ### Minor Changes

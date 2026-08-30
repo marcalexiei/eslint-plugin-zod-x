@@ -1,5 +1,20 @@
 # eslint-plugin-zod
 
+## 4.11.0
+
+### Minor Changes
+
+- [#410](https://github.com/marcalexiei/eslint-zod/pull/410) [`29fcc59`](https://github.com/marcalexiei/eslint-zod/commit/29fcc596a4f1bcadb6464abe815c09298ad69fc0) - feat: add `prefer-map-set-size-over-min-max` rule, which collapses `.min(n).max(n)` with the same value on a set or map schema into `.size(n)`
+
+### Patch Changes
+
+- [#413](https://github.com/marcalexiei/eslint-zod/pull/413) [`3084477`](https://github.com/marcalexiei/eslint-zod/commit/30844770e85f0e2c03e851363a2c34576fd18728) - fix: report deprecated methods reached through a computed member
+
+  `no-number-schema-with-int`, `no-string-schema-with-uuid` and `prefer-top-level-string-formats` now report `z['string']().uuid()` and friends, without offering a fix — matching `no-number-schema-with-safe`.
+
+- Updated dependencies [[`3084477`](https://github.com/marcalexiei/eslint-zod/commit/30844770e85f0e2c03e851363a2c34576fd18728)]:
+  - @eslint-zod/utils@3.2.0
+
 ## 4.10.0
 
 ### Minor Changes
