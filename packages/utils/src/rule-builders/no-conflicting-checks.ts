@@ -47,6 +47,9 @@ const FORMAT_LENGTH_RANGES = new Map<string, [number, number]>([
   ['ipv4', [7, 15]],
   ['ipv6', [2, 45]],
   ['e164', [8, 16]],
+  // 12-19 digits, single spaces or dashes tolerated between them:
+  // /^\d(?:[ -]?\d){11,18}$/ — 12 bare, 19 digits + 18 separators
+  ['creditCard', [12, 37]],
   ['jwt', [8, Number.POSITIVE_INFINITY]],
   ['iso.date', [10, 10]],
 ]);

@@ -174,6 +174,18 @@ ruleTester.run(preferStringLengthOverMinMax.name, preferStringLengthOverMinMax, 
       `,
     },
     {
+      name: 'fires on a credit card schema',
+      code: dedent`
+        import * as z from 'zod';
+        z.creditCard().min(16).max(16)
+      `,
+      errors: [{ messageId: 'preferStringLength' }],
+      output: dedent`
+        import * as z from 'zod';
+        z.creditCard().length(16)
+      `,
+    },
+    {
       name: 'fires on a named factory import',
       code: dedent`
         import { string } from 'zod';

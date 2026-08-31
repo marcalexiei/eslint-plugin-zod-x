@@ -16,6 +16,7 @@ If only `before` or `after` is configured, a variable name equal to that token i
 The rule ignores:
 
 - Variables that store parsed values (e.g., `.parse()`, `.safeParse()`)
+- Variables that store a validation result (`z.validate()`, `z.validateAsync()`)
 - Error formatting utilities (e.g., `prettifyError`, `formatError`)
 - Non-Zod Mini variable declarations
 

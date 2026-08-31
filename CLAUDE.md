@@ -170,6 +170,8 @@ Every change must be properly tested and documented:
 
 Comments are short — one line where one line does. A rule builder or pattern gets a JSDoc block of a few lines saying what it does and when it bails; everything else is a single line explaining a non-obvious decision. Do not restate what the code says, do not narrate each branch, and do not carry a design discussion in the source — that belongs in the rule doc or the changeset.
 
+When a comment does need a second line, break it at punctuation — a comma, colon, dash, or full stop — so each line is a whole clause. Never wrap mid-phrase to fill the column. The same applies to prose in Markdown (rule docs, proposals, changesets, this file): Prettier leaves those line breaks alone, so they are a style choice, and the choice is to break at punctuation or not at all.
+
 ## Ecosystem conventions
 
 For questions about ESLint plugin conventions rather than about this codebase — what a config name means, what belongs in `all`, how a rule should be named — follow what typescript-eslint does instead of deriving a repo-specific policy. Users arrive with that mental model already installed, and diverging from it costs them for no gain.
@@ -216,9 +218,9 @@ This repo uses [Changesets](https://github.com/changesets/changesets) for versio
 - `minor` — new feature (new rule, new export, new option)
 - `patch` — bug fix or non-breaking improvement
 
-**One changeset per package:** write a separate changeset file for each affected package rather than listing several packages in one file. This lets each entry describe the change in terms specific to that package (e.g. the exact methods a plugin targets, or the new export name in `@eslint-zod/utils`). A new rule shared across both plugins therefore needs three changesets: one for `eslint-plugin-zod`, one for `eslint-plugin-zod-mini`, and one for `@eslint-zod/utils` (when a rule builder export is added).
+**One changeset per change, listing every package it touches.** A changeset takes several packages in its front matter, so one user-facing change is one file — a shared rule lands as a single changeset naming `eslint-plugin-zod`, `eslint-plugin-zod-mini` and `@eslint-zod/utils`, not three. Split into separate files only when the same PR carries genuinely unrelated changes, or when one package needs a different bump type from another.
 
-**Summary style:** a conventional-commits title (`feat:`, `fix:`, `refactor:`) plus **at most one short sentence** of context — these become changelog entries, not documentation, so the rule doc carries the detail. Tailor that sentence to the package: a plugin changeset names the behavior it targets, the `@eslint-zod/utils` one names the new builder/export.
+**Summary style:** a conventional-commits title (`feat:`, `fix:`, `refactor:`) plus **at most one short sentence** of context — these become changelog entries, not documentation, so the rule doc carries the detail. One summary is shared by every package in the file, so write it in terms that hold for all of them: name the behavior, not the internal that implements it.
 
 ## Adding a new rule
 

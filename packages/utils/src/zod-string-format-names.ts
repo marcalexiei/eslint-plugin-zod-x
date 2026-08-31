@@ -13,6 +13,7 @@ export const ZOD_STRING_FORMAT_NAMES = Object.freeze([
   'base64url',
   'cidrv4',
   'cidrv6',
+  'creditCard',
   'cuid',
   'cuid2',
   'e164',

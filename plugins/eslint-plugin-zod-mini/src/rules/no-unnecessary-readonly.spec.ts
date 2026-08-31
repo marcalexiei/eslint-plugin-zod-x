@@ -158,6 +158,18 @@ ruleTester.run(noUnnecessaryReadonly.name, noUnnecessaryReadonly, {
       `,
     },
     {
+      name: 'readonly on a top-level string format schema',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.readonly(z.creditCard());
+      `,
+      errors: [{ messageId: 'unnecessaryReadonly' }],
+      output: dedent`
+        import * as z from 'zod/mini';
+        z.creditCard();
+      `,
+    },
+    {
       name: 'readonly on an optional-wrapped immutable schema',
       code: dedent`
         import * as z from 'zod/mini';

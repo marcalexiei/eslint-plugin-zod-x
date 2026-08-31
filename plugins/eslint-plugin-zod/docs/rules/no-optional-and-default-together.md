@@ -122,6 +122,13 @@ z.string().trim().default('hello').optional();
 z.number().default(42).optional();
 ```
 
+## Limitations
+
+The rule deliberately ignores `z.exactOptional(schema).default(value)`.
+The redundancy it reports is that `.default()` already makes a field optional, so `.optional()` adds nothing.
+That argument does not carry over to `exactOptional`, which rejects an explicitly-passed `undefined` while allowing the key to be absent.
+`.default()` accepts that `undefined` and substitutes the default, so the two are a real, if unusual, combination rather than a redundancy.
+
 ## When Not To Use It
 
 If you have a specific use case that requires both `.optional()` and `.default()` in your schema, you may want to disable this rule.
