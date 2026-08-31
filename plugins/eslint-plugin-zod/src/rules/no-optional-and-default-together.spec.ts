@@ -99,6 +99,15 @@ ruleTester.run(noOptionalAndDefaultTogether.name, noOptionalAndDefaultTogether, 
         `,
     },
     {
+      // `exactOptional` rejects an explicit `undefined`;
+      // `.default()` accepts and replaces it — not a redundancy
+      name: 'exactOptional with default - should not error',
+      code: dedent`
+          import * as z from 'zod';
+          z.exactOptional(z.string()).default("Test")
+        `,
+    },
+    {
       name: 'computed factory access yields no walkable chain',
       code: dedent`
           import * as z from 'zod';

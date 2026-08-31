@@ -126,6 +126,18 @@ ruleTester.run(noUnnecessaryReadonly.name, noUnnecessaryReadonly, {
       `,
     },
     {
+      name: 'readonly on a top-level string format schema',
+      code: dedent`
+        import * as z from 'zod';
+        z.creditCard().readonly();
+      `,
+      errors: [{ messageId: 'unnecessaryReadonly' }],
+      output: dedent`
+        import * as z from 'zod';
+        z.creditCard();
+      `,
+    },
+    {
       name: 'readonly in the middle of a chain keeps trailing methods',
       code: dedent`
         import * as z from 'zod';

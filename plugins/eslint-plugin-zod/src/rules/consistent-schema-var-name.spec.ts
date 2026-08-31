@@ -84,6 +84,24 @@ ruleTester.run(consistentSchemaVarName.name, consistentSchemaVarName, {
       `,
     },
     {
+      name: 'ignores z.validate / z.validateAsync (namespace import)',
+      code: dedent`
+        import * as z from 'zod';
+        const userSchema = z.object({ name: z.string() });
+        const isValid = z.validate(userSchema, input);
+        const isValidLater = z.validateAsync(userSchema, input);
+      `,
+    },
+    {
+      name: 'ignores validate / validateAsync (named import)',
+      code: dedent`
+        import { object, string, validate, validateAsync } from 'zod';
+        const userSchema = object({ name: string() });
+        const isValid = validate(userSchema, input);
+        const isValidLater = validateAsync(userSchema, input);
+      `,
+    },
+    {
       // https://github.com/marcalexiei/eslint-zod/issues/226
       name: 'ignores error utilities (namespace import)',
       code: dedent`

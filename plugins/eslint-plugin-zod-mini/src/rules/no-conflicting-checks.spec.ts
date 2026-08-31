@@ -258,6 +258,22 @@ ruleTester.run(noConflictingChecks.name, noConflictingChecks, {
       errors: [{ messageId: 'impossibleCase' }],
     },
     {
+      name: 'credit card conflicting with a length bound (min 12 characters)',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.creditCard().check(z.maxLength(8));
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
+      name: 'credit card conflicting with a lower length bound (max 37 characters)',
+      code: dedent`
+        import * as z from 'zod/mini';
+        z.creditCard().check(z.minLength(40));
+      `,
+      errors: [{ messageId: 'impossibleCase' }],
+    },
+    {
       name: 'format factory conflicting with a length bound',
       code: dedent`
         import * as z from 'zod/mini';

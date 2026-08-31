@@ -89,7 +89,7 @@ From each plugin directory run `pnpm build:docs` (builds first, then `eslint-doc
 
 ## 6. Bookkeeping
 
-- Changesets (`minor`), one file per package: each plugin + `@eslint-zod/utils` when a builder export was added. `feat:` prefix; plugin changesets name the targeted methods, the utils changeset describes the new export.
+- One changeset (`minor`) listing every affected package: each plugin, plus `@eslint-zod/utils` when a builder export was added. `feat:` prefix, and a summary that holds for all of them — name the rule and the behavior it targets, not the builder that implements it.
 - Update CLAUDE.md's AST-helper list if `@eslint-zod/utils` gained root exports (builder/pattern exports and shared-rule membership are derived from the filesystem, not listed in CLAUDE.md).
 - Update `packages/utils/README.md` for **any** new `@eslint-zod/utils` export — a rule-builder or rule-pattern subpath (add it to the matching list), a root helper/constant, or an exported contract type. This README enumerates every public export by hand and is not verified by any check, so it silently rots if skipped.
 
