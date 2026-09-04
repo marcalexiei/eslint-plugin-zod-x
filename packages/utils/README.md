@@ -90,7 +90,7 @@ Each rule shared between `eslint-plugin-zod` and `eslint-plugin-zod-mini` (some 
 - `buildNoNativeEnumCreate(scope)`
 - `buildNoPromiseSchemaCreate(scope)`
 - `buildNoThrowInRefineCreate(scope)`
-- `buildNoTransformInRecordKeyCreate(scope, options)` — also exports the `NoTransformInRecordKeyOptions` contract and the `FindTransformNodeHelpers` type its `findTransformNode` strategy receives
+- `buildNoTransformInRecordKeyCreate(scope, transformNames)` — `transformNames` are matched against the key schema's factory and its constraints, so one list covers both API styles
 - `buildNoUnknownSchemaCreate(scope)`
 - `buildNoUnnecessaryReadonlyCreate(scope)`
 - `buildPreferEnumOverLiteralUnionCreate(scope)`

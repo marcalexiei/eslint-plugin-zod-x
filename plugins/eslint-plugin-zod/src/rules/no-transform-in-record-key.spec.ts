@@ -71,6 +71,20 @@ ruleTester.run(noTransformInRecordKey.name, noTransformInRecordKey, {
       `,
     },
     {
+      name: 'key schema is a reference, not a call',
+      code: dedent`
+        import * as z from 'zod';
+        const config = z.record(keySchema, z.unknown());
+      `,
+    },
+    {
+      name: 'record with no arguments',
+      code: dedent`
+        import * as z from 'zod';
+        const config = z.record();
+      `,
+    },
+    {
       name: 'not zod.record',
       code: 'const config = someOtherLib.record(z.string().trim(), z.unknown());',
     },
@@ -300,6 +314,22 @@ ruleTester.run(noTransformInRecordKey.name, noTransformInRecordKey, {
       code: dedent`
         import * as z from 'zod';
         const config = z.record(z.string().map((v) => v.trim()), z.unknown());
+      `,
+      errors: [{ messageId: 'noTransformInRecordKey' }],
+    },
+    {
+      name: 'top-level transform factory as key schema',
+      code: dedent`
+        import * as z from 'zod';
+        const config = z.record(z.transform((v) => v.trim()), z.unknown());
+      `,
+      errors: [{ messageId: 'noTransformInRecordKey' }],
+    },
+    {
+      name: 'named import of the transform factory as key schema',
+      code: dedent`
+        import { record, transform, unknown } from 'zod';
+        const config = record(transform((v) => v.trim()), unknown());
       `,
       errors: [{ messageId: 'noTransformInRecordKey' }],
     },

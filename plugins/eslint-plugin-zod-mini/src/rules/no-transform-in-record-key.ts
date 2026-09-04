@@ -1,6 +1,5 @@
 import { ZOD_MUTATING_CHECK_NAMES, zodMiniImportScope } from '@eslint-zod/utils';
 import { buildNoTransformInRecordKeyCreate } from '@eslint-zod/utils/rule-builders/no-transform-in-record-key';
-import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { createZodMiniPluginRule } from '../utils/create-plugin-rule.js';
 
@@ -19,31 +18,5 @@ export const noTransformInRecordKey = createZodMiniPluginRule({
     schema: [],
   },
   defaultOptions: [],
-  create: buildNoTransformInRecordKeyCreate(zodMiniImportScope, {
-    findTransformNode(keySchema, { detectZodSchemaRootNode, collectZodChainMethods }) {
-      if (keySchema.type !== AST_NODE_TYPES.CallExpression) {
-        return null;
-      }
-
-      for (const method of collectZodChainMethods(keySchema)) {
-        if (method.name !== 'check') {
-          continue;
-        }
-
-        for (const argument of method.node.arguments) {
-          if (argument.type !== AST_NODE_TYPES.CallExpression) {
-            continue;
-          }
-
-          const zodCheck = detectZodSchemaRootNode(argument);
-
-          if (zodCheck && ZOD_MUTATING_CHECK_NAMES.includes(zodCheck.schemaType)) {
-            return argument;
-          }
-        }
-      }
-
-      return null;
-    },
-  }),
+  create: buildNoTransformInRecordKeyCreate(zodMiniImportScope, ZOD_MUTATING_CHECK_NAMES),
 });
