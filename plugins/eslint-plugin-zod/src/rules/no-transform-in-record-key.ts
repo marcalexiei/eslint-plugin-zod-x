@@ -1,6 +1,5 @@
 import { ZOD_MUTATING_CHECK_NAMES, zodImportScope } from '@eslint-zod/utils';
 import { buildNoTransformInRecordKeyCreate } from '@eslint-zod/utils/rule-builders/no-transform-in-record-key';
-import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { createZodPluginRule } from '../utils/create-plugin-rule.js';
 
@@ -21,17 +20,5 @@ export const noTransformInRecordKey = createZodPluginRule({
     schema: [],
   },
   defaultOptions: [],
-  create: buildNoTransformInRecordKeyCreate(zodImportScope, {
-    findTransformNode(keySchema, { collectZodChainMethods }) {
-      if (keySchema.type !== AST_NODE_TYPES.CallExpression) {
-        return null;
-      }
-
-      const hasTransform = collectZodChainMethods(keySchema).some((method) =>
-        TRANSFORM_METHODS.includes(method.name),
-      );
-
-      return hasTransform ? keySchema : null;
-    },
-  }),
+  create: buildNoTransformInRecordKeyCreate(zodImportScope, TRANSFORM_METHODS),
 });
