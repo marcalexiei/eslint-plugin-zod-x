@@ -18,6 +18,9 @@ catalogs:
     '@vitest/coverage-v8': '4.1.11'
     vitest: '4.1.11'
 
+    # published-artifact checks
+    '@arethetypeswrong/cli': '0.18.5'
+
     # plugin dev utilities
     '@marcalexiei/prettier-config': '2.0.0'
     dedent: '1.7.2'
@@ -30,6 +33,8 @@ overrides:
   '@types/node': '24.13.2'
 
 allowBuilds:
+  # postinstall places the platform binary; without it `pnpm exec` fails
+  lefthook: true
   unrs-resolver: true
 
 trustPolicy: no-downgrade

@@ -1,0 +1,24 @@
+# Fast checks only: the full suite, the build and the published-artifact checks
+# stay in CI, which is the only place `dist` is guaranteed to be current.
+
+pre-commit:
+  parallel: false
+  jobs:
+    - name: format
+      glob: '*'
+      run: pnpm exec prettier --write --ignore-unknown {staged_files}
+      stage_fixed: true
+
+    - name: lint
+      glob: '*.{js,ts,mts,cts}'
+      run: pnpm exec eslint --fix --no-warn-ignored {staged_files}
+      stage_fixed: true
+
+pre-push:
+  parallel: true
+  jobs:
+    - name: typecheck
+      run: pnpm run typecheck
+
+    - name: test
+      run: pnpm run test
