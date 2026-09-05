@@ -40,6 +40,8 @@ pnpm install
 pnpm run check-all
 ```
 
+`pnpm install` also installs the Git hooks (see **Git hooks** below).
+
 ---
 
 ## TypeScript configuration
@@ -97,6 +99,30 @@ To _update_ generated rule docs from the source code, run from the relevant plug
 # from plugins/eslint-plugin-zod/ or plugins/eslint-plugin-zod-mini/
 pnpm run build:docs
 ```
+
+- Check that the published packages resolve their types correctly — `@arethetypeswrong/cli` over a `pnpm pack` tarball of each published package:
+
+```shell
+pnpm run build
+pnpm run lint:publish
+```
+
+This inspects `dist`, so it needs a build first. It is not part of `pnpm run lint` for that reason.
+
+---
+
+## Git hooks 🪝
+
+[Lefthook](https://lefthook.dev) manages the hooks; `pnpm install` installs them through the root `prepare` script. The configuration is [`lefthook.yml`](./lefthook.yml).
+
+| Hook         | What it runs                                              |
+| ------------ | --------------------------------------------------------- |
+| `pre-commit` | Prettier and ESLint over the staged files, fixes restaged |
+| `pre-push`   | `pnpm run typecheck` and `pnpm test`                      |
+
+The build and the published-artifact checks are deliberately left out — they need a current `dist`, so CI is the only place they are guaranteed to be meaningful.
+
+To skip the hooks for one command, use Git's own flag (`git commit --no-verify`). For personal overrides, create a `lefthook-local.yml`; it is git-ignored.
 
 (This command runs a build first, so you don't need to run `pnpm run build` manually.)
 

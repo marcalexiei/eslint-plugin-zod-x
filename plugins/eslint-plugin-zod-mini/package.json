@@ -39,6 +39,7 @@
   },
   "scripts": {
     "build": "tsdown",
+    "lint:publish": "attw --pack .",
     "build:docs": "pnpm run build && eslint-doc-generator",
     "lint:docs": "eslint-doc-generator --check",
     "test": "vitest"
@@ -48,6 +49,7 @@
     "@typescript-eslint/utils": "catalog:deps"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "catalog:dev",
     "@eslint-zod/tooling": "workspace:*",
     "@typescript-eslint/rule-tester": "catalog:dev",
     "dedent": "catalog:dev",

@@ -41,6 +41,7 @@ pnpm test           # run all test suites
 pnpm test:coverage  # run all test suites with coverage + thresholds
 pnpm typecheck      # tsc -b (project references, no emit)
 pnpm lint           # lint:js + lint:docs + lint:knip
+pnpm lint:publish   # attw per published package (needs a build first)
 pnpm format         # prettier --write
 
 # per-plugin (run from plugin directory or with --filter)
@@ -241,6 +242,18 @@ Every `docs/rules/<rule-name>.md` follows the same section order after the auto-
 5. Optional rule-specific sections — `## Autofix Behavior`, `## Limitations`, `## Conflict with …`
 6. `## When Not To Use It` — optional
 7. `## Further Reading`
+
+## Published-artifact checks
+
+`pnpm lint:publish` runs `attw --pack .` in each of the four published packages, checking that the `exports` map resolves types correctly under node10, node16 (CJS and ESM) and bundler. It inspects the `pnpm pack` tarball, so it needs `dist` — that is why the script is separate from `pnpm lint` and why CI runs it after the build step.
+
+`publint` was evaluated alongside it and left out for now.
+
+## Git hooks
+
+[Lefthook](https://lefthook.dev) (`lefthook.yml`), installed by the root `prepare` script on `pnpm install`. `pre-commit` runs Prettier and ESLint over the staged files and restages the fixes; `pre-push` runs `typecheck` and `test`. The build, the docs check and the published-artifact checks stay in CI — they need a current `dist`.
+
+`lefthook` needs its postinstall to place the platform binary, so it is listed in `allowBuilds` in `pnpm-workspace.yaml`; without that, `pnpm exec` fails outright and takes the hooks with it.
 
 ## Knip
 

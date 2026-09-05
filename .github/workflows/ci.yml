@@ -104,6 +104,11 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
+      # attw over `pnpm pack` tarballs of the four published packages.
+      # Runs after Build because it inspects `dist`, not `src`.
+      - name: Lint published artifacts
+        run: pnpm run lint:publish
+
   ci-ok:
     name: CI OK
     runs-on: ubuntu-latest
